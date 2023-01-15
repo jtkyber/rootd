@@ -1,0 +1,21 @@
+@import 'variables.css';
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    padding-top: $nav_height;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & form {
+        width: 20rem;
+        height: 30rem;
+        border: 2px solid white;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+}
