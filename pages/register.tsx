@@ -3,9 +3,9 @@ import { NextPage } from 'next'
 import React from 'react'
 import { useRouter } from 'next/router'
 import Nav from '../components/Nav'
-import styles from '../styles/LogReg.module.css'
 import { useAppDispatch } from '../redux/hooks'
 import { IUserState, setUser } from '../redux/userSlice'
+import styles from '../styles/LogReg.module.css'
 
 const register: NextPage = () => {
     const router = useRouter()

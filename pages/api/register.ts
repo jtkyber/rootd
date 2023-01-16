@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
 import User from '../../models/userModel'
 import bcrypt from 'bcrypt'
+import { setCookie } from 'cookies-next';
+import { v4 as uuidv4 } from 'uuid'
 
 type Data = {
   name: string
@@ -24,8 +26,9 @@ export default async function handler(
                     bVersion: bVersion
                 }, (error, newUser) => {
                     const userClone = (({ password, ...object }) => object)(newUser._doc)
-                    console.log(userClone)
                     if (userClone?._id) {
+                        const sessionId = uuidv4()
+                        setCookie('server-key', sessionId, { req, res, maxAge: 1000 })
                         res.json(userClone)
                     } else {
                         if (error.code === 11000) {

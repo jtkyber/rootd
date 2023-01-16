@@ -10,7 +10,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <> 
-      <Head><title>Verse Collector</title></Head>
+      <Head><title>Bible Study App</title></Head>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <Component {...pageProps} />
