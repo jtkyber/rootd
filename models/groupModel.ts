@@ -1,17 +1,17 @@
 import { Schema, model, models } from "mongoose"
 
-export interface IDate {
-    dateNow: string,
-    dateFormatted: string
-}
+// export interface IDate {
+//     dateNow: string,
+//     dateFormatted: string
+// }
 
 export interface IMsg {
-    msgID: string,
+    msgId: string,
     author: string,
     content: string,
-    date: IDate,
+    date: Number,
     likes: number,
-    psgReference: string
+    psgReference?: string
 }
 
 export interface IGroup {
@@ -22,22 +22,26 @@ export interface IGroup {
     isPrivate: boolean,
     summary: string,
     tags: string[],
-    characters: string[],
-    books: string[]
+    characters?: string[],
+    books: string[],
+    date: number
 }
 
-export const dateSchema = new Schema<IDate>({
-    dateNow: String,
-    dateFormatted: String
-})
+// export const dateSchema = new Schema<IDate>({
+//     dateNow: String,
+//     dateFormatted: String
+// })
 
 export const msgSchema = new Schema<IMsg>({
-    msgID: String,
+    msgId: String,
     author: String,
     content: String,
-    date: dateSchema,
+    date: Number,
     likes: Number,
-    psgReference: String
+    psgReference: {
+        type: String,
+        required: false
+    }
 })
 
 const groupSchema = new Schema<IGroup>({
@@ -76,6 +80,10 @@ const groupSchema = new Schema<IGroup>({
     },
     books: {
         type: [String],
+        required: true
+    },
+    date: {
+        type: Number,
         required: true
     }
 })

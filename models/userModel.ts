@@ -1,11 +1,10 @@
 import { Schema, model, models } from "mongoose"
-import { IDate, dateSchema } from "./groupModel"
 
 export interface IDm {
-    msgID: string,
+    msgId: string,
     author: string,
     content: string,
-    date: IDate,
+    date: string,
     isLiked: boolean,
     isRead: boolean
 }
@@ -24,10 +23,10 @@ export interface IUser {
 }
 
 export const dmSchema = new Schema<IDm>({
-    msgID: String,
+    msgId: String,
     author: String,
     content: String,
-    date: dateSchema,
+    date: String,
     isLiked: {
         type: Boolean,
         default: false
@@ -83,6 +82,6 @@ const userSchema = new Schema<IUser>({
     }
 })
 
-const User = models.User0 || model('User0', userSchema, 'users')
+const User = models.User1 || model('User1', userSchema, 'users')
 
 export default User

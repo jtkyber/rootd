@@ -1,0 +1,35 @@
+@import '/variables.css';
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: $nav_height;
+
+    & .searchContainer {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 20rem 0.9fr;
+        grid-template-rows: 1fr;
+        justify-content: space-between;
+
+        & .searchParams {
+            border: 2px solid white;
+
+            & form {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: 2rem 2rem 2rem 2rem;
+                gap: 1rem;
+            }
+        }
+
+        & .searchResults {
+            border: 2px solid white;
+        }
+    }
+}

@@ -1,33 +1,50 @@
-import { GetServerSideProps, NextPage } from 'next'
-import Nav from '../components/Nav'
-import { getCookie } from 'cookies-next'
+import { NextPage } from 'next'
 import styles from '../styles/Home.module.css'
+import { useSession, getSession } from 'next-auth/react'
+import { useEffect } from 'react'
 
-const Home: NextPage = ({ cookie }: any) => {
+const Home: NextPage = () => {
+  const { data: session }: any = useSession()
+
+  useEffect(() => {
+    console.log(session.user)
+  }, [])
+
   return (
     <div className={styles.container}>
-        <Nav />
-        <h1>cookie: {cookie}</h1>
+      {
+        session ?
+        <>
+          <div className={styles.userGroups}>
+            <h1>Welcome Authorized User</h1>
+            <h5>{session?.user?.username}</h5>
+            <h5>{session?.user?.email}</h5>
+          </div>
+          <div className={styles.selectedGroup}>
+
+          </div>
+        </>
+        : <h1>Not Authorized</h1>
+      }
     </div>
   )
 }
 
 export default Home
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const cookie = getCookie('server-key', { req, res })
-  if (!cookie) {
+export async function getServerSideProps({req}) {
+  const session = await getSession({req})
+
+  if (!session) {
     return {
       redirect: {
-        permanent: false,
-        destination: '/register'
+        destination: '/login',
+        permanent: false
       }
-    } 
+    }
   }
 
-  return { 
-    props: {
-      cookie: cookie
-    }
- }
+  return {
+    props: { session }
+  }
 }

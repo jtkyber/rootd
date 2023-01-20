@@ -3,8 +3,6 @@
 .container {
     width: 100%;
     height: 100%;
-    background-color: grey;
-    padding-top: $nav_height;
 
     & .chunk1 {
         background-color: antiquewhite;

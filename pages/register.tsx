@@ -1,15 +1,14 @@
 import axios from 'axios'
 import { NextPage } from 'next'
 import React from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Nav from '../components/Nav'
-import { useAppDispatch } from '../redux/hooks'
-import { IUserState, setUser } from '../redux/userSlice'
+import { signIn } from 'next-auth/react'
+import { IUserState } from '../redux/userSlice'
 import styles from '../styles/LogReg.module.css'
 
 const register: NextPage = () => {
     const router = useRouter()
-    const dispatch = useAppDispatch()
 
     const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
@@ -25,7 +24,7 @@ const register: NextPage = () => {
             if (username == null || password == null || email == null || gender == null || bVersion == null) return
             if (gender.value === 'Gender' || bVersion.value === 'Prefered Bible Version') return
     
-            const res = await axios.post('/api/register', {
+            const res = await axios.post('/api/auth/register', {
                 username: username?.value,
                 password: password?.value,
                 email: email?.value,
@@ -36,17 +35,19 @@ const register: NextPage = () => {
             const newUser: IUserState = res.data
     
             if (newUser?._id?.length) {
-                dispatch(setUser(newUser))
-                router.replace('/home')
+                router.replace('/login')
             }
         } catch (err) {
             console.log(err)
         }
     }
 
+    const handleGoogleSignIn = async () => {
+        signIn('google', { callbackUrl: 'http://localhost:3000/home' })
+    }
+
     return (
         <div className={styles.container}>
-            <Nav />
             <form onSubmit={handleSubmit}>
                 <h1>Register</h1>
                 <input id="username" type="text" placeholder='username' required />
@@ -63,6 +64,8 @@ const register: NextPage = () => {
                     <option value="ESV">ESV</option>
                 </select>
                 <input type="submit" />
+                <button onClick={handleGoogleSignIn} type='button' className={styles.buttonCustom}>Sign in with Google</button>
+                <Link href='/login' replace>Log In</Link>
             </form>
         </div>
     )
