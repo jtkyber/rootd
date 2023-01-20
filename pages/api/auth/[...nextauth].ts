@@ -11,6 +11,9 @@ interface ICredentials {
 }
 
 export default NextAuth({
+    session: {
+        maxAge: 4 * 60 * 60
+    },
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
