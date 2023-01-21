@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signIn } from 'next-auth/react'
@@ -32,7 +32,7 @@ const register: NextPage = () => {
     }
 
     const handleGoogleSignIn = async () => {
-        signIn('google', { callbackUrl: 'http://localhost:3000/home' })
+        await signIn('google', { callbackUrl: `${process.env.CURRENT_BASE_URL}/home` })
     }
 
     return (

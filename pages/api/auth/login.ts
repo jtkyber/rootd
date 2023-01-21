@@ -12,13 +12,13 @@ export default async function handler(
   res: NextApiResponse<Data>
   ) {
     try {
-        const { username, password } = req.query;
-        await connectMongo();
+        const { username, password } = req.query
+        await connectMongo()
         
         const user = await User.findOne({ username: username })
         if (!user) throw new Error('Could not find user')
         else {
-            const pwMatch = await bcrypt.compare(password, user.password);
+            const pwMatch = await bcrypt.compare(password, user.password)
             if (pwMatch) {
                 const userClone = (({ password, ...object }) => object)(user._doc)
                 res.json(userClone)

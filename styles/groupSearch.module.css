@@ -7,7 +7,6 @@
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    padding-top: $nav_height;
 
     & .searchContainer {
         width: 100%;

@@ -1,4 +1,5 @@
-import { Schema, model, models } from "mongoose"
+import { ObjectId } from "bson"
+import { Schema, model, models, ObjectId as objectId } from "mongoose"
 
 export interface IDm {
     msgId: string,
@@ -15,7 +16,7 @@ export interface IUser {
     email: string,
     gender: string,
     bVersion: string,
-    groups: string[],
+    groups: objectId[],
     notifications: string[],
     directMsgs: IDm[],
     dmPeople: string[],
@@ -61,7 +62,7 @@ const userSchema = new Schema<IUser>({
         required: true
     },
     groups: {
-        type: [String],
+        type: [ObjectId],
         required: false
     },
     notifications: {

@@ -1,19 +1,16 @@
-// import type { NextApiRequest, NextApiResponse } from 'next'
-// import connectMongo from '../../connectDB'
-// import User from '../../models/userModel'
-// import bcrypt from 'bcrypt'
-// import { setCookie } from 'cookies-next';
-// import { v4 as uuidv4 } from 'uuid'
-// import { IGroup } from '../../models/groupModel';
+import type { NextApiRequest, NextApiResponse } from 'next'
+import connectMongo from '../../connectDB'
+import User from '../../models/userModel'
+import { IGroup } from '../../models/groupModel';
 
-// type Data = {
-//   name: string
-// }
+type Data = {
+  name: string
+}
 
 // const testGroup: IGroup = {
-//     groupId: 'test123',
+//     groupId: '12345',
 //     name: 'Test Group',
-//     members: ['123', 'steve', 'jeff', 'bob', 'mark'],
+//     members: ['123', 'steve', 'jeff', 'bob'],
 //     messages: [
 //         {
 //             msgId: 'dsa4g423',
@@ -44,7 +41,11 @@
 //   res: NextApiResponse<Data>
 //   ) {
 //     try {
-
+//         await connectMongo()
+//         const { userId } = req.query
+//         const user = await User.findOne({ _id: userId }).select('groups')
+            
+//         console.log()
 //         }
 //     } catch(err) {
 //         console.log(err)
