@@ -4,7 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signIn } from 'next-auth/react'
-import { IUserState } from '../redux/userSlice'
+import { IUserState } from '../redux/groupSlice'
 import styles from '../styles/LogReg.module.css'
 
 const register: NextPage = () => {

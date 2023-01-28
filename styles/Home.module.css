@@ -5,7 +5,7 @@
     height: 100%;
     display: grid;
     grid-template-columns: max-content 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: calc(100vh - $nav_height);
     align-items: center;
 
     & .userGroups {
@@ -26,6 +26,10 @@
             justify-content: center;
             align-items: center;
 
+            &.selectedGroup {
+                border: 2px solid turquoise;
+            }
+
             & .groupName {
                 text-align: center;
             }
@@ -33,21 +37,104 @@
     }
 
     & .selectedGroup {
+        width: 90%;
+        height: 90%;
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
-        width: 100%;
-        height: 100%;
+        justify-self: center;
 
         & .selectedGroupName {
             width: 100%;
             text-align: center;
         }
 
-        & .chatBox {
+        & .chatArea {
             width: 90%;
             height: 90%;
             border: 2px solid white;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr max-content;
+            
+            & .chatBox {
+                width: 100%;
+                height: 100%;
+                display: grid;
+                align-items: end;
+                overflow-y: auto;
+                
+                & .messages {
+                    padding: 5rem 1rem 1rem 1rem;
+                    width: 100%;
+                    height: max-content;
+                    display: flex;
+                    flex-flow: column-reverse nowrap;
+                    gap: 1rem;
+                    justify-content: flex-end;
+                    align-items: flex-start;
+
+                    & .msg {
+                        display: flex;
+                        flex-flow: column nowrap;
+                        gap: 0.2rem;
+    
+                        & .msgAuthor {
+                            font-weight: bold;
+                        }
+    
+                        & .msgContent {
+                            border-radius: 10px;
+                            padding: 0.5rem;
+                            width: 100%;
+                            max-width: max-content;
+                            font-weight: lighter;
+                            white-space: pre-wrap;
+                        }
+    
+                        & .msgDate {
+                            font-weight: lighter;
+                        }
+    
+                        &.userMsg {
+                            & .msgContent {
+                                border: 2px solid turquoise;
+                            }
+                        }
+        
+                        &.msgFromOther {
+                            & .msgContent {
+                                border: 2px solid white;
+                            }
+                        }
+
+                        &.earliestMsg {
+                            color: inherit
+                        }
+                    }
+                }
+            }
+            
+
+            & .chatInputArea {
+                height: max-content;
+                border-top: 2px solid white;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+                align-items: center;
+                padding: 0.5rem 0;
+                gap: 0.5rem;
+
+                & .input {
+                    resize: none;
+                    padding: 0.5rem;
+                }
+
+                & .sendMsgBtn {
+                    padding: 0.3rem;
+                }
+            }
         }
     }
 }

@@ -15,13 +15,14 @@ export default async function handler(
 
         const { groupIds }: any = req.query
         const groupIdArray = JSON.parse(groupIds)
-        if (!groupIdArray[0]) throw new Error('No group ids provided')
+        if (!groupIdArray[0]) throw new Error('No group IDs provided')
 
         const userGroups: any = []
         for (const groupId of groupIdArray) {
-            const group = await Group.findById(groupId)
+            const group = await Group.findById(groupId, { messages: 0 })
             userGroups.push(group)
         }
+
         res.json(userGroups)
     } catch(err) {
         console.log(err)

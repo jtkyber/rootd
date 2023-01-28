@@ -5,17 +5,24 @@ import { Schema, model, models } from "mongoose"
 //     dateFormatted: string
 // }
 
-export interface IMsg {
-    msgId: string,
+interface IMessage {
     author: string,
     content: string,
-    date: Number,
+    date: Date,
     likes: number,
     psgReference?: string
 }
 
-export interface IGroup {
-    groupId: string,
+export interface IMsg {
+    _id: string,
+    author: string,
+    content: string,
+    date: Date,
+    likes: number,
+    psgReference?: string
+}
+
+interface IGrp {
     name: string,
     members: string[], // usernames 
     messages: IMsg[],
@@ -24,7 +31,20 @@ export interface IGroup {
     tags: string[],
     characters?: string[],
     books: string[],
-    date: number
+    date: Date
+}
+
+export interface IGroup {
+    _id: string,
+    name: string,
+    members: string[], // usernames 
+    messages?: IMsg[],
+    isPrivate: boolean,
+    summary: string,
+    tags: string[],
+    characters?: string[],
+    books: string[],
+    date: Date
 }
 
 // export const dateSchema = new Schema<IDate>({
@@ -32,11 +52,10 @@ export interface IGroup {
 //     dateFormatted: String
 // })
 
-export const msgSchema = new Schema<IMsg>({
-    msgId: String,
+export const msgSchema = new Schema<IMessage>({
     author: String,
     content: String,
-    date: Number,
+    date: Date,
     likes: Number,
     psgReference: {
         type: String,
@@ -44,12 +63,7 @@ export const msgSchema = new Schema<IMsg>({
     }
 })
 
-const groupSchema = new Schema<IGroup>({
-    groupId: {
-        type: String,
-        required: true,
-        unique: true
-    },
+const groupSchema = new Schema<IGrp>({
     name: {
         type: String,
         required: true
@@ -83,7 +97,7 @@ const groupSchema = new Schema<IGroup>({
         required: true
     },
     date: {
-        type: Number,
+        type: Date,
         required: true
     }
 })

@@ -2,15 +2,28 @@ import { ObjectId } from "bson"
 import { Schema, model, models, ObjectId as objectId } from "mongoose"
 
 export interface IDm {
-    msgId: string,
     author: string,
     content: string,
-    date: string,
+    date: Date,
     isLiked: boolean,
     isRead: boolean
 }
 
+interface IUsr {
+    username: string,
+    password: string,
+    email: string,
+    gender: string,
+    bVersion: string,
+    groups: objectId[],
+    notifications: string[],
+    directMsgs: IDm[],
+    dmPeople: string[],
+    strikes: string[] // Reasons for strikes
+}
+
 export interface IUser {
+    _id: string,
     username: string,
     password: string,
     email: string,
@@ -24,10 +37,9 @@ export interface IUser {
 }
 
 export const dmSchema = new Schema<IDm>({
-    msgId: String,
     author: String,
     content: String,
-    date: String,
+    date: Date,
     isLiked: {
         type: Boolean,
         default: false
@@ -38,7 +50,7 @@ export const dmSchema = new Schema<IDm>({
     },
 })
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<IUsr>({
     username: {
         type: String,
         required: true,

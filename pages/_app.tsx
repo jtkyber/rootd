@@ -1,26 +1,32 @@
+import { useState } from 'react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Provider } from 'react-redux'
 import store from '../redux/store'
-import { ApiProvider } from '@reduxjs/toolkit/dist/query/react'
-import { myApi } from '../redux/apiSlice'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+// import { myApi } from '../redux/apiSlice'
 import { SessionProvider } from 'next-auth/react'
 import '../styles/globals.css'
 import Layout from '../components/Layout'
+import socketInitializer from '../socketImport'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  const [queryClient]= useState(() => new QueryClient())
+
   return (
     <> 
       <Head><title>Bible Study App</title></Head>
-      <Provider store={store}>
-        <ApiProvider api={myApi}>
           <SessionProvider session={pageProps.session}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <Provider store={store}>
+              <QueryClientProvider client={queryClient}>
+                <Layout>
+                  <Component socket={socketInitializer} {...pageProps} />
+                </Layout>
+                <ReactQueryDevtools initialIsOpen={false} />
+              </QueryClientProvider>
+            </Provider>
           </SessionProvider>
-        </ApiProvider>
-      </Provider>
     </>
   )
 }
