@@ -60,8 +60,9 @@
             & .chatBox {
                 width: 100%;
                 height: 100%;
-                display: grid;
-                align-items: end;
+                display: flex;
+                flex-flow: column-reverse nowrap;
+                align-items: flex-end;
                 overflow-y: auto;
                 
                 & .messages {

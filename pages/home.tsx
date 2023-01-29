@@ -6,8 +6,8 @@ import { IGroup, IMsg } from '../models/groupModel'
 import { useState, useEffect, useRef } from 'react'
 import styles from '../styles/Home.module.css'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
-import { setSelectedGroup, setSelectedGroupMsgs } from '../redux/groupSlice'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { setSelectedGroup } from '../redux/groupSlice'
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 let scrollElementId: string
 
@@ -16,12 +16,13 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
   const chatAreaRef: React.MutableRefObject<any> = useRef(null)
   const chatBoxRef: React.MutableRefObject<any> = useRef(null)
   const messagesRef: React.MutableRefObject<any> = useRef(null)
-
+  
   const dispatch = useAppDispatch()
 
-  const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
-  const selectedGroupMsgs: IMsg[] = useAppSelector(state => state.group.selectedGroupMsgs)
+  const queryClient = useQueryClient()
 
+  const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
+  
   const [inputValue, setInputValue] = useState('')
 
 
@@ -34,18 +35,7 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
       return group._id
     })
     socket.emit('join groups', rooms)
-
-    if (chatBoxRef.current) chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight
   }, [])
-  
-  useEffect(() => {
-    socket.on('fetch new group msgs', room => { 
-      fetchNewGroupMessages(room)
-    })
-    return () => {
-      socket.off('fetch new group msgs')
-    }
-  }, [selectedGroupMsgs])
   
   useEffect(() => {
     if (!selectedGroup._id) return
@@ -54,9 +44,7 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
   const fetchGroupMessages = async ({ pageParam = 0 }) => {
     if (!selectedGroup._id) return null
     try {
-      const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=3`)
-      const earliestMsg = document.querySelector(`.${styles.earliestMsg}`)?.id
-      if (earliestMsg) scrollElementId = earliestMsg
+      const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=10`)
       return res.data
     } catch (err) {
       console.log(err)
@@ -67,19 +55,6 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
       getNextPageParam: (lastPage, pages) => lastPage.cursor
   })
 
-  const fetchNewGroupMessages = async (groupId) => {
-    if ((selectedGroup._id !== groupId) || !selectedGroup._id) return
-    const res = await axios.get(`/api/getNewGroupMsgs?groupId=${selectedGroup._id}&lastMsgDate=${selectedGroupMsgs[selectedGroupMsgs.length-1].date}`)
-    const msgs: IMsg[] = res.data
-  }
-
-  useEffect(() => {
-    if (!isFetching) {
-      document.getElementById(`${scrollElementId}`)?.scrollIntoView()
-      chatBoxRef.current.scrollBy(0, -100)
-    }
-  }, [isFetching])
-
   const isToday = (someDate) => {
     const today = new Date()
     return someDate.getDate() == today.getDate() &&
@@ -87,12 +62,44 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
       someDate.getFullYear() == today.getFullYear()
   }
 
-  const sendMessage = async () => {
-    interface IGroupId {
-      groupId: string
+  useEffect(() => {
+    socket.on('fetch new group msgs', data => { 
+      if (data.groupId === selectedGroup._id) addMessage(JSON.parse(data.msg))
+    })
+    return () => {
+      socket.off('fetch new group msgs')
     }
+  }, [data])
 
-    const data: (Partial<IMsg> & IGroupId) = {
+  interface IGroupId {
+    groupId: string
+  }
+
+  const addMessage = (newData) => {
+    queryClient.setQueryData(['groupMessages', selectedGroup._id], (prev: any) => ({
+      ...data,
+      pages: prev?.pages.map((page, i) => {
+        if (i === 0) return {
+          ...page,
+          data: [newData.data, ...page.data]
+        } 
+        else return page
+      })
+    }))
+  }
+
+  const sendMessage = useMutation((msgData: (Partial<IMsg> & IGroupId)) => {
+    return axios.post('/api/postGroupMsg', msgData)
+  }, {
+    onSuccess: (newData) => {
+      addMessage(newData)
+      textAreaRef.current.value = ''
+      socket.emit('update group member msgs', {room: selectedGroup._id, msg: JSON.stringify(newData)})
+    }
+  })
+
+  const handleSendMsgClick = () => {
+    const msgData: (Partial<IMsg> & IGroupId) = {
       groupId: selectedGroup._id,
       author: session.user.username,
       content: inputValue,
@@ -101,15 +108,19 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
       psgReference: ''
     }
 
-    const res = await axios.post('/api/postGroupMsg', {
-      ...data
-    })
-    textAreaRef.current.value = ''
-    dispatch(setSelectedGroupMsgs([...selectedGroupMsgs, res.data]))
+    sendMessage.mutate(msgData)
 
-    socket.emit('update group member msgs', selectedGroup._id)
+    
   }
 
+  const handleLoadMoreClick = async () => {
+    const earliestMsg = document.querySelector(`.${styles.earliestMsg}`)?.id
+    if (earliestMsg) scrollElementId = earliestMsg
+    await fetchNextPage()
+    document.getElementById(`${scrollElementId}`)?.scrollIntoView()
+    chatBoxRef.current.scrollBy(0, -100)
+    scrollElementId = ''
+  }
   
   return (
     <div className={styles.container}>
@@ -132,12 +143,9 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
             <div ref={chatAreaRef} className={styles.chatArea}>
               <div ref={chatBoxRef} className={styles.chatBox}>
-                {hasNextPage 
-                  ? <button onClick={() => fetchNextPage()} className={styles.loadMoreMsgsBtn}>Load More</button>
-                  : null}
                 <div ref={messagesRef} className={styles.messages}>
                   {data?.pages.map((page, i, row1) => (
-                      <Fragment key={i}>
+                    <Fragment key={i}>
                         {page?.data.map((msg, j, row2) => {
                           const dateObj = new Date(msg.date)
                           const date = dateObj.toLocaleDateString()
@@ -158,13 +166,16 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
                         })}
                       </Fragment>
                     ))}
+                    {hasNextPage 
+                      ? <button onClick={() => handleLoadMoreClick()} className={styles.loadMoreMsgsBtn}>Load More</button>
+                      : null}
                 </div>
               </div>
 
               <div className={styles.chatInputArea}>
                 <textarea ref={textAreaRef} onChange={(e) => setInputValue(e.target.value)} rows={4} cols={40} className={styles.input}></textarea>
-                <button onClick={sendMessage} className={styles.sendMsgBtn}>Send</button>
-                <button onClick={fetchNewGroupMessages}>Update</button>
+                <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
+                <button>Update</button>
               </div>
             </div>
           </div>

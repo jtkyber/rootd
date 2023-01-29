@@ -12,7 +12,16 @@ import Layout from '../components/Layout'
 import socketInitializer from '../socketImport'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const [queryClient]= useState(() => new QueryClient())
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        retry: false,
+      }
+    }
+  }))
 
   return (
     <> 

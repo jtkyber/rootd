@@ -3,8 +3,7 @@ import { IGroup, IMsg } from "../models/groupModel"
 
 export interface IGroupState {
     socket: any,
-    selectedGroup: IGroup,
-    selectedGroupMsgs: IMsg[]
+    selectedGroup: IGroup
 }
 
 const initialState: IGroupState = {
@@ -19,8 +18,7 @@ const initialState: IGroupState = {
         characters: [],
         books: [],
         date: new Date()
-    },
-    selectedGroupMsgs: []
+    }
 }
 
 export const groupSlice = createSlice({
@@ -33,12 +31,9 @@ export const groupSlice = createSlice({
         setSelectedGroup: (state, action: PayloadAction<IGroup>) => {
             state.selectedGroup = action.payload
         },
-        setSelectedGroupMsgs: (state, action: PayloadAction<IMsg[]>) => {
-            state.selectedGroupMsgs = action.payload
-        }
     }
 })
 
-export const { setSocket, setSelectedGroup, setSelectedGroupMsgs } = groupSlice.actions
+export const { setSocket, setSelectedGroup } = groupSlice.actions
 
 export default groupSlice.reducer

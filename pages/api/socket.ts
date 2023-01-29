@@ -15,8 +15,8 @@ const SocketHandler = (req, res) => {
                 }
             })
 
-            socket.on('update group member msgs', room => {
-                socket.to(room).emit('fetch new group msgs', room)
+            socket.on('update group member msgs', data => {
+                socket.to(data.room).emit('fetch new group msgs', {groupId: data.room, msg: data.msg})
             })
         })
     }
