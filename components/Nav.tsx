@@ -13,11 +13,11 @@ const Nav: React.FC = () => {
             </div>
             <div className={styles.right}>
                 {
-                    router.asPath === '/'
+                    router.pathname === '/'
                     ? <Link href='/login'>Log In</Link>
-                    : router.asPath === '/login' || router.asPath === '/register'
+                    : router.pathname === '/login' || router.pathname === '/register'
                         ? <Link href='/'>Back</Link>
-                        : router.asPath === '/home'
+                        : router.pathname === '/home'
                             ? 
                             <>
                                 <Link href='/groupSearch'>Find Group</Link>
@@ -25,7 +25,7 @@ const Nav: React.FC = () => {
                                 <Link href='/home'>Notifications</Link>
                                 <Link href='/home'>Settings</Link>
                             </>
-                            : router.asPath === '/groupSearch'
+                            : router.pathname === '/groupSearch'
                                 ?
                                 <>
                                     <Link href='/home'>Back</Link>
