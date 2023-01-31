@@ -45,7 +45,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
         
     const { data, status, isFetching, fetchNextPage, hasNextPage, error } = useInfiniteQuery(
         ['groupMessages', selectedGroup._id], fetchGroupMessages, {
-            getNextPageParam: (lastPage, pages) => lastPage.cursor
+            getNextPageParam: (lastPage, pages) => lastPage?.cursor
         }
     )
         

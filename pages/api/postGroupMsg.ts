@@ -28,7 +28,8 @@ export default async function handler(
                     $each: [msg],
                     $position: 0
                 }
-            }
+            },
+            $set: {lastActive: Date.now()}
         }, { new: true }).then((docs) => {
             if (docs) res.json(docs.messages[0])
         })

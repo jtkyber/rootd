@@ -5,6 +5,7 @@ import axios from 'axios';
 import debounce from '../utils/debounce';
 import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { IGroup } from '../models/groupModel';
 
 interface IOptions {
   keyword: string,
@@ -95,6 +96,28 @@ const groupSearch = () => {
     }
   }
 
+  function getTimeDiff(lastActive) {
+    const currentDate = Date.now()
+    const lastActiveDateTemp = new Date(lastActive)
+    const lastActiveDate = lastActiveDateTemp.getTime()
+    const msSinceLastActive = Math.abs(currentDate - lastActiveDate)
+    const minsSinceLastActive = Math.ceil(msSinceLastActive / (1000 * 60))
+    let timeSinceLastActive = minsSinceLastActive
+
+    const includeS = (num) => num >= 2 ? 's' : ''
+
+    // is mimutes
+    if(timeSinceLastActive < 60) {return `${Math.round(timeSinceLastActive)}min${includeS(timeSinceLastActive)}`} else timeSinceLastActive /= 60 
+    // is hours
+    if(timeSinceLastActive >= 1 && timeSinceLastActive < 24) {return `${Math.round(timeSinceLastActive)}hr${includeS(timeSinceLastActive)}`} else timeSinceLastActive /= 24
+    // is days
+    if(timeSinceLastActive >= 1 && timeSinceLastActive < 365) {return `${Math.round(timeSinceLastActive)}dy${includeS(timeSinceLastActive)}`} else timeSinceLastActive /= 365
+    // is years
+    if(timeSinceLastActive >= 365) return `${Math.round(timeSinceLastActive)}yr${includeS(timeSinceLastActive)}`
+
+    return `${msSinceLastActive}ms`
+  }
+
   return (
       <div className={styles.container}>
           <h1>Find Group</h1>
@@ -141,8 +164,14 @@ const groupSearch = () => {
             </div>
             <div className={styles.searchResults}>
               {
-                data?.data.map((group, i) => {
-                  return <h3 key={i}>{group.name}</h3>
+                data?.data.map((group: IGroup, i) => {
+                  return <div className={styles.result} key={i}>
+                    <h3 className={styles.name}>{group.name}</h3>
+                    <h5 className={styles.summary}>{group.summary}</h5>
+                    <h5 className={styles.memberCount}>{group.members.length}</h5>
+                    <h5 className={styles.lastActive}>{getTimeDiff(group.lastActive)}</h5>
+                    <button onClick={(e) => e.preventDefault()}>Join</button>
+                  </div>
                 })
               }
             </div>

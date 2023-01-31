@@ -17,7 +17,8 @@ const initialState: IGroupState = {
         tags: [],
         characters: [],
         books: [],
-        date: new Date()
+        date: new Date(),
+        lastActive: new Date()
     }
 }
 

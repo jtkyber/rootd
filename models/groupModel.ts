@@ -31,7 +31,8 @@ interface IGrp {
     tags: string[],
     characters?: string[],
     books: string[],
-    date: Date
+    date: Date,
+    lastActive: Date
 }
 
 export interface IGroup {
@@ -44,7 +45,8 @@ export interface IGroup {
     tags: string[],
     characters?: string[],
     books: string[],
-    date: Date
+    date: Date,
+    lastActive: Date
 }
 
 // export const dateSchema = new Schema<IDate>({
@@ -97,6 +99,10 @@ const groupSchema = new Schema<IGrp>({
         required: true
     },
     date: {
+        type: Date,
+        required: true
+    },
+    lastActive: {
         type: Date,
         required: true
     }
