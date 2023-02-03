@@ -3,102 +3,182 @@
 .container {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 16rem 1fr;
+    grid-template-rows: 2rem 1fr;
+    grid-template-areas: 
+    "searchParams sortContainer"
+    "searchParams searchResults";
 
-    & .selectorContainer {
+    & .searchParams {
+        grid-area: searchParams;
         width: 100%;
         height: 100%;
-        display: grid;
-        grid-template-columns: 20rem 0.9fr;
-        grid-template-rows: 1fr;
-        justify-content: space-between;
+        border: 2px solid white;
+        border-right: none;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
 
-        & .searchParams {
+        & .selector {
+            position: relative;
             width: 100%;
-            border: 2px solid white;
-            display: flex;
-            flex-flow: column nowrap;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
+            height: max-content;
+            margin-bottom: 1rem;
 
-            & .selector {
-                position: relative;
+            & .selectorBtn {
+                padding: 0.8rem 0;
                 width: 100%;
-                height: max-content;
-                margin-bottom: 1rem;
+            }
 
-                & .selectorBtn {
-                    padding: 0.8rem 0;
-                    width: 100%;
+            & .options {
+                position: absolute;
+                display: flex;
+                flex-flow: column nowrap;
+                width: 100%;
+                max-height: 0;
+                background-color: darkgrey;
+                overflow: auto;
+                overflow-x: hidden;
+                z-index: 1;
+
+                &.show {
+                    max-height: 50vh;
                 }
-    
-                & .options {
-                    position: absolute;
+
+                & .checkboxChunk {
                     display: flex;
-                    flex-flow: column nowrap;
+                    flex-flow: row nowrap;
                     width: 100%;
-                    max-height: 0;
-                    background-color: darkgrey;
-                    overflow: auto;
-                    overflow-x: hidden;
-                    z-index: 1;
-    
-                    &.show {
-                        max-height: 50vh;
+
+                    &:has(input:checked) {
+                        background-color: teal;
                     }
-    
-                    & .checkboxChunk {
-                        display: flex;
-                        flex-flow: row nowrap;
+
+                    & input {
+                        display: none;
+                    }
+
+                    & label {
                         width: 100%;
-    
-                        &:has(input:checked) {
-                            background-color: teal;
-                        }
-    
-                        & input {
-                            display: none;
-                        }
-    
-                        & label {
-                            width: 100%;
-                            text-align: center;
-                            cursor: pointer;
-    
-                            &:hover {
-                                opacity: 0.6;
-                            }
+                        text-align: center;
+                        cursor: pointer;
+
+                        &:hover {
+                            opacity: 0.6;
                         }
                     }
                 }
-    
-                &.characters {
-                    
-                }
-    
-                &.books {
-                    
-                }
+            }
+
+            &.characters {
+                
+            }
+
+            &.books {
+                
+            }
+        }
+    }
+
+    & .sortContainer {
+        width: 100%;
+        height: 100%;
+        grid-area: sortContainer;
+        display: grid;
+        grid-template-columns: 8rem 1fr 14rem;
+        grid-template-areas: "nameSort summarySort sortRightChunk";
+        border: 2px solid white;
+        border-bottom: none;
+        padding: 0 1rem;
+        align-items: center;
+        gap: 1rem;
+
+        & .nameSort {
+            grid-area: nameSort;
+            justify-self: start;
+        }
+
+        & .summarySort {
+            grid-area: summarySort;
+            justify-self: center;
+        }
+
+        & .sortRightChunk {
+            width: 100%;
+            grid-area: sortRightChunk;
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            justify-self: end;
+            text-align: center;
+
+            & .memberSort {
+
+            }
+
+            & .lastActiveSort {
+                
+            }
+
+            & .privateSort {
+
             }
         }
 
-        & .searchResults {
-            width: 100%;
-            border: 2px solid white;
+    }
 
-            & .result {
+    & .searchResults {
+        grid-area: searchResults;
+        width: 100%;
+        height: 100%;
+        border: 2px solid white;
+        border-top-width: 1px;
+        overflow-y: auto;
+
+        & .result {
+            width: 100%;
+            height: 3rem;
+            background-color: green;
+            border-bottom: 2px solid black;
+            display: grid;
+            grid-template-columns: 8rem 1fr 12rem;
+            grid-template-rows: 1fr;
+            align-items: center;
+            gap: 1rem;
+            padding: 0 1rem;
+            cursor: pointer;
+            overflow: hidden;
+            
+            &:hover {
+                opacity: 0.6;
+            }
+
+            & .name {
+                justify-self: start;
+            }
+            
+            & .summary {
+                justify-self: start;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                display: -webkit-box !important;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                white-space: normal;
+            }
+
+            & .resultRightChunk {
                 width: 100%;
-                background-color: green;
-                border-bottom: 2px solid black;
                 display: flex;
                 flex-flow: row nowrap;
-                justify-content: space-around;
+                justify-content: space-between;
+                justify-self: end;
             }
+            
         }
     }
 }

@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import group from './groupSlice'
+import search from './searchSlice';
 
 export const store = configureStore({
     reducer: {
-        group: group
+        group: group,
+        search: search
     }
 })
 

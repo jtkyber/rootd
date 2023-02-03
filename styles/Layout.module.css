@@ -4,6 +4,6 @@
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: $nav_height 1fr;
+    grid-template-columns: 100vw;
+    grid-template-rows: $nav_height calc(100vh - $nav_height);
 }

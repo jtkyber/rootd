@@ -8,7 +8,7 @@ import { Schema, model, models } from "mongoose"
 interface IMessage {
     author: string,
     content: string,
-    date: Date,
+    date: Date | number,
     likes: number,
     psgReference?: string
 }
@@ -17,26 +17,12 @@ export interface IMsg {
     _id: string,
     author: string,
     content: string,
-    date: Date,
+    date: Date | number,
     likes: number,
     psgReference?: string
 }
 
 interface IGrp {
-    name: string,
-    members: string[], // usernames 
-    messages: IMsg[],
-    isPrivate: boolean,
-    summary: string,
-    tags: string[],
-    characters?: string[],
-    books: string[],
-    date: Date,
-    lastActive: Date
-}
-
-export interface IGroup {
-    _id: string,
     name: string,
     members: string[], // usernames 
     messages?: IMsg[],
@@ -45,8 +31,12 @@ export interface IGroup {
     tags: string[],
     characters?: string[],
     books: string[],
-    date: Date,
-    lastActive: Date
+    date: Date | number,
+    lastActive: Date | number
+}
+
+export interface IGroup extends IGrp {
+    _id: string
 }
 
 // export const dateSchema = new Schema<IDate>({
@@ -108,6 +98,6 @@ const groupSchema = new Schema<IGrp>({
     }
 })
 
-const Group = models.Group || model('Group', groupSchema, 'groups')
+const Group = models.Group0 || model('Group0', groupSchema, 'groups')
 
 export default Group

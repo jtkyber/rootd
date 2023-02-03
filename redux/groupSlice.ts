@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IGroup, IMsg } from "../models/groupModel"
+import { IGroup } from "../models/groupModel"
 
 export interface IGroupState {
     socket: any,
@@ -17,8 +17,8 @@ const initialState: IGroupState = {
         tags: [],
         characters: [],
         books: [],
-        date: new Date(),
-        lastActive: new Date()
+        date: Date.now(),
+        lastActive: Date.now()
     }
 }
 

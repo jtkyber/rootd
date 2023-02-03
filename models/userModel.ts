@@ -4,7 +4,7 @@ import { Schema, model, models, ObjectId as objectId } from "mongoose"
 export interface IDm {
     author: string,
     content: string,
-    date: Date,
+    date: Date | number,
     isLiked: boolean,
     isRead: boolean
 }
@@ -22,18 +22,8 @@ interface IUsr {
     strikes: string[] // Reasons for strikes
 }
 
-export interface IUser {
-    _id: string,
-    username: string,
-    password: string,
-    email: string,
-    gender: string,
-    bVersion: string,
-    groups: objectId[],
-    notifications: string[],
-    directMsgs: IDm[],
-    dmPeople: string[],
-    strikes: string[] // Reasons for strikes
+export interface IUser extends IUsr {
+    _id: string
 }
 
 export const dmSchema = new Schema<IDm>({
