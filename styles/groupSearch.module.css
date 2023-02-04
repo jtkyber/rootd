@@ -74,13 +74,13 @@
                 }
             }
 
-            &.characters {
+            /* &.characters {
                 
             }
 
             &.books {
                 
-            }
+            } */
         }
     }
 
@@ -116,7 +116,7 @@
             justify-self: end;
             text-align: center;
 
-            & .memberSort {
+            /* & .memberSort {
 
             }
 
@@ -126,7 +126,7 @@
 
             & .privateSort {
 
-            }
+            } */
         }
 
     }

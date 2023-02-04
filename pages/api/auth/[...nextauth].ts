@@ -2,7 +2,7 @@ import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import connectMongo from '../../../connectDB'
-import User, { IUser } from '../../../models/userModel'
+import User from '../../../models/userModel'
 import bcrypt from 'bcrypt'
 
 interface ICredentials {
@@ -24,7 +24,8 @@ export default NextAuth({
             credentials: {},
             async authorize(credentials: ICredentials) {
                 try {
-                    connectMongo().catch(error => { error: 'Connection Failed'})
+                    // connectMongo().catch(error => { error: 'Connection Failed'})
+                    await connectMongo()
     
                     const user = await User.findOne({ email: credentials?.email })
                     if (!user) throw new Error('No user found with email')
@@ -53,4 +54,5 @@ export default NextAuth({
     pages: {
         signIn: '/login',
     },
+    secret: process.env.AUTH_SECRET
 })

@@ -4,10 +4,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios';
 import debounce from '../utils/debounce';
 import { getSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import { IGroup } from '../models/groupModel';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { ICurSort, setCurrentSort } from '../redux/searchSlice';
+import characters from '../characters.json'
+import books from '../books.json'
 
 interface IOptions {
   keyword: string,
@@ -17,8 +18,6 @@ interface IOptions {
 }
 
 const groupSearch = () => {
-  const router = useRouter()
-
   const queryClient = useQueryClient()
 
   const [options, setOptions] = useState<IOptions>({
@@ -46,14 +45,6 @@ const groupSearch = () => {
   async function fetchGroups(page = 0) {
     return axios.get(`/api/findGroups?keyword=${options.keyword}&characters=${JSON.stringify(options.characters)}&books=${JSON.stringify(options.books)}&includePrivate=${options.includePrivate}`)
   }
-  
-  // useEffect(() => {
-  //   console.log(options)
-  // }, [options]))
-
-  // useEffect(() => {
-  //   console.log(data)
-  // }, [data])
 
   useEffect(() => {
     document.addEventListener('click', handlePageClick)
@@ -99,7 +90,7 @@ const groupSearch = () => {
     const options = document.querySelectorAll(`.${styles.options}`)
     
     for (let i = 0; i < options.length; i++) {
-        if ((e.target !== btns[i] && !checkParent(options[i], e.target))) {
+      if ((e.target !== btns[i]) && (!checkParent(options[i], e.target))) {
             options[i].classList.remove(styles.show)
         }
     }
@@ -176,33 +167,29 @@ const groupSearch = () => {
 
           <div className={`${styles.selector} ${styles.characters}`}>
             <button onClick={toggleCharacterList} className={styles.selectorBtn}>Characters</button>
-            <div ref={characterSelectorRef} className={styles.options}>
-              <div className={styles.checkboxChunk}>
-                <input type='checkbox' onChange={(e) => onCharacterChange(e)} id="samuel" name='samuel' value='samuel' />
-                <label htmlFor="samuel">samuel</label>
-              </div>
-              <div className={styles.checkboxChunk}>
-                <input type='checkbox' onChange={(e) => onCharacterChange(e)} id="david" name='david' value='david' />
-                <label htmlFor="david">david</label>
-              </div>
-              <div className={styles.checkboxChunk}>
-                <input type='checkbox' onChange={(e) => onCharacterChange(e)} id="saul" name='saul' value='saul' />
-                <label htmlFor="saul">saul</label>
-              </div>
+            <div id='characterOptions' ref={characterSelectorRef} className={styles.options}>
+              {
+                characters.map((character, i) => (
+                  <div key={i} className={styles.checkboxChunk}>
+                    <input type='checkbox' onChange={(e) => onCharacterChange(e)} id={character} name={character} value={character} />
+                    <label htmlFor={character}>{character}</label>
+                  </div>
+                ))
+              }
             </div>
           </div>
 
           <div className={`${styles.selector} ${styles.books}`}>
             <button onClick={toggleBookList} className={styles.selectorBtn}>Books</button>
-            <div ref={bookSelectorRef} className={styles.options}>
-            <div className={styles.checkboxChunk}>
-              <input type='checkbox' onChange={(e) => onBookChange(e)} id="1 samuel" name='1 samuel' value='1 samuel' />
-              <label htmlFor="1 samuel">1 samuel</label>
-            </div>
-            <div className={styles.checkboxChunk}>
-              <input type='checkbox' onChange={(e) => onBookChange(e)} id="acts" name='acts' value='acts' />
-              <label htmlFor="acts">acts</label>
-            </div>
+            <div id='bookOptions' ref={bookSelectorRef} className={styles.options}>
+              {
+                books.map((book, i) => (
+                  <div key={i} className={styles.checkboxChunk}>
+                    <input type='checkbox' onChange={(e) => onBookChange(e)} id={book.book + '-book'} name={book.book} value={book.book} />
+                    <label className={styles.bookLabel} htmlFor={book.book + '-book'}>{book.book}</label>
+                  </div>
+                ))
+              }
             </div>
           </div>
           

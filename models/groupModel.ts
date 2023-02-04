@@ -32,7 +32,8 @@ interface IGrp {
     characters?: string[],
     books: string[],
     date: Date | number,
-    lastActive: Date | number
+    lastActive: Date | number,
+    groupAdmin?: string | null
 }
 
 export interface IGroup extends IGrp {
@@ -95,9 +96,13 @@ const groupSchema = new Schema<IGrp>({
     lastActive: {
         type: Date,
         required: true
+    },
+    groupAdmin: {
+        type: String,
+        required: false
     }
 })
 
-const Group = models.Group0 || model('Group0', groupSchema, 'groups')
+const Group = models.Group || model('Group', groupSchema, 'groups')
 
 export default Group

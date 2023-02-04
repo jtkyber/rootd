@@ -18,7 +18,8 @@ const initialState: IGroupState = {
         characters: [],
         books: [],
         date: Date.now(),
-        lastActive: Date.now()
+        lastActive: Date.now(),
+        groupAdmin: null
     }
 }
 
