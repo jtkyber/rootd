@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import styles from '../styles/GroupSearch.module.css'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios';
 import debounce from '../utils/debounce';
 import { getSession } from 'next-auth/react';
@@ -36,14 +36,25 @@ const groupSearch = () => {
   const characterSelectorRef: React.MutableRefObject<any> = useRef(null)
   const bookSelectorRef: React.MutableRefObject<any> = useRef(null)
 
-  const { data, status } = useQuery({
-    queryKey: ['groups', [options, page]], 
-    queryFn: () => fetchGroups(page),
-    keepPreviousData: true
-  })
+  // const { data, status } = useQuery({
+  //   queryKey: ['groups', [options, page]], 
+  //   queryFn: () => fetchGroups(page),
+  //   keepPreviousData: true
+  // })
 
-  async function fetchGroups(page = 0) {
-    return axios.get(`/api/findGroups?keyword=${options.keyword}&characters=${JSON.stringify(options.characters)}&books=${JSON.stringify(options.books)}&includePrivate=${options.includePrivate}`)
+  const { data, status, isFetching, fetchNextPage, hasNextPage, error } = useInfiniteQuery(
+    ['groups', [options, page]], fetchGroups, {
+        getNextPageParam: (lastPage, pages) => lastPage?.cursor
+    }
+)
+
+  async function fetchGroups({ pageParam = 0 }) {
+    try {
+      const res = await axios.get(`/api/findGroups?keyword=${options.keyword}&characters=${JSON.stringify(options.characters)}&books=${JSON.stringify(options.books)}&includePrivate=${options.includePrivate}&cursor=${pageParam}&limit=10`)
+      return res.data
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   useEffect(() => {
@@ -119,11 +130,13 @@ const groupSearch = () => {
   }
 
   useEffect(() => sortGroups(), [currentSort])
+  // useEffect(() => {
+  //   console.log(data)
+  // }, [data])
 
   const sortGroups = (): void => {
-    if(!data?.data) return
-    const dataTemp = [...data.data]
-    
+    if(!data?.pages[0]) return
+    const dataTemp = data?.pages.map(page => page.data).flat()
     switch(currentSort.name) {
       case 'name':
         if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.name.localeCompare(b.name)) 
@@ -133,28 +146,55 @@ const groupSearch = () => {
         if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.members.length - b.members.length) 
         else dataTemp.sort((a, b) => b.members.length - a.members.length)
         break
-      case 'lastActive':
-        if (currentSort.dir === 'down') {
-          dataTemp.sort((a, b) => {
-            const dateA = new Date(a.lastActive)
-            const dateB = new Date(b.lastActive)
-            return dateB.getTime() - dateA.getTime()
-          })
-        } else dataTemp.sort((a, b) => {
+        case 'lastActive':
+          if (currentSort.dir === 'down') {
+            dataTemp.sort((a, b) => {
+              const dateA = new Date(a.lastActive)
+              const dateB = new Date(b.lastActive)
+              return dateB.getTime() - dateA.getTime()
+            })
+          } else dataTemp.sort((a, b) => {
             const dateA = new Date(a.lastActive)
             const dateB = new Date(b.lastActive)
             return dateA.getTime() - dateB.getTime()
-        })
-        break
+          })
+          break
         case 'isPrivate':
           if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.isPrivate - b.isPrivate) 
           else dataTemp.sort((a, b) => b.isPrivate - a.isPrivate)
           break
-      }
+    }
 
+    let startingIndex = 0
+    const getStartingIndex = (cursor) => {
+      const startingIndexTemp = startingIndex
+      startingIndex = cursor - 1
+      return startingIndexTemp
+    }
+
+    // const newData = {
+    //   ...data,
+    //   pages: data?.pages.map((page, i) => {
+    //     const curStartingIndex = getStartingIndex(page.data.length)
+    //     return {
+    //       ...page,
+    //       data: dataTemp.slice(curStartingIndex, (curStartingIndex > 0 ? curStartingIndex + 1 : 0) + page.data.length)
+    //     } 
+    //   })
+    // }
+
+    // console.log(data, newData)
+        
     queryClient.setQueryData(['groups', [options, page]], (prev: any) => ({
-      ...prev,
-      data: dataTemp
+      ...data,
+      pages: prev?.pages.map(page => {
+        const curStartingIndex = getStartingIndex(page.data.length)
+        console.log(page.data.length)
+        return {
+          ...page,
+          data: dataTemp.slice(curStartingIndex, (curStartingIndex > 0 ? curStartingIndex + 1 : 0) + page.data.length)
+        } 
+      })
     }))
   }
 
@@ -208,19 +248,21 @@ const groupSearch = () => {
           </div>
         </div>
         <div className={styles.searchResults}>
-          {
-            data?.data.map((group: IGroup, i) => {
-              return <div onClick={(e) => e.preventDefault()} className={styles.result} key={i}>
-                <h3 className={styles.name}>{group.name}</h3>
-                <p className={styles.summary}>{group.summary}</p>
-                <div className={styles.resultRightChunk}>
-                  <h5 className={styles.memberCount}>{group.members.length}</h5>
-                  <h5 className={styles.lastActive}>{getTimeDiff(group.lastActive)}</h5>
-                  <h5 className={styles.isPrivate}>{group.isPrivate ? 'Yes' : 'No'}</h5>
-                </div>
-              </div>
-            })
-          }
+          {data?.pages.map((page, i) => (
+              <Fragment key={i}>
+                {page?.data.map((group: IGroup, j) => {
+                  return <div onClick={(e) => e.preventDefault()} className={styles.result} key={j}>
+                    <h3 className={styles.name}>{group.name}</h3>
+                    <p className={styles.summary}>{group.summary}</p>
+                    <div className={styles.resultRightChunk}>
+                      <h5 className={styles.memberCount}>{group.members.length}</h5>
+                      <h5 className={styles.lastActive}>{getTimeDiff(group.lastActive)}</h5>
+                      <h5 className={styles.isPrivate}>{group.isPrivate ? 'Yes' : 'No'}</h5>
+                    </div>
+                  </div>
+                })}
+              </Fragment>
+            ))}
         </div>
       </div>
   )

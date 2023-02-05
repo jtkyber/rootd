@@ -2,13 +2,18 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
 import Group, { IGroup } from '../../models/groupModel';
 
+type Data = {
+  data: IGroup[],
+  cursor: number | null
+}
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<IGroup[]>
+  res: NextApiResponse<Data>
   ) {
     try {
         await connectMongo()
-        const { keyword, characters, books, includePrivate }: any = req.query
+        const { keyword, characters, books, includePrivate, cursor, limit }: any = req.query
         const groups = await Group.find({
           $and: [
             {$or: [
@@ -20,8 +25,11 @@ export default async function handler(
             JSON.parse(books).length ? {'books': {$all: [...JSON.parse(books)]}} : {},
             JSON.parse(includePrivate) === false ? {'isPrivate': {$ne: true}} : {}
           ]
-        }, {messages: 0})
-        res.json(groups)
+        }, {messages: 0}).skip(parseInt(cursor)).limit(parseInt(limit))
+        res.json({
+          data: groups,
+          cursor: groups.length > 2 ? parseInt(cursor) + parseInt(limit) : null
+        })
     } catch(err) {
         console.log(err)
         res.status(400).end(err)
