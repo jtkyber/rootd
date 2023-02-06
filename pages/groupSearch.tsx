@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { ICurSort, setCurrentSort } from '../redux/searchSlice';
 import characters from '../characters.json'
 import books from '../books.json'
+import { useOnScreen } from '../utils/hooks'
 
 interface IOptions {
   keyword: string,
@@ -28,6 +29,7 @@ const groupSearch = () => {
   })
 
   const [page, setPage] = useState()
+  const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
 
   const dispatch = useAppDispatch()
 
@@ -35,18 +37,22 @@ const groupSearch = () => {
 
   const characterSelectorRef: React.MutableRefObject<any> = useRef(null)
   const bookSelectorRef: React.MutableRefObject<any> = useRef(null)
+  const resultsEndRef: React.MutableRefObject<any> = useRef(null)
 
-  // const { data, status } = useQuery({
-  //   queryKey: ['groups', [options, page]], 
-  //   queryFn: () => fetchGroups(page),
-  //   keepPreviousData: true
-  // })
+  const isVisible = useOnScreen(resultsEndRef)
 
   const { data, status, isFetching, fetchNextPage, hasNextPage, error } = useInfiniteQuery(
     ['groups', [options, page]], fetchGroups, {
         getNextPageParam: (lastPage, pages) => lastPage?.cursor
     }
-)
+  )
+
+  useEffect(() => {
+    const now = Date.now()
+    if ((status === 'loading') || isFetching || (now - lastNextPageFetchTime) < 250 || !hasNextPage) return
+    setLastNextPageFetchTime(now)
+    fetchNextPage()
+  }, [isVisible])
 
   async function fetchGroups({ pageParam = 0 }) {
     try {
@@ -130,13 +136,11 @@ const groupSearch = () => {
   }
 
   useEffect(() => sortGroups(), [currentSort])
-  // useEffect(() => {
-  //   console.log(data)
-  // }, [data])
 
   const sortGroups = (): void => {
     if(!data?.pages[0]) return
     const dataTemp = data?.pages.map(page => page.data).flat()
+
     switch(currentSort.name) {
       case 'name':
         if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.name.localeCompare(b.name)) 
@@ -165,37 +169,28 @@ const groupSearch = () => {
           break
     }
 
-    let startingIndex = 0
-    const getStartingIndex = (cursor) => {
-      const startingIndexTemp = startingIndex
-      startingIndex = cursor - 1
-      return startingIndexTemp
+
+    function sliceIntoChunks(arr, chunkSize) {
+      const res: any[] = []
+      for (let i = 0; i < arr.length; i += chunkSize) {
+        const chunk = arr.slice(i, i + chunkSize);
+        res.push(chunk);
+      }
+      return res
     }
 
-    // const newData = {
-    //   ...data,
-    //   pages: data?.pages.map((page, i) => {
-    //     const curStartingIndex = getStartingIndex(page.data.length)
-    //     return {
-    //       ...page,
-    //       data: dataTemp.slice(curStartingIndex, (curStartingIndex > 0 ? curStartingIndex + 1 : 0) + page.data.length)
-    //     } 
-    //   })
-    // }
-
-    // console.log(data, newData)
-        
-    queryClient.setQueryData(['groups', [options, page]], (prev: any) => ({
-      ...data,
-      pages: prev?.pages.map(page => {
-        const curStartingIndex = getStartingIndex(page.data.length)
-        console.log(page.data.length)
-        return {
-          ...page,
-          data: dataTemp.slice(curStartingIndex, (curStartingIndex > 0 ? curStartingIndex + 1 : 0) + page.data.length)
-        } 
-      })
-    }))
+    queryClient.setQueryData(['groups', [options, page]], (prev: any) => {
+      const dataChunked = sliceIntoChunks(dataTemp, prev?.pages[0].cursor)
+      return {
+        ...data,
+        pages: prev?.pages.map((page, i) => {
+          return {
+            ...page,
+            data: dataChunked[i]
+          } 
+        })
+      }
+    })
   }
 
   const handleSortClick = (e) => dispatch(setCurrentSort(e.target.id))
@@ -263,6 +258,7 @@ const groupSearch = () => {
                 })}
               </Fragment>
             ))}
+            <div ref={resultsEndRef} className={styles.resultsEnd}></div>
         </div>
       </div>
   )

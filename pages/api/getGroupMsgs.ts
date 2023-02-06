@@ -22,7 +22,7 @@ export default async function handler(
 
       res.json({
         data: messages,
-        cursor: messages.length > 2 ? parseInt(cursor) + parseInt(limit) : null
+        cursor: messages.length >= parseInt(limit) ? parseInt(cursor) + parseInt(limit) : null
       })
     } catch(err) {
         console.log(err)

@@ -28,7 +28,7 @@ export default async function handler(
         }, {messages: 0}).skip(parseInt(cursor)).limit(parseInt(limit))
         res.json({
           data: groups,
-          cursor: groups.length > 2 ? parseInt(cursor) + parseInt(limit) : null
+          cursor: groups.length >= parseInt(limit) ? parseInt(cursor) + parseInt(limit) : null
         })
     } catch(err) {
         console.log(err)
