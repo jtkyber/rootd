@@ -5,18 +5,33 @@ import { IGroup } from '../models/groupModel'
 import { useEffect } from 'react'
 import styles from '../styles/Home.module.css'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
-import { setSelectedGroup } from '../redux/groupSlice'
+import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
 import ChatBox from '../components/ChatBox'
+import { IUserState, setUser } from '../redux/userSlice'
+import getUser from '../utils/getUser'
 
-const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: any }) => {
+const Home: NextPage = ({ socket }: { socket: any }) => {
   const dispatch = useAppDispatch()
 
   const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
+  const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
+  const user: IUserState = useAppSelector(state => state.user.user)
   
   const { data: session }: any = useSession()
 
   useEffect(() => {
-    dispatch(setSelectedGroup(userGroups[0]))
+    if (session.user) {
+      (async () => {
+        const updatedUser: IUserState = await getUser(session.user.email)
+        if (!user?.bVersion) {
+          if (updatedUser) dispatch(setUser(updatedUser))
+        }
+
+        const userGroups = await axios.get(`${process.env.CURRENT_BASE_URL}/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
+        if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
+      })()
+    }
+
     const rooms = userGroups.map(group => group._id)
     socket.emit('join groups', rooms)
   }, [])
@@ -28,11 +43,11 @@ const Home: NextPage = ({ userGroups, socket }: { userGroups: IGroup[], socket: 
         <>
           <div className={styles.userGroups}>
             {
-              userGroups.map((group, i) => (
+              userGroups?.map((group, i) => (
                 <div 
                 onClick={()=> {dispatch(setSelectedGroup(group))}} 
                 key={i} 
-                className={`${styles.singleGroup} ${group._id === selectedGroup._id ? styles.selectedGroup : null}`}>
+                className={`${styles.singleGroup} ${group._id === selectedGroup._id ? styles.selected : null}`}>
                   <h4 className={styles.groupName}>{group.name}</h4>
                 </div>
               ))
@@ -58,16 +73,15 @@ export async function getServerSideProps({req}) {
     }
   }
 
-  let userGroups: any = []
+  // let userGroups: any = []
   
-  if (session?.user?.groups) {
-    userGroups = await axios.get(`${process.env.CURRENT_BASE_URL}/api/getUserGroups?groupIds=${JSON.stringify(session.user.groups)}`)
-  }
+  // if (session?.user?.groups) {
+  //   userGroups = await axios.get(`${process.env.CURRENT_BASE_URL}/api/getUserGroups?groupIds=${JSON.stringify(session.user.groups)}`)
+  // }
 
   return {
     props: { 
-      session,
-      userGroups: userGroups.data
+      session
     }
   }
 }

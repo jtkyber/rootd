@@ -4,9 +4,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signIn } from 'next-auth/react'
 import styles from '../styles/LogReg.module.css'
+import { useAppDispatch } from '../redux/hooks'
+import axios from 'axios'
+import { IUserState, setUser } from '../redux/userSlice'
+import getUser from '../utils/getUser'
 
 const register: NextPage = () => {
     const router = useRouter()
+    const dispatch = useAppDispatch()
 
     const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
@@ -25,7 +30,20 @@ const register: NextPage = () => {
                 callbackUrl: '/home'
             })
 
-            if (status?.ok) router.replace(`${status?.url}`)
+            if (status?.ok) {
+                const user: IUserState = await getUser(email.value)
+                if (user.bVersion) {
+                    dispatch(setUser({
+                        bVersion: user.bVersion,
+                        groups: user.groups,
+                        notifications: user.notifications,
+                        dmPeople: user.dmPeople,
+                        strikes: user.strikes,
+                        directMsgs: user.directMsgs
+                    }))
+                    router.replace(`${status?.url}`)
+                }
+            }
         } catch (err) {
             console.log(err)
         }

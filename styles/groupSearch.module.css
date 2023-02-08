@@ -139,10 +139,12 @@
         border-top-width: 1px;
         overflow-y: auto;
         display: grid;
-        grid-auto-rows: 4rem;
+        grid-auto-rows: max-content;
 
         & .result {
+            position: relative;
             width: 100%;
+            height: 3.5rem;
             background-color: green;
             border-bottom: 2px solid black;
             display: grid;
@@ -151,15 +153,16 @@
             align-items: center;
             gap: 1rem;
             padding: 0 1rem;
-            cursor: pointer;
             overflow: hidden;
-            
+            cursor: pointer;
+
             &:hover {
                 opacity: 0.6;
             }
-
+            
             & .name {
                 justify-self: start;
+                pointer-events: none;
             }
             
             & .summary {
@@ -170,6 +173,33 @@
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
                 white-space: normal;
+                pointer-events: none;
+            }
+
+            & .joinBtn {
+                display: none;
+            }
+            
+            &.active {
+                height: max-content;
+                min-height: 5rem;
+                padding: 1rem 1rem;
+
+                & .summary {
+                    -webkit-line-clamp: unset;
+                }
+                & .name {
+                    /* align-self: start; */
+                }
+                & .resultRightChunk {
+                    /* align-self: start; */
+                }
+                & .joinBtn {
+                    display: block;
+                    position: absolute;
+                    top: 0.5rem;
+                    right: 1rem;
+                }
             }
 
             & .resultRightChunk {
@@ -178,6 +208,7 @@
                 flex-flow: row nowrap;
                 justify-content: space-between;
                 justify-self: end;
+                pointer-events: none;
             }
             
         }

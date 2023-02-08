@@ -3,11 +3,13 @@ import { IGroup } from "../models/groupModel"
 
 export interface IGroupState {
     socket: any,
+    userGroups: IGroup[]
     selectedGroup: IGroup
 }
 
 const initialState: IGroupState = {
     socket: '',
+    userGroups: [],
     selectedGroup: {
         _id: '',
         name: '',
@@ -30,12 +32,15 @@ export const groupSlice = createSlice({
         setSocket: (state, action: PayloadAction<any>) => {
             state.socket = action.payload
         },
+        setUserGroups: (state, action: PayloadAction<IGroup[]>) => {
+            state.userGroups = action.payload
+        },
         setSelectedGroup: (state, action: PayloadAction<IGroup>) => {
             state.selectedGroup = action.payload
         },
     }
 })
 
-export const { setSocket, setSelectedGroup } = groupSlice.actions
+export const { setSocket, setUserGroups, setSelectedGroup } = groupSlice.actions
 
 export default groupSlice.reducer

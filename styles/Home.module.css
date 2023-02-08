@@ -13,20 +13,21 @@
         height: 90%;
         padding: 1rem 1rem;
         border: 2px solid white;
-        display: flex;
-        flex-flow: column nowrap;
-        justify-content: flex-start;
+        display: grid;
+        grid-auto-rows: max-content;
+        gap: 0.3rem;
+        overflow-y: auto;
 
         & .singleGroup {
-            width: 7rem;
-            height: 7rem;
+            width: 6rem;
+            aspect-ratio: 1/1;
             border: 2px solid white;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
 
-            &.selectedGroup {
+            &.selected {
                 border: 2px solid turquoise;
             }
 

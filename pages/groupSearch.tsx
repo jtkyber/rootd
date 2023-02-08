@@ -3,13 +3,17 @@ import styles from '../styles/GroupSearch.module.css'
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios';
 import debounce from '../utils/debounce';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { IGroup } from '../models/groupModel';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { ICurSort, setCurrentSort } from '../redux/searchSlice';
 import characters from '../characters.json'
 import books from '../books.json'
 import { useOnScreen } from '../utils/hooks'
+import { useRouter } from 'next/router';
+import { IUserState, setUser } from '../redux/userSlice';
+import getUser from '../utils/getUser';
+import { setSelectedGroup } from '../redux/groupSlice';
 
 interface IOptions {
   keyword: string,
@@ -20,6 +24,10 @@ interface IOptions {
 
 const groupSearch = () => {
   const queryClient = useQueryClient()
+
+  const router = useRouter()
+
+  const { data: session }: any = useSession()
 
   const [options, setOptions] = useState<IOptions>({
     keyword: '',
@@ -33,6 +41,7 @@ const groupSearch = () => {
 
   const dispatch = useAppDispatch()
 
+  const user: IUserState = useAppSelector(state => state.user.user)
   const currentSort: ICurSort = useAppSelector(state => state.search.currentSort)
 
   const characterSelectorRef: React.MutableRefObject<any> = useRef(null)
@@ -64,6 +73,13 @@ const groupSearch = () => {
   }
 
   useEffect(() => {
+    if (session.user && !user?.bVersion) {
+      (async () => {
+        const updatedUser: IUserState = await getUser(session.user.email)
+        if (updatedUser) dispatch(setUser(updatedUser))
+      })()
+    }
+
     document.addEventListener('click', handlePageClick)
     return () => document.removeEventListener('click', handlePageClick)
   }, [])
@@ -195,6 +211,26 @@ const groupSearch = () => {
 
   const handleSortClick = (e) => dispatch(setCurrentSort(e.target.id))
 
+  const handleResultClick = (e) => e.target.classList.toggle(styles.active)
+
+  const handleJoinGroup = async (group) => {
+    try {
+      const res = await axios.post('/api/joinGroup', {
+        userId: session.user._id,
+        userName: session.user.username,
+        groupId: group._id,
+      })
+
+      if (res.data.groups.includes(group._id)) {
+        dispatch(setUser({ ...user, groups: res.data.groups }))
+        dispatch(setSelectedGroup(group))
+        router.replace('/home')
+      }
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
   return (
       <div className={styles.container}>
         <div className={styles.searchParams}>
@@ -246,8 +282,13 @@ const groupSearch = () => {
           {data?.pages.map((page, i) => (
               <Fragment key={i}>
                 {page?.data.map((group: IGroup, j) => {
-                  return <div onClick={(e) => e.preventDefault()} className={styles.result} key={j}>
+                  return <div onClick={(e) => handleResultClick(e)} className={styles.result} key={j}>
                     <h3 className={styles.name}>{group.name}</h3>
+                    {
+                      user.groups.includes(group._id)
+                      ? <h5 className={styles.joinBtn}>Joined</h5>
+                      : <button onClick={() => handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
+                    }
                     <p className={styles.summary}>{group.summary}</p>
                     <div className={styles.resultRightChunk}>
                       <h5 className={styles.memberCount}>{group.members.length}</h5>

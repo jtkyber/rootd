@@ -15,7 +15,7 @@ interface IUsr {
     email: string,
     gender: string,
     bVersion: string,
-    groups: objectId[],
+    groups: string[],
     notifications: string[],
     directMsgs: IDm[],
     dmPeople: string[],
