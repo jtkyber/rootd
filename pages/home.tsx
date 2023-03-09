@@ -31,12 +31,15 @@ const Home: NextPage = ({ socket }: { socket: any }) => {
         if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
       })()
     }
-
-    const rooms = userGroups.map(group => group._id)
-    socket.emit('join groups', rooms)
   }, [])
 
-  useEffect(() => {if (userGroups[0]) dispatch(setSelectedGroup(userGroups[0]))}, [userGroups])
+  useEffect(() => {
+    if (userGroups[0]) {
+      dispatch(setSelectedGroup(userGroups[0]))
+      const rooms = userGroups.map(group => group._id)
+      socket.emit('join groups', rooms)
+    }
+  }, [userGroups])
 
   return (
     <div className={styles.container}>

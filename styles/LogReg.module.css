@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: inherit;
+    background-color: $light_grey;
 
     & form {
         width: max-content;

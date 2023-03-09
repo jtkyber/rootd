@@ -1,4 +1,4 @@
-import io from 'Socket.IO-client'
+import io from 'socket.io-client'
 
 const socketInitializer = () => {
     fetch(`${process.env.CURRENT_BASE_URL}/api/socket`)
