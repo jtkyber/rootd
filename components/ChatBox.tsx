@@ -4,9 +4,9 @@ import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import { IGroup, IMsg } from '../models/groupModel'
 import { useState, useEffect, useRef } from 'react'
-import styles from '../styles/Home.module.css'
 import { useAppSelector } from '../redux/hooks'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import styles from '../styles/Home.module.css'
 
 let scrollElementId: string
 

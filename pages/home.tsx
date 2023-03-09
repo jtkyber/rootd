@@ -3,12 +3,12 @@ import { useSession, getSession } from 'next-auth/react'
 import axios from 'axios'
 import { IGroup } from '../models/groupModel'
 import { useEffect } from 'react'
-import styles from '../styles/Home.module.css'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
 import ChatBox from '../components/ChatBox'
 import { IUserState, setUser } from '../redux/userSlice'
 import getUser from '../utils/getUser'
+import styles from '../styles/Home.module.css'
 
 const Home: NextPage = ({ socket }: { socket: any }) => {
   const dispatch = useAppDispatch()

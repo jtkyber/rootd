@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef, Fragment } from 'react';
-import { useRouter } from 'next/router';
-import debounce from '../utils/debounce';
+import React, { useState, useEffect, useRef, Fragment } from 'react'
+import { useRouter } from 'next/router'
+import debounce from '../utils/debounce'
 import axios from 'axios';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { getSession, useSession } from 'next-auth/react';
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { getSession, useSession } from 'next-auth/react'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { ICurSort, setCurrentSort } from '../redux/searchSlice';
-import { IUserState, setUser } from '../redux/userSlice';
-import { setSelectedGroup } from '../redux/groupSlice';
-import { IGroup } from '../models/groupModel';
+import { ICurSort, setCurrentSort } from '../redux/searchSlice'
+import { IUserState, setUser } from '../redux/userSlice'
+import { setSelectedGroup } from '../redux/groupSlice'
+import { IGroup } from '../models/groupModel'
 import { useOnScreen } from '../utils/hooks'
-import getUser from '../utils/getUser';
+import getUser from '../utils/getUser'
 import characters from '../characters.json'
 import books from '../books.json'
 import styles from '../styles/GroupSearch.module.css'
