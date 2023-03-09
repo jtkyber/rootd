@@ -37,7 +37,7 @@ const Home: NextPage = ({ socket }: { socket: any }) => {
     if (userGroups[0]) {
       dispatch(setSelectedGroup(userGroups[0]))
       const rooms = userGroups.map(group => group._id)
-      // socket.emit('join groups', rooms)
+      socket.emit('join groups', rooms)
     }
   }, [userGroups])
 
