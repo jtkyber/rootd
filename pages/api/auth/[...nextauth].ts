@@ -55,4 +55,4 @@ export default NextAuth({
         signIn: '/login',
     },
     secret: process.env.AUTH_SECRET
-})
+}) 
