@@ -27,7 +27,7 @@ const Home: NextPage = ({ socket }: { socket: any }) => {
           if (updatedUser) dispatch(setUser(updatedUser))
         }
 
-        const userGroups = await axios.get(`${process.env.CURRENT_BASE_URL}/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
+        const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
         if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
       })()
     }

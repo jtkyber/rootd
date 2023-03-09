@@ -42,7 +42,7 @@ const register: NextPage = () => {
     }
 
     const handleGoogleSignIn = async () => {
-        signIn('google', { callbackUrl: `${process.env.CURRENT_BASE_URL}/home` })
+        signIn('google', { callbackUrl: `/home` })
     }
 
     return (
