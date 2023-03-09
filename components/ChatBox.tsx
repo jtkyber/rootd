@@ -38,7 +38,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
             onSuccess: (newData) => {
                 addMessage(newData)
                 textAreaRef.current.value = ''
-                socket.emit('update group member msgs', {room: selectedGroup._id, msg: JSON.stringify(newData)})
+                // socket.emit('update group member msgs', {room: selectedGroup._id, msg: JSON.stringify(newData)})
             }
         }
     )
@@ -50,10 +50,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
     )
         
     useEffect(() => {
-        socket.on('fetch new group msgs', data => { 
-            if (data.groupId === selectedGroup._id) addMessage(JSON.parse(data.msg))
-        })
-        return () => socket.off('fetch new group msgs')
+        // socket.on('fetch new group msgs', data => { 
+        //     if (data.groupId === selectedGroup._id) addMessage(JSON.parse(data.msg))
+        // })
+        // return () => socket.off('fetch new group msgs')
     }, [data])
             
     async function fetchGroupMessages ({ pageParam = 0 }) {
