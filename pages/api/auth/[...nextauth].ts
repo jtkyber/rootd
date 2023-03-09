@@ -27,6 +27,7 @@ export default NextAuth({
                     // connectMongo().catch(error => { error: 'Connection Failed'})
                     console.log('test')
                     await connectMongo()
+                    console.log('test2')
     
                     const user = await User.findOne({ email: credentials?.email })
 
