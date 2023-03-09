@@ -5,30 +5,41 @@
     height: 100%;
     display: grid;
     grid-template-columns: max-content 1fr;
-    grid-template-rows: calc(100vh - $nav_height);
+    grid-template-rows: calc(100vh - $nav_height - $footer_height);
     align-items: center;
-
+    background-color: inherit;
+    
     & .userGroups {
-        width: 100%;
-        height: 90%;
+        width: 10rem;
+        height: 100%;
         padding: 1rem 1rem;
-        border: 2px solid white;
         display: grid;
         grid-auto-rows: max-content;
         gap: 0.3rem;
         overflow-y: auto;
+        background-color: inherit;
+        box-shadow: 0 0 0.5rem 0 black;
+        z-index: 100;
+        @mixin miniScrollbar;
 
         & .singleGroup {
-            width: 6rem;
+            width: 100%;
             aspect-ratio: 1/1;
-            border: 2px solid white;
+            background-color: inherit;
+            box-shadow: 0 0 0.5rem 0 black;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
+
+            & h4 {
+                font-weight: 600;
+                color: $red_brown_dark;
+            }
 
             &.selected {
-                border: 2px solid turquoise;
+                box-shadow: inset 0 0 0.5rem 0 black;
             }
 
             & .groupName {
@@ -38,25 +49,30 @@
     }
 
     & .selectedGroup {
-        width: 90%;
-        height: 90%;
-        display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
-        justify-self: center;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 4rem 1fr;
 
         & .selectedGroupName {
             width: 100%;
             text-align: center;
+            box-shadow: 0 0 0.5rem 0 black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 400;
+            color: $red_brown_dark;
         }
 
         & .chatArea {
-            width: 90%;
-            height: 90%;
-            border: 2px solid white;
+            width: 100%;
+            height: 100%;
             display: grid;
             grid-template-columns: 1fr;
             grid-template-rows: 1fr max-content;
+            overflow: hidden;
             
             & .chatBox {
                 width: 100%;
@@ -65,6 +81,7 @@
                 flex-flow: column-reverse nowrap;
                 align-items: flex-end;
                 overflow-y: auto;
+                @mixin customScrollbar;
                 
                 & .messages {
                     padding: 5rem 1rem 1rem 1rem;
@@ -83,30 +100,35 @@
     
                         & .msgAuthor {
                             font-weight: bold;
+                            color: $red_brown;
                         }
     
                         & .msgContent {
                             border-radius: 10px;
+                            border-width: 2px;
+                            border-style: solid;
                             padding: 0.5rem;
                             width: 100%;
                             max-width: max-content;
                             font-weight: lighter;
                             white-space: pre-wrap;
+                            color: $red_brown;
                         }
     
                         & .msgDate {
                             font-weight: lighter;
+                            color: $red_brown;
                         }
     
                         &.userMsg {
                             & .msgContent {
-                                border: 2px solid turquoise;
+                                border-color: $moss_green_vibrant;
                             }
                         }
         
                         &.msgFromOther {
                             & .msgContent {
-                                border: 2px solid white;
+                                border-color: $grey_blue;
                             }
                         }
 
@@ -120,7 +142,7 @@
 
             & .chatInputArea {
                 height: max-content;
-                border-top: 2px solid white;
+                box-shadow: 0 0 0.5rem 0 black;
                 display: flex;
                 flex-flow: row nowrap;
                 justify-content: center;
@@ -131,10 +153,27 @@
                 & .input {
                     resize: none;
                     padding: 0.5rem;
+                    background-color: inherit;
+                    border-radius: 0.5rem;
+                    outline: none;
+                    outline: 1px solid $red_brown;
+                    color: black;
+
+                    &:focus {
+                        outline-width: 2px;
+                    }
                 }
 
                 & .sendMsgBtn {
-                    padding: 0.3rem;
+                    width: max-content;
+                    height: 2rem;
+                    background-color: $red_brown;
+                    border: none;
+                    border-radius: 0.5rem;
+                    color: $light_grey;
+                    padding: 0.5rem;
+
+                    @mixin fadeOnHover;
                 }
             }
         }

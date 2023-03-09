@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import styles from '../styles/GroupSearch.module.css'
-import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios';
+import { useRouter } from 'next/router';
 import debounce from '../utils/debounce';
-import { getSession, useSession } from 'next-auth/react';
-import { IGroup } from '../models/groupModel';
+import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { getSession, useSession } from 'next-auth/react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { ICurSort, setCurrentSort } from '../redux/searchSlice';
+import { IUserState, setUser } from '../redux/userSlice';
+import { setSelectedGroup } from '../redux/groupSlice';
+import { IGroup } from '../models/groupModel';
+import { useOnScreen } from '../utils/hooks'
+import getUser from '../utils/getUser';
 import characters from '../characters.json'
 import books from '../books.json'
-import { useOnScreen } from '../utils/hooks'
-import { useRouter } from 'next/router';
-import { IUserState, setUser } from '../redux/userSlice';
-import getUser from '../utils/getUser';
-import { setSelectedGroup } from '../redux/groupSlice';
+import styles from '../styles/GroupSearch.module.css'
 
 interface IOptions {
   keyword: string,
@@ -58,10 +58,10 @@ const groupSearch = () => {
 
   useEffect(() => {
     const now = Date.now()
-    if ((status === 'loading') || isFetching || (now - lastNextPageFetchTime) < 250 || !hasNextPage) return
+    if (!isVisible || isFetching || (now - lastNextPageFetchTime) < 250 || !hasNextPage) return
     setLastNextPageFetchTime(now)
     fetchNextPage()
-  }, [isVisible])
+  }, [isVisible, status])
 
   async function fetchGroups({ pageParam = 0 }) {
     try {
@@ -234,7 +234,7 @@ const groupSearch = () => {
   return (
       <div className={styles.container}>
         <div className={styles.searchParams}>
-          <input onChange={(e) => onKeywordChange(e.target.value)} type='text' placeholder='Search Groups' />
+          <input className={styles.keywordSearchInput} onChange={(e) => onKeywordChange(e.target.value)} type='text' placeholder='Search Groups' />
 
           <div className={`${styles.selector} ${styles.characters}`}>
             <button onClick={toggleCharacterList} className={styles.selectorBtn}>Characters</button>
@@ -286,7 +286,7 @@ const groupSearch = () => {
                     <h3 className={styles.name}>{group.name}</h3>
                     {
                       user.groups.includes(group._id)
-                      ? <h5 className={styles.joinBtn}>Joined</h5>
+                      ? <h5 className={styles.joined}>Joined</h5>
                       : <button onClick={() => handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
                     }
                     <p className={styles.summary}>{group.summary}</p>

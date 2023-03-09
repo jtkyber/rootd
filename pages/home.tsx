@@ -36,6 +36,8 @@ const Home: NextPage = ({ socket }: { socket: any }) => {
     socket.emit('join groups', rooms)
   }, [])
 
+  useEffect(() => {if (userGroups[0]) dispatch(setSelectedGroup(userGroups[0]))}, [userGroups])
+
   return (
     <div className={styles.container}>
       {

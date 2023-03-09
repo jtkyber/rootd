@@ -5,5 +5,5 @@
     height: 100vh;
     display: grid;
     grid-template-columns: 100vw;
-    grid-template-rows: $nav_height calc(100vh - $nav_height);
+    grid-template-rows: $nav_height calc(100vh - $nav_height - $footer_height) $footer_height;
 }

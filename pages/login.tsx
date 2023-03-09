@@ -59,8 +59,8 @@ const register: NextPage = () => {
                 <h1>Login</h1>
                 <input id="email" type="email" placeholder='email' required />
                 <input id="password" type="password" placeholder='password' required />
-                <input type="submit" />
-                <button onClick={handleGoogleSignIn} type='button' className={styles.buttonCustom}>Sign in with Google</button>
+                <button type="submit">Submit</button>
+                <button onClick={handleGoogleSignIn} className={styles.buttonCustom}>Sign in with Google</button>
                 <Link href='/register' replace>Register</Link>
             </form>
         </div>

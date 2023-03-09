@@ -1,1 +1,46 @@
+$red_brown: rgb(69, 33, 23);
+$red_brown_dark: rgba(27, 13, 9, 0.8);
+$light_grey: rgb(206, 204, 204);
+$moss_green_vibrant: hsl(87, 90%, 30%);
+$moss_green: rgb(116, 142, 84);
+$moss_green_shadow: hsl(88, 25%, 15%);
+$grey_blue: rgb(86, 102, 122);
+$deep_red: rgb(180, 0, 0);
+$deep_red_shadow: hsl(0, 100%, 15%);
 $nav_height: 3.5rem;
+$footer_height: 2rem;
+
+@define-mixin customScrollbar $display: block {
+    &::-webkit-scrollbar {
+      width: 1rem;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+      border: none;
+      border-left: 1px solid $red_brown;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: $red_brown;
+        border-radius: 0.5rem;
+
+        &:hover {
+            background: rgba(69, 33, 23, 0.6);
+        }
+    }
+  }
+
+  @define-mixin miniScrollbar {
+    @mixin customScrollbar;
+    &::-webkit-scrollbar {
+        width: 0.7rem;
+    }
+  }
+
+  @define-mixin fadeOnHover {
+    transition: opacity ease-out 0.15s;
+    &:hover {
+        opacity: 0.6;
+    }
+}

@@ -11,39 +11,66 @@
     "searchParams searchResults";
 
     & .searchParams {
+        position: relative;
         grid-area: searchParams;
         width: 100%;
         height: 100%;
-        border: 2px solid white;
-        border-right: none;
+        box-shadow: 0 0 0.5rem 0 black;
+        background-color: $light_grey;
         display: flex;
         flex-flow: column nowrap;
         justify-content: flex-start;
         align-items: center;
         gap: 1rem;
         padding: 1rem;
+        z-index: 100;
+
+        & .keywordSearchInput {
+            width: 100%;
+            height: 2.2rem;
+            padding: 0.3rem;
+            background-color: inherit;
+            border: 0.1rem solid $red_brown_dark;
+            border-radius: 0.5rem;
+            color: $red_brown_dark;
+            outline: none;
+            margin-bottom: 2rem;
+        }
 
         & .selector {
             position: relative;
             width: 100%;
             height: max-content;
             margin-bottom: 1rem;
-
+            
             & .selectorBtn {
+                position: relative;
+                box-shadow: 0 0 0.5rem 0 black;
+                background-color: $light_grey;
                 padding: 0.8rem 0;
                 width: 100%;
+                border: none;
+                z-index: 1;
+                border-radius: 0.5rem;
+                color: $red_brown;
+                font-size: large;
             }
-
+            
             & .options {
                 position: absolute;
                 display: flex;
                 flex-flow: column nowrap;
+                align-items: center;
                 width: 100%;
                 max-height: 0;
-                background-color: darkgrey;
+                background-color: $light_grey;
                 overflow: auto;
                 overflow-x: hidden;
-                z-index: 1;
+                z-index: 10;
+                box-shadow: 0 0 0.5rem 0 black;
+                border-radius: 0.5rem;
+                transition: max-height 0.2s ease-out;
+                @mixin miniScrollbar;
 
                 &.show {
                     max-height: 50vh;
@@ -52,7 +79,13 @@
                 & .checkboxChunk {
                     display: flex;
                     flex-flow: row nowrap;
-                    width: 100%;
+                    width: 85%;
+                    border-top: 1px solid rgba(0, 0, 0, 0.3);
+                    padding: 0.5rem 0;
+
+                    &:first-child {
+                        border: none;
+                    }
 
                     &:has(input:checked) {
                         background-color: teal;
@@ -66,6 +99,7 @@
                         width: 100%;
                         text-align: center;
                         cursor: pointer;
+                        color: $red_brown;
 
                         &:hover {
                             opacity: 0.6;
@@ -82,20 +116,41 @@
                 
             } */
         }
+
+        & .hidePrivateSection {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            
+            & label {
+                color: $red_brown;
+                font-weight: 600;
+            }
+            
+        }
     }
 
     & .sortContainer {
+        position: relative;
         width: 100%;
         height: 100%;
         grid-area: sortContainer;
+        background-color: $light_grey;
         display: grid;
         grid-template-columns: 8rem 1fr 14rem;
         grid-template-areas: "nameSort summarySort sortRightChunk";
-        border: 2px solid white;
-        border-bottom: none;
-        padding: 0 1rem;
+        box-shadow: 0 0 0.5rem 0 black;
+        padding: 0 2rem;
         align-items: center;
         gap: 1rem;
+        z-index: 10;
+        
+        & h6 {
+            color: $red_brown;
+            cursor: pointer;
+        }
 
         & .nameSort {
             grid-area: nameSort;
@@ -105,6 +160,7 @@
         & .summarySort {
             grid-area: summarySort;
             justify-self: center;
+            cursor: default;
         }
 
         & .sortRightChunk {
@@ -132,21 +188,28 @@
     }
 
     & .searchResults {
+        position: relative;
         grid-area: searchResults;
         width: 100%;
         height: 100%;
-        border: 2px solid white;
-        border-top-width: 1px;
         overflow-y: auto;
         display: grid;
         grid-auto-rows: max-content;
+        justify-items: center;
+        z-index: 1;
+        background-color: $light_grey;
+        gap: 0.4rem;
+        padding: 1rem;
+
+        @mixin customScrollbar;
 
         & .result {
             position: relative;
             width: 100%;
             height: 3.5rem;
-            background-color: green;
-            border-bottom: 2px solid black;
+            background-color: $light_grey;
+            box-shadow: inset 0 0 0.5rem 0 black;
+            border-radius: 0.5rem;
             display: grid;
             grid-template-columns: 8rem 1fr 12rem;
             grid-template-rows: 1fr;
@@ -155,9 +218,11 @@
             padding: 0 1rem;
             overflow: hidden;
             cursor: pointer;
+            color: $red_brown;
 
             &:hover {
-                opacity: 0.6;
+                background-color: $red_brown;
+                color: $light_grey;
             }
             
             & .name {
@@ -176,13 +241,34 @@
                 pointer-events: none;
             }
 
+            & .joined {
+                display: none;
+                color: $moss_green_vibrant;
+                position: absolute;
+                top: 0.5rem;
+                right: 1rem;
+            }
+
             & .joinBtn {
                 display: none;
+                position: absolute;
+                top: 0.5rem;
+                right: 1rem;
+                width: max-content;
+                height: max-content;
+                background-color: $moss_green_vibrant;
+                border: none;
+                border-radius: 0.5rem;
+                color: $red_brown;
+                padding: 0.2rem 0.5rem;
+                font-weight: bold;
+
+                @mixin fadeOnHover;
             }
             
             &.active {
                 height: max-content;
-                min-height: 5rem;
+                min-height: 6rem;
                 padding: 1rem 1rem;
 
                 & .summary {
@@ -194,11 +280,8 @@
                 & .resultRightChunk {
                     /* align-self: start; */
                 }
-                & .joinBtn {
+                & .joinBtn, & .joined {
                     display: block;
-                    position: absolute;
-                    top: 0.5rem;
-                    right: 1rem;
                 }
             }
 

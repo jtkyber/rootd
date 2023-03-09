@@ -52,18 +52,20 @@ const register: NextPage = () => {
                 <input id="username" type="text" placeholder='username' required />
                 <input id="password" type="password" placeholder='password' required />
                 <input id="email" type="email" placeholder='email' required />
-                <select id="gender" name='gender' defaultValue='Gender' required>
-                    <option value="Gender" disabled hidden>Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-                <select id="bVersion" name='bVersion' defaultValue='Prefered Bible Version' required>
-                    <option value="Prefered Bible Version" disabled hidden>Prefered Bible Version</option>
-                    <option value="NIV">NIV</option>
-                    <option value="ESV">ESV</option>
-                </select>
-                <input type="submit" />
-                <button onClick={handleGoogleSignIn} type='button' className={styles.buttonCustom}>Sign in with Google</button>
+                <div className={styles.genderAndVersion}>
+                    <select id="gender" name='gender' defaultValue='Gender' required>
+                        <option value="Gender" disabled hidden>Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <select id="bVersion" name='bVersion' defaultValue='Prefered Bible Version' required>
+                        <option value="Prefered Bible Version" disabled hidden>Prefered Bible Version</option>
+                        <option value="NIV">NIV</option>
+                        <option value="ESV">ESV</option>
+                    </select>
+                </div>
+                <button type="submit">Submit</button>
+                <button onClick={handleGoogleSignIn} className={styles.buttonCustom}>Sign in with Google</button>
                 <Link href='/login' replace>Log In</Link>
             </form>
         </div>

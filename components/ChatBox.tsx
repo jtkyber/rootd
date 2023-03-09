@@ -145,7 +145,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
             <div className={styles.chatInputArea}>
             <textarea ref={textAreaRef} onChange={(e) => setInputValue(e.target.value)} rows={4} cols={40} className={styles.input}></textarea>
             <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
-            <button>Update</button>
             </div>
         </div>
         </div>
