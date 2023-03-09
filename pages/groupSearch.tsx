@@ -22,7 +22,7 @@ interface IOptions {
   includePrivate: boolean
 }
 
-const groupSearch = () => {
+const groupSearch = () => {  
   const queryClient = useQueryClient()
 
   const router = useRouter()
