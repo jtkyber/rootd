@@ -13,6 +13,7 @@ export default async function handler(
   ) {
     try {
         const { username, password } = req.query
+        console.log(req.query)
         await connectMongo()
         
         const user = await User.findOne({ username: username })
