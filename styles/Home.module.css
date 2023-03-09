@@ -10,6 +10,7 @@
     background-color: inherit;
     
     & .userGroups {
+        position: relative;
         width: 10rem;
         height: 100%;
         padding: 1rem 1rem;
@@ -17,7 +18,7 @@
         grid-auto-rows: max-content;
         gap: 0.3rem;
         overflow-y: auto;
-        background-color: inherit;
+        background-color: $light_grey;
         box-shadow: 0 0 0.5rem 0 black;
         z-index: 100;
         @mixin miniScrollbar;
@@ -56,6 +57,7 @@
         grid-template-rows: 4rem 1fr;
 
         & .selectedGroupName {
+            position: relative;
             width: 100%;
             text-align: center;
             box-shadow: 0 0 0.5rem 0 black;
@@ -64,6 +66,7 @@
             align-items: center;
             font-weight: 400;
             color: $red_brown_dark;
+            z-index: 10;
         }
 
         & .chatArea {
