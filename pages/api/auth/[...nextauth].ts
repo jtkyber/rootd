@@ -27,11 +27,10 @@ export default NextAuth({
                     // connectMongo().catch(error => { error: 'Connection Failed'})
                     console.log('test')
                     await connectMongo()
-                    console.log(credentials)
     
                     const user = await User.findOne({ email: credentials?.email })
 
-                    console.log(user)
+                    console.log('test2')
                     if (!user) throw new Error('No user found with email')
     
                     const pwMatch = await bcrypt.compare(credentials?.password, user.password);
