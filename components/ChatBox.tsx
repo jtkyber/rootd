@@ -29,7 +29,6 @@ const ChatBox: React.FC = () => {
     
     const user: IUserState = useAppSelector(state => state.user.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
-    // const channel: any = useAppSelector(state => state.user.channel)
     
     const [channel, setChannel]: any = useState(null)
     const [inputValue, setInputValue] = useState('')
@@ -43,7 +42,7 @@ const ChatBox: React.FC = () => {
             onSuccess: async (newData) => {
                 addMessage(newData)
                 textAreaRef.current.value = ''
-                await axios.get(`/api/pusher/updateGrpMemberMsgs?channelName=${selectedGroup._id}&msg=${JSON.stringify(newData)}`)
+                await axios.get(`/api/pusher/updateGrpMemberMsgs?username=${user.username}&channelName=${selectedGroup._id}&msg=${JSON.stringify(newData)}`)
             }
         }
     )
@@ -79,7 +78,7 @@ const ChatBox: React.FC = () => {
     useEffect(() => {
         if (!channel) return
         channel.bind('fetch-new-group-msgs', data => {
-            addMessage(JSON.parse(data.msg))
+            if (data.username !== user.username) addMessage(JSON.parse(data.msg))
         })
 
         return () => {
