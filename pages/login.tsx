@@ -21,8 +21,6 @@ const register: NextPage = () => {
             const email: HTMLInputElement | null = form.querySelector('#email')
             const password: HTMLInputElement | null = form.querySelector('#password')
 
-            console.log('email: ' + email?.value, 'pw: ' + password?.value)
-            
             if (email == null || password == null) return
     
             const status = await signIn('credentials', {
