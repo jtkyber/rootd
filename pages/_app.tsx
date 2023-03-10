@@ -5,11 +5,9 @@ import { Provider } from 'react-redux'
 import store from '../redux/store'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-// import { myApi } from '../redux/apiSlice'
 import { SessionProvider } from 'next-auth/react'
 import '../styles/globals.css'
 import Layout from '../components/Layout'
-import socketInitializer from '../socketImport'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const [queryClient] = useState(() => new QueryClient({
@@ -30,7 +28,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             <Provider store={store}>
               <QueryClientProvider client={queryClient}>
                 <Layout>
-                  <Component socket={socketInitializer} {...pageProps} />
+                  <Component {...pageProps} />
                 </Layout>
                 <ReactQueryDevtools initialIsOpen={false} />
               </QueryClientProvider>

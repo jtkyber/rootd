@@ -15,13 +15,10 @@ let scrollElementId: string
 interface IGroupId {
   groupId: string
 }
-type ChatBoxProps = {
-    socket: any
-}
 
 let pusher
 
-const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
+const ChatBox: React.FC = () => {
     const textAreaRef: React.MutableRefObject<any> = useRef(null)
     const chatAreaRef: React.MutableRefObject<any> = useRef(null)
     const chatBoxRef: React.MutableRefObject<any> = useRef(null)
@@ -46,7 +43,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
             onSuccess: async (newData) => {
                 addMessage(newData)
                 textAreaRef.current.value = ''
-                // socket.emit('update group member msgs', {room: selectedGroup._id, msg: JSON.stringify(newData)})
                 await axios.get(`/api/pusher/updateGrpMemberMsgs?channelName=${selectedGroup._id}&msg=${JSON.stringify(newData)}`)
             }
         }
@@ -59,7 +55,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
     )
 
     useEffect(() => {
-        console.log(process.env.PUSHER_KEY)
         if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
             pusher = new Pusher(process.env.PUSHER_KEY, {
                 cluster: process.env.PUSHER_CLUSTER,
@@ -91,14 +86,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
             channel.unbind('fetch-new-group-msgs')
         }
     }, [channel, data])
-        
-    // useEffect(() => {
-    //     socket.on('fetch new group msgs', data => { 
-    //         if (data.groupId === selectedGroup._id) addMessage(JSON.parse(data.msg))
-    //     })
-    //     return () => socket.off('fetch new group msgs')
-    // }, [data])
-            
+    
     async function fetchGroupMessages ({ pageParam = 0 }) {
         if (!selectedGroup._id) return null
         try {

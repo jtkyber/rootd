@@ -1,18 +1,16 @@
-import { useState } from 'react'
 import { NextPage } from 'next'
 import { useSession, getSession } from 'next-auth/react'
 import axios from 'axios'
-import Pusher from 'pusher-js'
 import { IGroup } from '../models/groupModel'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
 import ChatBox from '../components/ChatBox'
-import { IUserState, setChannel, setUser } from '../redux/userSlice'
+import { IUserState, setUser } from '../redux/userSlice'
 import getUser from '../utils/getUser'
 import styles from '../styles/Home.module.css'
 
-const Home: NextPage = ({ socket }: { socket: any }) => {
+const Home: NextPage = () => {
   const dispatch = useAppDispatch()
 
   const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
@@ -52,7 +50,7 @@ const Home: NextPage = ({ socket }: { socket: any }) => {
               ))
             }
           </div>
-         <ChatBox socket={socket}/>
+         <ChatBox />
         </>
         : <h1>Not Authorized</h1>
       }
