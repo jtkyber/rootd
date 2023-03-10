@@ -7,6 +7,7 @@ export default async function getUser(email) {
         const user: IUser = res.data
         if (user._id) {
             return {
+                username: user.username,
                 bVersion: user.bVersion,
                 groups: user.groups,
                 notifications: user.notifications,

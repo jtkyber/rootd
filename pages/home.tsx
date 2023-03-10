@@ -1,12 +1,14 @@
+import { useState } from 'react'
 import { NextPage } from 'next'
 import { useSession, getSession } from 'next-auth/react'
 import axios from 'axios'
+import Pusher from 'pusher-js'
 import { IGroup } from '../models/groupModel'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
 import ChatBox from '../components/ChatBox'
-import { IUserState, setUser } from '../redux/userSlice'
+import { IUserState, setChannel, setUser } from '../redux/userSlice'
 import getUser from '../utils/getUser'
 import styles from '../styles/Home.module.css'
 
@@ -32,14 +34,6 @@ const Home: NextPage = ({ socket }: { socket: any }) => {
       })()
     }
   }, [])
-
-  useEffect(() => {
-    if (userGroups[0]) {
-      dispatch(setSelectedGroup(userGroups[0]))
-      const rooms = userGroups.map(group => group._id)
-      socket.emit('join groups', rooms)
-    }
-  }, [userGroups])
 
   return (
     <div className={styles.container}>

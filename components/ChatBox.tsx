@@ -1,5 +1,6 @@
 import React from 'react'
 import { Fragment } from 'react'
+import Pusher from 'pusher-js'
 import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import { IGroup, IMsg } from '../models/groupModel'
@@ -7,6 +8,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import styles from '../styles/Home.module.css'
+import { IUserState } from '../redux/userSlice'
 
 let scrollElementId: string
 
@@ -17,6 +19,8 @@ type ChatBoxProps = {
     socket: any
 }
 
+let pusher
+
 const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
     const textAreaRef: React.MutableRefObject<any> = useRef(null)
     const chatAreaRef: React.MutableRefObject<any> = useRef(null)
@@ -24,9 +28,13 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
     const messagesRef: React.MutableRefObject<any> = useRef(null)
     
     const queryClient = useQueryClient()
+
     
+    const user: IUserState = useAppSelector(state => state.user.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
+    // const channel: any = useAppSelector(state => state.user.channel)
     
+    const [channel, setChannel]: any = useState(null)
     const [inputValue, setInputValue] = useState('')
     
     
@@ -35,10 +43,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
     const sendMessage = useMutation((msgData: (Partial<IMsg> & IGroupId)) => {
         return axios.post('/api/postGroupMsg', msgData)
         }, {
-            onSuccess: (newData) => {
+            onSuccess: async (newData) => {
                 addMessage(newData)
                 textAreaRef.current.value = ''
-                socket.emit('update group member msgs', {room: selectedGroup._id, msg: JSON.stringify(newData)})
+                // socket.emit('update group member msgs', {room: selectedGroup._id, msg: JSON.stringify(newData)})
+                await axios.get(`/api/pusher/updateGrpMemberMsgs?channelName=${selectedGroup._id}&msg=${JSON.stringify(newData)}`)
             }
         }
     )
@@ -48,13 +57,46 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
             getNextPageParam: (lastPage, pages) => lastPage?.cursor
         }
     )
-        
+
     useEffect(() => {
-        socket.on('fetch new group msgs', data => { 
-            if (data.groupId === selectedGroup._id) addMessage(JSON.parse(data.msg))
+        if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
+            pusher = new Pusher(process.env.PUSHER_KEY, {
+                cluster: process.env.PUSHER_CLUSTER,
+                authEndpoint: `/api/pusher/auth`,
+                auth: {params: {username: user.username}}
+            })
+        }
+    }, [user.username])
+
+    useEffect(() => {
+        if (!pusher) return
+        if (selectedGroup) {
+           setChannel(pusher.subscribe(selectedGroup._id))
+        }
+
+        return () => {
+            pusher.unsubscribe(selectedGroup._id)
+            setChannel(null)
+        }
+    }, [selectedGroup])
+
+    useEffect(() => {
+        if (!channel) return
+        channel.bind('fetch-new-group-msgs', data => {
+            addMessage(JSON.parse(data.msg))
         })
-        return () => socket.off('fetch new group msgs')
-    }, [data])
+
+        return () => {
+            channel.unbind('fetch-new-group-msgs')
+        }
+    }, [channel, data])
+        
+    // useEffect(() => {
+    //     socket.on('fetch new group msgs', data => { 
+    //         if (data.groupId === selectedGroup._id) addMessage(JSON.parse(data.msg))
+    //     })
+    //     return () => socket.off('fetch new group msgs')
+    // }, [data])
             
     async function fetchGroupMessages ({ pageParam = 0 }) {
         if (!selectedGroup._id) return null

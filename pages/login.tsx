@@ -30,12 +30,11 @@ const register: NextPage = () => {
                 callbackUrl: '/home'
             })
 
-            console.log('status', status)
-
             if (status?.ok) {
                 const user: IUserState = await getUser(email.value)
-                if (user.bVersion) {
+                if (user.username) {
                     dispatch(setUser({
+                        username: user.username,
                         bVersion: user.bVersion,
                         groups: user.groups,
                         notifications: user.notifications,
