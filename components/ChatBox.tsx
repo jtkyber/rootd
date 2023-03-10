@@ -59,6 +59,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket }: { socket: any }) => {
     )
 
     useEffect(() => {
+        console.log(process.env.PUSHER_KEY)
         if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
             pusher = new Pusher(process.env.PUSHER_KEY, {
                 cluster: process.env.PUSHER_CLUSTER,
