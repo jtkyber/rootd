@@ -24,9 +24,9 @@ export default NextAuth({
             credentials: {},
             async authorize(credentials: ICredentials) {
                 try {
-                    // connectMongo().catch(error => { error: 'Connection Failed'})
                     console.log('test')
-                    await connectMongo()
+                    // await connectMongo()
+                    await connectMongo().catch(error => { error: 'Connection Failed'})
     
                     const user = await User.findOne({ email: credentials?.email })
 
