@@ -33,6 +33,8 @@ const Home: NextPage = () => {
     }
   }, [])
 
+  useEffect(() => { if (userGroups[0]) dispatch(setSelectedGroup(userGroups[0])) }, [userGroups])
+
   return (
     <div className={styles.container}>
       {
