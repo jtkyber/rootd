@@ -1,0 +1,80 @@
+@import '/variables.css';
+
+.selector {
+    position: relative;
+    width: 100%;
+    max-width: 20rem;
+    height: max-content;
+    margin-bottom: 1rem;
+    
+    & .selectorBtn {
+        position: relative;
+        box-shadow: 0 0 0.5rem 0 black;
+        background-color: $light_grey;
+        padding: 0.8rem 0;
+        width: 100%;
+        border: none;
+        z-index: 1;
+        border-radius: 0.5rem;
+        color: $red_brown;
+        font-size: large;
+    }
+    
+    & .options {
+        position: absolute;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        width: 100%;
+        max-height: 0;
+        background-color: $light_grey;
+        overflow: auto;
+        overflow-x: hidden;
+        z-index: 10;
+        box-shadow: 0 0 0.5rem 0 black;
+        border-radius: 0.5rem;
+        transition: max-height 0.2s ease-out;
+        @mixin miniScrollbar;
+
+        &.show {
+            max-height: 50vh;
+        }
+
+        & .checkboxChunk {
+            display: flex;
+            flex-flow: row nowrap;
+            width: 85%;
+            border-top: 1px solid rgba(0, 0, 0, 0.3);
+            
+            &:first-child {
+                border: none;
+            }
+
+            &:has(input:checked) {
+                width: 100%;
+                background-color: $red_brown;
+                border-top-color: $light_grey;
+                
+                & label {
+                    color: $light_grey;
+                }
+            }
+
+            & input {
+                display: none;
+            }
+
+            & label {
+                width: 100%;
+                text-align: center;
+                cursor: pointer;
+                color: $red_brown;
+                padding: 0.5rem 0;
+
+                &:hover {
+                    opacity: 0.6;
+                }
+            }
+        }
+    }
+}

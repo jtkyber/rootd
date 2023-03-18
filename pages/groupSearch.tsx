@@ -11,8 +11,10 @@ import { setSelectedGroup } from '../redux/groupSlice'
 import { IGroup } from '../models/groupModel'
 import { useOnScreen } from '../utils/hooks'
 import getUser from '../utils/getUser'
+import DropDown from '../components/DropDown'
+import GroupCreation from '../components/GroupCreation'
 import characters from '../characters.json'
-import books from '../books.json'
+import bookNames from '../bookNames.json'
 import styles from '../styles/GroupSearch.module.css'
 
 interface IOptions {
@@ -37,6 +39,9 @@ const groupSearch = () => {
   })
 
   const [page, setPage] = useState()
+
+  const [creatingGroup, setCreatingGroup] = useState(false)
+
   const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
 
   const dispatch = useAppDispatch()
@@ -44,8 +49,6 @@ const groupSearch = () => {
   const user: IUserState = useAppSelector(state => state.user.user)
   const currentSort: ICurSort = useAppSelector(state => state.search.currentSort)
 
-  const characterSelectorRef: React.MutableRefObject<any> = useRef(null)
-  const bookSelectorRef: React.MutableRefObject<any> = useRef(null)
   const resultsEndRef: React.MutableRefObject<any> = useRef(null)
 
   const isVisible = useOnScreen(resultsEndRef)
@@ -96,16 +99,6 @@ const groupSearch = () => {
     e.target.checked 
     ? setOptions({...options, characters: [...options.characters, e.target.value]})
     : setOptions({...options, characters: [...options.characters.filter(item => item !== e.target.value)]})
-  }
-
-  const toggleCharacterList = (e): void => {
-    e.preventDefault()
-    characterSelectorRef.current.classList.toggle(styles.show)
-  }
-
-  const toggleBookList = (e): void => {
-    e.preventDefault()
-    bookSelectorRef.current.classList.toggle(styles.show)
   }
 
   const checkParent = (parent, child) => {
@@ -236,39 +229,18 @@ const groupSearch = () => {
         <div className={styles.searchParams}>
           <input className={styles.keywordSearchInput} onChange={(e) => onKeywordChange(e.target.value)} type='text' placeholder='Search Groups' />
 
-          <div className={`${styles.selector} ${styles.characters}`}>
-            <button onClick={toggleCharacterList} className={styles.selectorBtn}>Characters</button>
-            <div id='characterOptions' ref={characterSelectorRef} className={styles.options}>
-              {
-                characters.map((character, i) => (
-                  <div key={i} className={styles.checkboxChunk}>
-                    <input type='checkbox' onChange={(e) => onCharacterChange(e)} id={character} name={character} value={character} />
-                    <label htmlFor={character}>{character}</label>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
+          <DropDown idEnd='characters1' key='characters1' name='Characters' optionArray={characters} onSelection={onCharacterChange} />
 
-          <div className={`${styles.selector} ${styles.books}`}>
-            <button onClick={toggleBookList} className={styles.selectorBtn}>Books</button>
-            <div id='bookOptions' ref={bookSelectorRef} className={styles.options}>
-              {
-                books.map((book, i) => (
-                  <div key={i} className={styles.checkboxChunk}>
-                    <input type='checkbox' onChange={(e) => onBookChange(e)} id={book.book + '-book'} name={book.book} value={book.book} />
-                    <label className={styles.bookLabel} htmlFor={book.book + '-book'}>{book.book}</label>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
+          <DropDown idEnd='books1' key='books1' name='Books' optionArray={bookNames} onSelection={onBookChange} />
           
           <div className={styles.hidePrivateSection}>
             <label htmlFor='hidePrivate'>Hide Private Groups</label>
             <input onChange={(e) => setOptions({...options, includePrivate: !e.target.checked})} id='hidePrivate' type='checkbox' />
           </div>
+
+          <button onClick={() => setCreatingGroup(true)} className={styles.groupCreation}>Create a New Group</button>
         </div>
+
         <div className={styles.sortContainer}>
           <h6 id='name' onClick={(e) => handleSortClick(e)} className={styles.nameSort}>Name {currentSort.name === 'name' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
           <h6 className={styles.summarySort}>Summary</h6>
@@ -301,6 +273,8 @@ const groupSearch = () => {
             ))}
             <div ref={resultsEndRef} className={styles.resultsEnd}></div>
         </div>
+
+        {creatingGroup ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={session.user._id} /> : null}
       </div>
   )
 }

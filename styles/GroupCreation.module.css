@@ -1,0 +1,244 @@
+@import 'variables.css';
+
+.container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & .groupCreationContainer {
+        width: 40rem;
+        height: 16rem;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 1rem;
+        padding: 1rem;
+
+        & .progressMap {
+            width: max-content;
+            height: 90%;
+            padding: 1rem;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            gap: 0.5rem;
+            border-right: 2px solid $red_brown_dark;
+
+            & button {
+                background-color: transparent;
+                border: none;
+                text-align: left;
+                color: $red_brown_dark;
+                font-weight: 600;
+
+                &:disabled {
+                    opacity: 0.6;
+                    pointer-events: none;
+                }
+
+                @mixin fadeOnHover;
+            }
+        }
+
+        & .section {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: max-content max-content 1fr max-content;
+            justify-items: center;
+
+            & .exitBtn {
+                justify-self: end;
+                background-color: transparent;
+                border: none;
+                color: black;
+                font-weight: 600;
+
+                @mixin fadeOnHover;
+            }
+
+            & .sectionTitle {
+
+                margin-bottom: 1rem;
+                color: $red_brown_dark;
+            }
+
+            & .sectionContent {
+                align-self: center;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                & .tagContainer {
+                    width: 100%;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    align-items: center;
+
+                    & .tags {
+                        display: flex;
+                        flex-flow: row wrap;
+                        justify-content: center;
+                        gap: 0.5rem;
+                        margin-bottom: 0.3rem;
+                        
+                        & .tag {
+                            position: relative;
+                            padding: 0.2rem 0.5rem;
+                            cursor: pointer;
+                            border: 1px solid $red_brown_dark;
+                            border-radius: 0.5rem;
+                            overflow: hidden;
+                            color: $red_brown_dark;
+
+                            &::after {
+                                position: absolute;
+                                content: "X";
+                                left: 50%;
+                                top: 50%;
+                                transform: translate(-50%, -50%);
+                                width: 100%;
+                                height: 100%;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                background-color: transparent;
+                                color: $deep_red;
+                                opacity: 0;
+                                font-size: medium;
+                                font-weight: 600;
+                            }
+
+                            &:hover::after {
+                                opacity: 1;
+                            }
+
+                            &:hover {
+                                color: transparent;
+                            }
+                        }
+                    }
+
+                    & .tagInputContainer {
+                        width: max-content;
+                        position: relative;
+                        display: flex;
+                        flex-flow: row nowrap;
+                        border: 2px solid black;
+                        border-radius: 1rem;
+                        overflow: hidden;
+                        box-shadow: $shadow;
+
+                        & .addTagBtn {
+                            position: absolute;
+                            right: 0;
+                            top: -4px;
+                            width: max-content;
+                            padding: 0rem 0.8rem;
+                            height: calc(100% + 8px);
+                            background-color: $moss_green_vibrant;
+                            border: 2px solid black;
+                            border-right: none;
+                            border-top-left-radius: 50%;
+                            border-bottom-left-radius: 50%;
+                            color: $red_brown_dark;
+                            font-size: larger;
+                            font-weight: 400;
+                            transition: opacity linear .1s;
+
+                            &:disabled {
+                                opacity: 0.6;
+                                cursor: not-allowed;
+                            }
+
+                            &:hover {
+                                opacity: 0.6;
+                            }
+                        }
+
+                        & .tagInput {
+                            border: none;
+                            border-radius: 0;
+                            padding-right: 2.5rem;
+                        }
+                    }
+                }
+
+                & input {
+                    width: 15rem;
+                    height: 2.2rem;
+                    padding: 0.3rem;
+                    background-color:transparent;
+                    border: 1px solid $red_brown_dark;
+                    border-radius: 0.5rem;
+                    color: $red_brown_dark;
+                    outline: none;
+                    box-shadow: $shadow;
+
+                    &:focus {
+                        outline: none;
+                        border-width: 2px;
+                    }
+                }
+
+                & .summary {
+                    background-color: transparent;
+                    border: 1px solid $red_brown_dark;
+                    padding: 0.5rem;
+                    border-radius: 0.5rem;
+                    resize: none;
+                    width: 80%;
+                    height: 90%;
+                    color: $red_brown_dark;
+                    box-shadow: $shadow;
+
+                    &:focus {
+                        outline: none;
+                        border-width: 2px;
+                    }
+                }
+
+                & .isPrivateContainer {
+                    display: flex;
+                    flex-flow: row nowrap;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 1rem;
+
+                    & input {
+                        width: 1rem;
+                        aspect-ratio: 1/1;
+                        box-shadow: none;
+                    }
+
+                    & label {
+                        color: $red_brown_dark;
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            & .nextBtn {
+                background-color: $red_brown;
+                border: none;
+                border-radius: 0.5rem;
+                color: $light_grey;
+                width: 4rem;
+                height: 2rem;
+                justify-self: end;
+
+                @mixin fadeOnHover;
+            }
+        }
+    }
+}

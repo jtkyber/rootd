@@ -22,7 +22,7 @@ export default async function handler(
 
         const group = await Group.findByIdAndUpdate(groupId, { $push: {members: userName}}, { new: true })
         if (group.members.includes(userName)) {
-            const user = await User.findByIdAndUpdate(userId, { $push: {groups: groupId}}, { new: true })
+            const user = await User.findByIdAndUpdate(userId, { $push: {groups: {$each: [groupId], $position: 0}}}, { new: true })
             res.json(user)
         } else throw new Error('User not able to be added to group')
 
