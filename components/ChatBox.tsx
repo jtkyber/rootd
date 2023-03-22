@@ -153,7 +153,7 @@ const ChatBox: React.FC = () => {
     }
 
     const setNewMsgLikes = (msg, isAdded, liker = user.username) => {
-        console.log(msg, 'is added: ' + isAdded, 'liker: ' + liker, 'user: ' + user.username)
+        console.log(Date.now(), 'is added: ' + isAdded, 'liker: ' + liker, 'user: ' + user.username)
         queryClient.setQueryData(['groupMessages', selectedGroup._id], (prev: any) => {
             return {
                 ...data,
