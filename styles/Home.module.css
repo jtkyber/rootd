@@ -1,6 +1,7 @@
 @import 'variables.css';
 
 .container {
+    position: relative;
     width: 100%;
     height: 100%;
     display: grid;
@@ -13,13 +14,13 @@
         position: relative;
         width: max-content;
         height: 100%;
-        padding: 1rem 1rem;
+        padding: 1rem 1rem 1rem 1rem;
         display: grid;
         grid-auto-rows: max-content;
         gap: 0.3rem;
         overflow-y: auto;
         background-color: $light_grey;
-        box-shadow: 0 0 0.5rem 0 black;
+        box-shadow: $sectionShadow;
         z-index: 100;
         @mixin miniScrollbar;
 
@@ -27,12 +28,13 @@
             width: 8rem;
             height: 8rem;
             background-color: inherit;
-            box-shadow: 0 0 0.5rem 0 black;
+            box-shadow: $sectionShadow;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 1rem;
+            cursor: pointer;
 
             & h4 {
                 width: 100%;
@@ -42,7 +44,7 @@
             }
 
             &.selected {
-                box-shadow: inset 0 0 0.5rem 0 black;
+                box-shadow: inset $sectionShadow;
             }
 
             & .groupName {
@@ -52,6 +54,7 @@
     }
 
     & .selectedGroup {
+        position: relative;
         width: 100%;
         height: 100%;
         display: grid;
@@ -62,7 +65,7 @@
             position: relative;
             width: 100%;
             text-align: center;
-            box-shadow: 0 0 0.5rem 0 black;
+            box-shadow: $sectionShadow;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -103,13 +106,14 @@
                         display: flex;
                         flex-flow: column nowrap;
                         gap: 0.2rem;
-    
+                        
                         & .msgAuthor {
                             font-weight: bold;
                             color: $red_brown;
                         }
-    
+                        
                         & .msgContent {
+                            position: relative;
                             border-radius: 10px;
                             border-width: 2px;
                             border-style: solid;
@@ -119,6 +123,36 @@
                             font-weight: lighter;
                             white-space: pre-wrap;
                             color: $red_brown;
+
+                            & .msgLikes {
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                width: 1rem;
+                                height: max-content;
+                                transform: translate(50%, -50%);
+                                display: flex;
+                                flex-flow: row nowrap;
+                                gap: 0.2rem;
+                                
+                                & .msgLikeIcon {
+                                    width: 100%;
+                                    height: auto;
+                                    background-color: $light_grey;
+                                    cursor: pointer;
+                                    overflow: visible;
+
+                                    &.isAuthor {
+                                        cursor: default;
+                                    }
+                                }
+
+                                & .msgLikeNumber {
+                                    font-weight: 400;
+                                    line-height: 1rem;
+                                }
+                            }
+                            
                         }
     
                         & .msgDate {
@@ -130,11 +164,19 @@
                             & .msgContent {
                                 border-color: $moss_green_vibrant;
                             }
+
+                            & .msgAuthor {
+                                color: $moss_green_vibrant;
+                            }
                         }
         
                         &.msgFromOther {
                             & .msgContent {
                                 border-color: $grey_blue;
+                            }
+
+                            & .msgAuthor {
+                                color: $grey_blue;
                             }
                         }
 
@@ -160,7 +202,7 @@
 
             & .chatInputArea {
                 height: max-content;
-                box-shadow: 0 0 0.5rem 0 black;
+                box-shadow: $sectionShadow;
                 display: flex;
                 flex-flow: row nowrap;
                 justify-content: center;
@@ -193,6 +235,78 @@
 
                     @mixin fadeOnHover;
                 }
+            }
+        }
+        
+        & .groupDetails {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 15rem;
+            height: 100%;
+            background-color: $light_grey;
+            box-shadow: none;
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+            color: $red_brown;
+            gap: 0.5rem;
+            z-index: 100;
+            transform: translate(100%);
+            transition: transform ease-in 0.2s, box-shadow 0s 0.2s;
+            
+            &.show {
+                transition: transform ease-out 0.2s, box-shadow 0s 0s;
+                transform: translate(0);
+                box-shadow: $sectionShadow;
+            }
+            
+            & .name {
+                font-weight: 600;
+                text-align: center;
+                width: 100%;
+            }
+
+            & .summary {
+                font-weight: 400;
+            }
+
+            & .expandGroupDetailsBtn {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 2.5rem;
+                aspect-ratio: 1/1;
+                align-self: flex-start;
+                background-color: transparent;
+                border: none;
+                z-index: 100;
+                overflow: hidden;
+                transform-origin: center;
+                transition: transform ease-in 0.2s;
+                transform: rotate(0) translate(-2.5rem);
+                margin-top: 0.8rem;
+                
+                &.show {
+                    transition: transform ease-out 0.2s;
+                    transform: rotate(180deg);
+                }
+                
+                & .arrow {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    background-color: $light_grey;
+                    box-shadow: inset 0 0 0.3rem 0 rgba(0, 0, 0, 1);
+                    border: 1px solid $light_grey;
+                    transform-origin: center;
+                    transform: rotate(45deg) translate(50%, -50%);
+                }
+            
             }
         }
     }

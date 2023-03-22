@@ -35,7 +35,7 @@
         border-radius: 0.5rem;
         transition: max-height 0.2s ease-out;
         @mixin miniScrollbar;
-
+        
         &.show {
             max-height: 50vh;
         }
@@ -48,6 +48,10 @@
             
             &:first-child {
                 border: none;
+            }
+
+            &:last-child {
+                margin-bottom: 50%;
             }
 
             &:has(input:checked) {
@@ -70,6 +74,7 @@
                 cursor: pointer;
                 color: $red_brown;
                 padding: 0.5rem 0;
+                margin-left: $miniScrollbarWidth;
 
                 &:hover {
                     opacity: 0.6;

@@ -10,6 +10,8 @@ $deep_red_shadow: hsl(0, 100%, 15%);
 $nav_height: 3.5rem;
 $footer_height: 2rem;
 $shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.5);
+$sectionShadow: 0 0 0.5rem 0 black;
+$miniScrollbarWidth: 0.7rem;
 
 @define-mixin customScrollbar $display: block {
     &::-webkit-scrollbar {
@@ -35,7 +37,7 @@ $shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.5);
   @define-mixin miniScrollbar {
     @mixin customScrollbar;
     &::-webkit-scrollbar {
-        width: 0.7rem;
+        width: $miniScrollbarWidth;
     }
   }
 

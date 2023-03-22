@@ -13,12 +13,11 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { groupId, author, content, date, likes, psgReference }: any = req.body
+        const { groupId, author, content, date, psgReference }: any = req.body
         const msg: Partial<IMsg> = {
             author,
             content,
             date,
-            likes,
             psgReference
         }
         

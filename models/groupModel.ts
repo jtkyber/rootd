@@ -9,7 +9,7 @@ interface IMessage {
     author: string,
     content: string,
     date: Date | number,
-    likes: number,
+    likes: string[],
     psgReference?: string
 }
 
@@ -18,7 +18,7 @@ export interface IMsg {
     author: string,
     content: string,
     date: Date | number,
-    likes: number,
+    likes: string[],
     psgReference?: string
 }
 
@@ -49,7 +49,7 @@ export const msgSchema = new Schema<IMessage>({
     author: String,
     content: String,
     date: Date,
-    likes: Number,
+    likes: [String],
     psgReference: {
         type: String,
         required: false
@@ -103,6 +103,6 @@ const groupSchema = new Schema<IGrp>({
     }
 })
 
-const Group = models.Group || model('Group', groupSchema, 'groups')
+const Group = models.Group1 || model('Group1', groupSchema, 'groups')
 
 export default Group

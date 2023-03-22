@@ -226,55 +226,61 @@ const groupSearch = () => {
 
   return (
       <div className={styles.container}>
-        <div className={styles.searchParams}>
-          <input className={styles.keywordSearchInput} onChange={(e) => onKeywordChange(e.target.value)} type='text' placeholder='Search Groups' />
-
-          <DropDown idEnd='characters1' key='characters1' name='Characters' optionArray={characters} onSelection={onCharacterChange} />
-
-          <DropDown idEnd='books1' key='books1' name='Books' optionArray={bookNames} onSelection={onBookChange} />
-          
-          <div className={styles.hidePrivateSection}>
-            <label htmlFor='hidePrivate'>Hide Private Groups</label>
-            <input onChange={(e) => setOptions({...options, includePrivate: !e.target.checked})} id='hidePrivate' type='checkbox' />
-          </div>
-
-          <button onClick={() => setCreatingGroup(true)} className={styles.groupCreation}>Create a New Group</button>
-        </div>
-
-        <div className={styles.sortContainer}>
-          <h6 id='name' onClick={(e) => handleSortClick(e)} className={styles.nameSort}>Name {currentSort.name === 'name' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
-          <h6 className={styles.summarySort}>Summary</h6>
-          <div className={styles.sortRightChunk}>
-            <h6 id='members' onClick={(e) => handleSortClick(e)} className={styles.memberSort}>Members {currentSort.name === 'members' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
-            <h6 id='lastActive' onClick={(e) => handleSortClick(e)} className={styles.lastActiveSort}>Last Active {currentSort.name === 'lastActive' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
-            <h6 id='isPrivate' onClick={(e) => handleSortClick(e)} className={styles.privateSort}>Private {currentSort.name === 'isPrivate' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
-          </div>
-        </div>
-        <div className={styles.searchResults}>
-          {data?.pages.map((page, i) => (
-              <Fragment key={i}>
-                {page?.data.map((group: IGroup, j) => {
-                  return <div onClick={(e) => handleResultClick(e)} className={styles.result} key={j}>
-                    <h3 className={styles.name}>{group.name}</h3>
-                    {
-                      user.groups.includes(group._id)
-                      ? <h5 className={styles.joined}>Joined</h5>
-                      : <button onClick={() => handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
-                    }
-                    <p className={styles.summary}>{group.summary}</p>
-                    <div className={styles.resultRightChunk}>
-                      <h5 className={styles.memberCount}>{group.members.length}</h5>
-                      <h5 className={styles.lastActive}>{getTimeDiff(group.lastActive)}</h5>
-                      <h5 className={styles.isPrivate}>{group.isPrivate ? 'Yes' : 'No'}</h5>
-                    </div>
-                  </div>
-                })}
-              </Fragment>
-            ))}
-            <div ref={resultsEndRef} className={styles.resultsEnd}></div>
-        </div>
-
-        {creatingGroup ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={session.user._id} /> : null}
+        {
+          session ?
+          <>
+            <div className={styles.searchParams}>
+              <input className={styles.keywordSearchInput} onChange={(e) => onKeywordChange(e.target.value)} type='text' placeholder='Search Groups' />
+    
+              <DropDown idEnd='characters1' key='characters1' name='Characters' optionArray={characters} onSelection={onCharacterChange} />
+    
+              <DropDown idEnd='books1' key='books1' name='Books' optionArray={bookNames} onSelection={onBookChange} />
+              
+              <div className={styles.hidePrivateSection}>
+                <label htmlFor='hidePrivate'>Hide Private Groups</label>
+                <input onChange={(e) => setOptions({...options, includePrivate: !e.target.checked})} id='hidePrivate' type='checkbox' />
+              </div>
+    
+              <button onClick={() => setCreatingGroup(true)} className={styles.groupCreation}>Create a New Group</button>
+            </div>
+    
+            <div className={styles.sortContainer}>
+              <h6 id='name' onClick={(e) => handleSortClick(e)} className={styles.nameSort}>Name {currentSort.name === 'name' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
+              <h6 className={styles.summarySort}>Summary</h6>
+              <div className={styles.sortRightChunk}>
+                <h6 id='members' onClick={(e) => handleSortClick(e)} className={styles.memberSort}>Members {currentSort.name === 'members' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
+                <h6 id='lastActive' onClick={(e) => handleSortClick(e)} className={styles.lastActiveSort}>Last Active {currentSort.name === 'lastActive' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
+                <h6 id='isPrivate' onClick={(e) => handleSortClick(e)} className={styles.privateSort}>Private {currentSort.name === 'isPrivate' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
+              </div>
+            </div>
+            <div className={styles.searchResults}>
+              {data?.pages.map((page, i) => (
+                  <Fragment key={i}>
+                    {page?.data.map((group: IGroup, j) => {
+                      return <div onClick={(e) => handleResultClick(e)} className={styles.result} key={j}>
+                        <h3 className={styles.name}>{group.name}</h3>
+                        {
+                          user.groups.includes(group._id)
+                          ? <h5 className={styles.joined}>Joined</h5>
+                          : <button onClick={() => handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
+                        }
+                        <p className={styles.summary}>{group.summary}</p>
+                        <div className={styles.resultRightChunk}>
+                          <h5 className={styles.memberCount}>{group.members.length}</h5>
+                          <h5 className={styles.lastActive}>{getTimeDiff(group.lastActive)}</h5>
+                          <h5 className={styles.isPrivate}>{group.isPrivate ? 'Yes' : 'No'}</h5>
+                        </div>
+                      </div>
+                    })}
+                  </Fragment>
+                ))}
+                <div ref={resultsEndRef} className={styles.resultsEnd}></div>
+            </div>
+    
+            {creatingGroup ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={session.user._id} /> : null}
+          </>
+          : <h1>Not Authorized</h1>
+        }
       </div>
   )
 }

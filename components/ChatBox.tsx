@@ -9,6 +9,7 @@ import { useAppSelector } from '../redux/hooks'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import styles from '../styles/Home.module.css'
 import { IUserState } from '../redux/userSlice'
+import LikeIcon from '../components/LikeIcon'
 
 let scrollElementId: string
 
@@ -17,6 +18,8 @@ interface IGroupId {
 }
 
 let pusher
+let lastMsgClickedDate
+let lastMsgClicked
 
 const ChatBox: React.FC = () => {
     const textAreaRef: React.MutableRefObject<any> = useRef(null)
@@ -26,12 +29,12 @@ const ChatBox: React.FC = () => {
     
     const queryClient = useQueryClient()
 
-    
     const user: IUserState = useAppSelector(state => state.user.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
     
     const [channel, setChannel]: any = useState(null)
     const [inputValue, setInputValue] = useState('')
+    const [detailedExpanded, setDetailedExpanded] = useState(false)
     
     
     const { data: session }: any = useSession()
@@ -46,7 +49,8 @@ const ChatBox: React.FC = () => {
             }
         }
     )
-        
+
+    
     const { data, status, isFetching, fetchNextPage, hasNextPage, error } = useInfiniteQuery(
         ['groupMessages', selectedGroup._id], fetchGroupMessages, {
             getNextPageParam: (lastPage, pages) => lastPage?.cursor
@@ -81,10 +85,19 @@ const ChatBox: React.FC = () => {
             if (data.username !== user.username) addMessage(JSON.parse(data.msg))
         })
 
+        channel.bind('set-msg-like', data => {
+            if (data.liker === user.username) return
+            if (data.isAdded) {
+                setNewMsgLikes(data.msg, true, data.liker)
+            }
+            else setNewMsgLikes(data.msg, false, data.liker)
+        })
+
         return () => {
             channel.unbind('fetch-new-group-msgs')
+            channel.unbind('set-msg-like')
         }
-    }, [channel, data])
+    }, [channel, data, user.username])
     
     async function fetchGroupMessages ({ pageParam = 0 }) {
         if (!selectedGroup._id) return null
@@ -122,7 +135,6 @@ const ChatBox: React.FC = () => {
             author: session.user.username,
             content: inputValue,
             date: new Date,
-            likes: 0,
             psgReference: ''
         }
 
@@ -137,46 +149,107 @@ const ChatBox: React.FC = () => {
         chatBoxRef.current.scrollBy(0, -100)
         scrollElementId = ''
     }
-  
+
+    const setNewMsgLikes = (msg, isAdded, liker = user.username) => {
+        queryClient.setQueryData(['groupMessages', selectedGroup._id], (prev: any) => {
+            return {
+                ...data,
+                pages: prev?.pages.map((page, i) => {
+                    return {
+                        ...page,
+                  data: page.data.map((m, j) => {
+                    return {
+                        ...m,
+                        likes: m._id === msg._id ? 
+                            isAdded ? [...m.likes, liker] : m.likes.filter(like => like !== liker)
+                        : m.likes
+                    }
+                  })
+                } 
+              })
+            }
+        })
+    }
+
+    const postMsgLike = async (msg) => {
+        const res = await axios.post('/api/addMsgLike', {
+            msg: msg,
+            name: user.username,
+            channel: selectedGroup._id
+        })
+        if (res.data) setNewMsgLikes(msg, true) 
+        else setNewMsgLikes(msg, false)
+    }
+
+    const handleMsgLikeClick = (msg: IMsg, e?: React.TouchEvent<HTMLDivElement>): void => {
+        if (msg.author === user.username) return
+        const timeSinceLastMsgClick = Date.now() - lastMsgClickedDate
+        lastMsgClickedDate = Date.now()
+
+        if (!e)  postMsgLike(msg)
+        else if ((lastMsgClicked === e.target) && timeSinceLastMsgClick > 0 && timeSinceLastMsgClick < 300) postMsgLike(msg) 
+        else lastMsgClicked = e.target
+    }
+
+    const likedByUser = (msg: IMsg): boolean => {
+        if (msg.likes.includes(user.username)) return true
+        return false
+    }
+
     return (
         <div className={styles.selectedGroup}>
-        <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
-        <div ref={chatAreaRef} className={styles.chatArea}>
-            <div ref={chatBoxRef} className={styles.chatBox}>
-            <div ref={messagesRef} className={styles.messages}>
-                {data?.pages.map((page, i, row1) => (
-                <Fragment key={i}>
-                    {page?.data.map((msg, j, row2) => {
-                        const dateObj = new Date(msg.date)
-                        const date = dateObj.toLocaleDateString()
-                        const time = dateObj.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}).replace(/\s+/g, '').toLocaleLowerCase()
-                        return (
-                        <div key={j} id={msg._id} 
-                            className={`
-                            ${styles.msg} 
-                            ${msg.author === session.user.username ? styles.userMsg : styles.msgFromOther}
-                            ${(i+1 === row1.length) && (j+1 === row2.length) ? styles.earliestMsg : null}
-                            `}
-                        >
-                            <h5 className={styles.msgAuthor}>{msg.author}</h5>
-                            <h4 className={styles.msgContent}>{msg.content}</h4>
-                            <h6 className={styles.msgDate}>{`${isToday(dateObj) ? '' : date + ' '}${time}`}</h6>
-                        </div>
-                        )
-                    })}
-                    </Fragment>
-                ))}
-                {hasNextPage 
-                    ? <button onClick={() => handleLoadMoreClick()} className={styles.loadMoreMsgsBtn}>Load More</button>
-                    : null}
-            </div>
-            </div>
+            <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
+            <div ref={chatAreaRef} className={styles.chatArea}>
+                <div ref={chatBoxRef} className={styles.chatBox}>
+                    <div ref={messagesRef} className={styles.messages}>
+                        {data?.pages.map((page, i, row1) => (
+                        <Fragment key={i}>
+                            {page?.data.map((msg: IMsg, j, row2) => {
+                                const dateObj = new Date(msg.date)
+                                const date = dateObj.toLocaleDateString()
+                                const time = dateObj.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}).replace(/\s+/g, '').toLocaleLowerCase()
+                                return (
+                                <div key={j} id={msg._id} 
+                                    className={`
+                                    ${styles.msg} 
+                                    ${msg.author === session.user.username ? styles.userMsg : styles.msgFromOther}
+                                    ${(i+1 === row1.length) && (j+1 === row2.length) ? styles.earliestMsg : null}
+                                    `}
+                                >
+                                    <h5 className={styles.msgAuthor}>{msg.author}</h5>
+                                    <h4 className={styles.msgContent}>
+                                        {msg.content}
+                                        ? <LikeIcon 
+                                            isAuthor={msg.author === user.username}
+                                            msgLikes={msg.likes.length} 
+                                            handleMsgLikeClick={() => handleMsgLikeClick(msg)} 
+                                            likedByUser={likedByUser(msg) ? true : false} 
+                                        />
+                                        </h4>
+                                    <h6 className={styles.msgDate}>{`${isToday(dateObj) ? '' : date + ' '}${time}`}</h6>
+                                </div>
+                                )
+                            })}
+                            </Fragment>
+                        ))}
+                        {hasNextPage 
+                            ? <button onClick={() => handleLoadMoreClick()} className={styles.loadMoreMsgsBtn}>Load More</button>
+                            : null}
+                    </div>
+                </div>
 
-            <div className={styles.chatInputArea}>
-            <textarea ref={textAreaRef} onChange={(e) => setInputValue(e.target.value)} rows={4} cols={40} className={styles.input}></textarea>
-            <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
+                <div className={styles.chatInputArea}>
+                <textarea ref={textAreaRef} onChange={(e) => setInputValue(e.target.value)} rows={4} cols={40} className={styles.input}></textarea>
+                <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
+                </div>
             </div>
-        </div>
+            <div className={`${styles.groupDetails} ${detailedExpanded ? styles.show : null}`}>
+                <h2 className={styles.name}>{selectedGroup.name}</h2>
+                <h5 className={styles.summary}>{selectedGroup.summary}</h5>
+                <button onClick={() => setDetailedExpanded(!detailedExpanded)} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>
+                    <div className={styles.arrow}></div>
+                </button>
+            </div>
         </div>
     )
 }
