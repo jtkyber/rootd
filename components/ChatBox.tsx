@@ -10,6 +10,8 @@ import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-q
 import styles from '../styles/Home.module.css'
 import { IUserState } from '../redux/userSlice'
 import LikeIcon from '../components/LikeIcon'
+import LikeIconSVG from '../public/like-icon.svg'
+import Image from 'next/image'
 
 let scrollElementId: string
 
@@ -196,6 +198,11 @@ const ChatBox: React.FC = () => {
         return false
     }
 
+    const showLikeNames = (e, msg) => {
+        if (!msg.likes.length || !e.target.classList.contains(styles.msgContent)) return
+        document.getElementById(msg._id + '-likes')?.classList.toggle(styles.show)
+    }
+
     return (
         <div className={styles.selectedGroup}>
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
@@ -217,16 +224,26 @@ const ChatBox: React.FC = () => {
                                     `}
                                 >
                                     <h5 className={styles.msgAuthor}>{msg.author}</h5>
-                                    <h4 className={styles.msgContent}>
+                                    <h4 onClick={(e) => showLikeNames(e, msg)} className={styles.msgContent}>
                                         {msg.content}
-                                        ? <LikeIcon 
+                                        <LikeIcon 
                                             isAuthor={msg.author === user.username}
                                             msgLikes={msg.likes.length} 
                                             handleMsgLikeClick={() => handleMsgLikeClick(msg)} 
                                             likedByUser={likedByUser(msg) ? true : false} 
                                         />
-                                        </h4>
+                                    </h4>
                                     <h6 className={styles.msgDate}>{`${isToday(dateObj) ? '' : date + ' '}${time}`}</h6>
+                                    <div id={msg._id + '-likes'} className={styles.msgLikeNames}>
+                                        {
+                                            msg.likes.map((name, i) => {
+                                                return <h6 key={i} className={styles.likeName}>
+                                                    {name}
+                                                    <Image className={styles.likeImg} src={LikeIconSVG} alt='Like Icon'></Image>
+                                                </h6>
+                                            })
+                                        }
+                                    </div>
                                 </div>
                                 )
                             })}

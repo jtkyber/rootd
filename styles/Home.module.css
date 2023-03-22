@@ -12,12 +12,12 @@
     
     & .userGroups {
         position: relative;
-        width: max-content;
+        width: 9rem;
         height: 100%;
         padding: 1rem 1rem 1rem 1rem;
         display: grid;
         grid-auto-rows: max-content;
-        gap: 0.3rem;
+        gap: 1rem;
         overflow-y: auto;
         background-color: $light_grey;
         box-shadow: $sectionShadow;
@@ -25,8 +25,8 @@
         @mixin miniScrollbar;
 
         & .singleGroup {
-            width: 8rem;
-            height: 8rem;
+            width: 100%;
+            aspect-ratio: 1/1;
             background-color: inherit;
             box-shadow: $sectionShadow;
             border-radius: 50%;
@@ -50,6 +50,20 @@
             & .groupName {
                 text-align: center;
             }
+        }
+
+        & a {
+            width: max-content;
+            height: max-content;
+            background-color: $red_brown;
+            border: none;
+            border-radius: 0.5rem;
+            color: $light_grey;
+            padding: 0.5rem;
+            justify-self: center;
+            margin-top: 1rem;
+
+            @mixin fadeOnHover;
         }
     }
 
@@ -115,7 +129,7 @@
                         & .msgContent {
                             position: relative;
                             border-radius: 10px;
-                            border-width: 2px;
+                            border-width: 1px;
                             border-style: solid;
                             padding: 0.5rem;
                             width: 100%;
@@ -158,6 +172,37 @@
                         & .msgDate {
                             font-weight: lighter;
                             color: $red_brown;
+                        }
+
+                        & .msgLikeNames {
+                            width: max-content;
+                            height: max-content;
+                            display: none;
+                            justify-content: flex-start;
+                            gap: 0.5rem;
+
+                            & .likeName {
+                                position: relative;
+                                color: rgba(0, 0, 0, 0.8);
+                                font-weight: 600;
+                                border-radius: 0.3rem;
+                                padding: 0.15rem 0.3rem;
+                                box-shadow: 0 0 0.15rem 0 rgba(0, 0, 0, 0.8);
+
+                                & .likeImg {
+                                    position: absolute;
+                                    width: 0.8rem;
+                                    height: auto;
+                                    z-index: 1;
+                                    top: 0;
+                                    right: 0;
+                                    transform: translate(50%, -50%);
+                                }
+                            }
+
+                            &.show {
+                                display: flex;
+                            }
                         }
     
                         &.userMsg {

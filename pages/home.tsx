@@ -9,6 +9,7 @@ import ChatBox from '../components/ChatBox'
 import { IUserState, setUser } from '../redux/userSlice'
 import getUser from '../utils/getUser'
 import styles from '../styles/Home.module.css'
+import Link from 'next/link'
 
 const Home: NextPage = () => {
   const dispatch = useAppDispatch()
@@ -27,8 +28,10 @@ const Home: NextPage = () => {
           if (updatedUser) dispatch(setUser(updatedUser))
         }
 
-        const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
-        if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
+        if (updatedUser.groups.length) {
+          const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
+          if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
+        }
       })()
     }
   }, [])
@@ -42,14 +45,16 @@ const Home: NextPage = () => {
         <>
           <div className={styles.userGroups}>
             {
-              userGroups?.map((group, i) => (
-                <div 
-                onClick={()=> {dispatch(setSelectedGroup(group))}} 
-                key={i} 
-                className={`${styles.singleGroup} ${group._id === selectedGroup._id ? styles.selected : null}`}>
-                  <h4 className={styles.groupName}>{group.name}</h4>
-                </div>
-              ))
+              userGroups.length ?
+                userGroups?.map((group, i) => (
+                  <div 
+                  onClick={()=> {dispatch(setSelectedGroup(group))}} 
+                  key={i} 
+                  className={`${styles.singleGroup} ${group._id === selectedGroup._id ? styles.selected : null}`}>
+                    <h4 className={styles.groupName}>{group.name}</h4>
+                  </div>
+                ))
+              : <Link href='/groupSearch'>Find Group</Link>
             }
           </div>
          <ChatBox />
