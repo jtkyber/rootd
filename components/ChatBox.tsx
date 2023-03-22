@@ -175,6 +175,7 @@ const ChatBox: React.FC = () => {
     }
 
     const postMsgLike = async (msg) => {
+        console.log(channel)
         const res = await axios.post('/api/addMsgLike', {
             msg: msg,
             name: user.username,
