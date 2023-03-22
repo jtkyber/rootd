@@ -13,14 +13,15 @@ export default async function handler(
   ) {
     try {
         await connectMongo()
-        const { keyword, characters, books, includePrivate, cursor, limit }: any = req.query
+        const { keyword = '', characters, books, includePrivate, cursor, limit }: any = req.query
         const groups = await Group.find({
           $and: [
-            {$or: [
-              {'name': {$regex: keyword}},
-              {'summary': {$regex: keyword}},
-              {'tags': {$in: keyword}}
-            ]},
+            // {$or: [
+            //   {'name': {$regex: keyword}},
+            //   {'summary': {$regex: keyword}},
+            //   {'tags': {$in: keyword}}
+            // ]},
+            {'tags': {$regex: keyword}},
             JSON.parse(characters).length ? {'characters': {$all: [...JSON.parse(characters)]}} : {},
             JSON.parse(books).length ? {'books': {$all: [...JSON.parse(books)]}} : {},
             JSON.parse(includePrivate) === false ? {'isPrivate': {$ne: true}} : {}

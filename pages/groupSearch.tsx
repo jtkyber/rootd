@@ -230,7 +230,7 @@ const groupSearch = () => {
           session ?
           <>
             <div className={styles.searchParams}>
-              <input className={styles.keywordSearchInput} onChange={(e) => onKeywordChange(e.target.value)} type='text' placeholder='Search Groups' />
+              <input className={styles.keywordSearchInput} onChange={(e) => onKeywordChange(e.target.value.toLowerCase())} type='text' placeholder='Search Groups' />
     
               <DropDown idEnd='characters1' key='characters1' name='Characters' optionArray={characters} onSelection={onCharacterChange} />
     
