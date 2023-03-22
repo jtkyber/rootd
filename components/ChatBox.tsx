@@ -88,6 +88,7 @@ const ChatBox: React.FC = () => {
         })
 
         channel.bind('set-msg-like', data => {
+            console.log(data)
             if (data.liker === user.username) return
             if (data.isAdded) {
                 setNewMsgLikes(data.msg, true, data.liker)
@@ -153,7 +154,6 @@ const ChatBox: React.FC = () => {
     }
 
     const setNewMsgLikes = (msg, isAdded, liker = user.username) => {
-        console.log(Date.now(), 'is added: ' + isAdded, 'liker: ' + liker, 'user: ' + user.username)
         queryClient.setQueryData(['groupMessages', selectedGroup._id], (prev: any) => {
             return {
                 ...data,
