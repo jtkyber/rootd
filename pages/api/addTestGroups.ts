@@ -38,7 +38,7 @@ export default async function handler(
                 books: newBooks,
                 date: Date.now(),
                 lastActive: Date.now(),
-                groupAdmin: isPrivate ? '123' : null
+                groupAdmin: '123'
             })
             groups.push(newGroup)
         } 
