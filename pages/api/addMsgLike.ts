@@ -24,6 +24,7 @@ export default async function handler(
             {new: false}
         ).then(async (docs1) => {
             const msgs = docs1.messages.filter(m => m._id.toString() === msg._id)
+            console.log(msgs)
             if (msgs[0]?.likes?.includes(name)) {
                 await Group.findOneAndUpdate(
                     { "messages._id" : msg._id },
