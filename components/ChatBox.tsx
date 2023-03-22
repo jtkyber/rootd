@@ -88,7 +88,6 @@ const ChatBox: React.FC = () => {
         })
 
         channel.bind('set-msg-like', data => {
-            console.log(data)
             if (data.liker === user.username) return
             if (data.isAdded) {
                 setNewMsgLikes(data.msg, true, data.liker)
@@ -175,7 +174,6 @@ const ChatBox: React.FC = () => {
     }
 
     const postMsgLike = async (msg) => {
-        console.log(channel)
         const res = await axios.post('/api/addMsgLike', {
             msg: msg,
             name: user.username,

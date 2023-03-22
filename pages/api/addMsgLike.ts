@@ -15,7 +15,6 @@ export default async function handler(
         await connectMongo()
 
         const { msg, name, channel }: any = req.body
-        console.log(req.body)
         await Group.findOneAndUpdate(
             { "messages._id" : msg._id},
             { "$addToSet": {
@@ -25,17 +24,19 @@ export default async function handler(
         ).then(async (docs1) => {
             const msgs = docs1.messages.filter(m => m._id.toString() === msg._id)
             if (msgs[0]?.likes?.includes(name)) {
+                console.log('removing')
                 await Group.findOneAndUpdate(
                     { "messages._id" : msg._id },
                     { "$pull": {
                         "messages.$.likes": name.toString()
                     }}
                 )
-                res.json(false)
                 await pusher.trigger(channel, 'set-msg-like', {msg: msg, isAdded: false, liker: name})
+                res.json(false)
             } else {
-                res.json(true)
+                console.log('adding')
                 await pusher.trigger(channel, 'set-msg-like', {msg: msg, isAdded: true, liker: name})
+                res.json(true)
             }
             
         })
