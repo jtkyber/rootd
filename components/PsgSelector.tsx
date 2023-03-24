@@ -15,7 +15,7 @@ const initialPsgContent = {
     }
 }
 
-const PsgSelector = ({ setAddingPsg, setInputValue, inputValue }) => {
+const PsgSelector = ({ textArea, setAddingPsg }) => {
     const [ starting, setStarting ] = useState(true)
     const [ bookIndex, setBookIndex ] = useState(0)
     const [ bookResults, setBookResults ] = useState<number[]>([])
@@ -102,7 +102,7 @@ const PsgSelector = ({ setAddingPsg, setInputValue, inputValue }) => {
             : `${psgContent.book} ${psgContent.starting.chapter}:${psgContent.starting.verse}`
 
             const passageHTML = `<span class='passageLink' contentEditable='false' id=${passage.replaceAll(' ', '%20')}>${passage}</span>`
-            setInputValue(`${inputValue}${passageHTML}`)
+            textArea.innerHTML = textArea.innerHTML + passageHTML
             setAddingPsg(false)
         }
     }

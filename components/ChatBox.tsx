@@ -38,7 +38,6 @@ const ChatBox: React.FC = () => {
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
     
     const [channel, setChannel]: any = useState(null)
-    const [inputValue, setInputValue] = useState('')
     const [detailedExpanded, setDetailedExpanded] = useState(false)
     const [addingPsg, setAddingPsg] = useState(false)
     
@@ -151,7 +150,7 @@ const ChatBox: React.FC = () => {
         const msgData: (Partial<IMsg> & IGroupId) = {
             groupId: selectedGroup._id,
             author: session.user.username,
-            content: inputValue,
+            content: textAreaRef.current.innerHTML,
             date: new Date,
             psgReference: ''
         }
@@ -273,12 +272,12 @@ const ChatBox: React.FC = () => {
                             ? <button onClick={() => handleLoadMoreClick()} className={styles.loadMoreMsgsBtn}>Load More</button>
                             : null}
                     </div>
-                    {addingPsg ? <PsgSelector setAddingPsg={setAddingPsg} setInputValue={setInputValue} inputValue={inputValue} /> : null}
+                    {addingPsg ? <PsgSelector textArea={textAreaRef.current} setAddingPsg={setAddingPsg} /> : null}
                 </div>
 
                 <div style={{pointerEvents: addingPsg ? 'none' : 'all'} } className={styles.chatInputArea}>
                     <button onClick={() => setAddingPsg(true)} className={styles.addPsgBtn}>Insert Passage</button>
-                    <div suppressContentEditableWarning={true} contentEditable={true} ref={textAreaRef} onChange={(e) => setInputValue((e.target as HTMLElement).innerHTML)} className={styles.input}>{parse(inputValue)}</div>
+                    <div suppressContentEditableWarning={true} contentEditable={true} ref={textAreaRef} className={styles.input}></div>
                     <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
                 </div>
             </div>
