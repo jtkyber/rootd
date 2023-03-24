@@ -14,6 +14,7 @@ import LikeIconSVG from '../public/like-icon.svg'
 import Image from 'next/image'
 import PsgSelector from './PsgSelector'
 import parse from 'html-react-parser'
+import { useOnScreen } from '../utils/hooks'
 
 
 let scrollElementId: string
@@ -31,6 +32,9 @@ const ChatBox: React.FC = () => {
     const chatAreaRef: React.MutableRefObject<any> = useRef(null)
     const chatBoxRef: React.MutableRefObject<any> = useRef(null)
     const messagesRef: React.MutableRefObject<any> = useRef(null)
+    const resultsEndRef: React.MutableRefObject<any> = useRef(null)
+
+    const isVisible = useOnScreen(resultsEndRef)
     
     const queryClient = useQueryClient()
 
@@ -40,7 +44,7 @@ const ChatBox: React.FC = () => {
     const [channel, setChannel]: any = useState(null)
     const [detailedExpanded, setDetailedExpanded] = useState(false)
     const [addingPsg, setAddingPsg] = useState(false)
-    
+    const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
     
     const { data: session }: any = useSession()
   
@@ -67,6 +71,13 @@ const ChatBox: React.FC = () => {
 
         return () => document.removeEventListener('click', handlePageClick)
     }, [])
+
+    useEffect(() => {
+        const now = Date.now()
+        if (!isVisible || isFetching || (now - lastNextPageFetchTime) < 250 || !hasNextPage) return
+        setLastNextPageFetchTime(now)
+        handleLoadMore()
+      }, [isVisible])
 
     const handlePageClick = (e) => {
         if (e.target.classList.contains('passageLink') && !e.target.parentElement.classList.contains(styles.input)) {
@@ -159,7 +170,7 @@ const ChatBox: React.FC = () => {
         textAreaRef.current.innerHTML = ''
     }
 
-    async function handleLoadMoreClick  () {
+    async function handleLoadMore() {
         const earliestMsg = document.querySelector(`.${styles.earliestMsg}`)?.id
         if (earliestMsg) scrollElementId = earliestMsg
         await fetchNextPage()
@@ -265,9 +276,7 @@ const ChatBox: React.FC = () => {
                             })}
                             </Fragment>
                         ))}
-                        {hasNextPage 
-                            ? <button onClick={() => handleLoadMoreClick()} className={styles.loadMoreMsgsBtn}>Load More</button>
-                            : null}
+                        <div ref={resultsEndRef} className={styles.resultsEnd}></div>
                     </div>
                     {addingPsg ? <PsgSelector textArea={textAreaRef.current} setAddingPsg={setAddingPsg} /> : null}
                 </div>
