@@ -156,6 +156,7 @@ const ChatBox: React.FC = () => {
         }
 
         sendMessage.mutate(msgData)
+        textAreaRef.current.innerHTML = ''
     }
 
     async function handleLoadMoreClick  () {
@@ -216,10 +217,6 @@ const ChatBox: React.FC = () => {
     const showLikeNames = (e, msg) => {
         if (!msg.likes.length || !e.target.classList.contains(styles.msgContent)) return
         document.getElementById(msg._id + '-likes')?.classList.toggle(styles.show)
-    }
-
-    const options = {
-
     }
 
     return (
