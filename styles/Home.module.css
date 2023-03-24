@@ -97,6 +97,7 @@
             overflow: hidden;
             
             & .chatBox {
+                position: relative;
                 width: 100%;
                 height: 100%;
                 display: flex;
@@ -137,6 +138,13 @@
                             font-weight: lighter;
                             white-space: pre-wrap;
                             color: $red_brown;
+
+                            & span {
+                                cursor: pointer;
+                                color: blue;
+
+                                @mixin fadeOnHover
+                            }
 
                             & .msgLikes {
                                 position: absolute;
@@ -246,6 +254,7 @@
             
 
             & .chatInputArea {
+                position: relative;
                 height: max-content;
                 box-shadow: $sectionShadow;
                 display: flex;
@@ -255,14 +264,29 @@
                 padding: 0.5rem 0;
                 gap: 0.5rem;
 
+                & .addPsgBtn {
+                    width: min-content;
+                    height: max-content;
+                    background-color: transparent;
+                    border: none;
+                    border-radius: 0.5rem;
+                    color: $red_brown;
+                    padding: 0.5rem;
+                    @mixin fadeOnHover;
+                }
+
                 & .input {
-                    resize: none;
+                    width: 20rem;
+                    line-height: 1.3rem;
+                    height: calc(3 * 1.3rem + 1rem);
+                    overflow-y: auto;
                     padding: 0.5rem;
                     background-color: inherit;
                     border-radius: 0.5rem;
                     outline: none;
                     outline: 1px solid $red_brown;
                     color: black;
+                    @mixin hideScrollbar;
 
                     &:focus {
                         outline-width: 2px;

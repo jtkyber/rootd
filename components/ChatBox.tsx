@@ -12,6 +12,9 @@ import { IUserState } from '../redux/userSlice'
 import LikeIcon from '../components/LikeIcon'
 import LikeIconSVG from '../public/like-icon.svg'
 import Image from 'next/image'
+import PsgSelector from './PsgSelector'
+import parse from 'html-react-parser'
+
 
 let scrollElementId: string
 
@@ -37,6 +40,7 @@ const ChatBox: React.FC = () => {
     const [channel, setChannel]: any = useState(null)
     const [inputValue, setInputValue] = useState('')
     const [detailedExpanded, setDetailedExpanded] = useState(false)
+    const [addingPsg, setAddingPsg] = useState(false)
     
     
     const { data: session }: any = useSession()
@@ -58,6 +62,18 @@ const ChatBox: React.FC = () => {
             getNextPageParam: (lastPage, pages) => lastPage?.cursor
         }
     )
+
+    useEffect(() => {
+        document.addEventListener('click', handlePageClick)
+
+        return () => document.removeEventListener('click', handlePageClick)
+    }, [])
+
+    const handlePageClick = (e) => {
+        if (e.target.classList.contains('passageLink') && !e.target.parentElement.classList.contains(styles.input)) {
+            window.open(`https://www.biblegateway.com/passage/?search=${e.target.id}&version=${user.bVersion}`, '_blank')
+        }
+    }
 
     useEffect(() => {
         if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
@@ -203,6 +219,10 @@ const ChatBox: React.FC = () => {
         document.getElementById(msg._id + '-likes')?.classList.toggle(styles.show)
     }
 
+    const options = {
+
+    }
+
     return (
         <div className={styles.selectedGroup}>
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
@@ -225,7 +245,7 @@ const ChatBox: React.FC = () => {
                                 >
                                     <h5 className={styles.msgAuthor}>{msg.author}</h5>
                                     <h4 onClick={(e) => showLikeNames(e, msg)} className={styles.msgContent}>
-                                        {msg.content}
+                                        {parse(msg.content)}
                                         <LikeIcon 
                                             isAuthor={msg.author === user.username}
                                             msgLikes={msg.likes.length} 
@@ -253,11 +273,13 @@ const ChatBox: React.FC = () => {
                             ? <button onClick={() => handleLoadMoreClick()} className={styles.loadMoreMsgsBtn}>Load More</button>
                             : null}
                     </div>
+                    {addingPsg ? <PsgSelector setAddingPsg={setAddingPsg} setInputValue={setInputValue} inputValue={inputValue} /> : null}
                 </div>
 
-                <div className={styles.chatInputArea}>
-                <textarea ref={textAreaRef} onChange={(e) => setInputValue(e.target.value)} rows={4} cols={40} className={styles.input}></textarea>
-                <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
+                <div style={{pointerEvents: addingPsg ? 'none' : 'all'} } className={styles.chatInputArea}>
+                    <button onClick={() => setAddingPsg(true)} className={styles.addPsgBtn}>Insert Passage</button>
+                    <div suppressContentEditableWarning={true} contentEditable={true} ref={textAreaRef} onChange={(e) => setInputValue((e.target as HTMLElement).innerHTML)} className={styles.input}>{parse(inputValue)}</div>
+                    <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
                 </div>
             </div>
             <div className={`${styles.groupDetails} ${detailedExpanded ? styles.show : null}`}>
