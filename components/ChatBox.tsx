@@ -15,6 +15,7 @@ import Image from 'next/image'
 import PsgSelector from './PsgSelector'
 import parse from 'html-react-parser'
 import { useOnScreen } from '../utils/hooks'
+import $ from 'jquery'
 
 
 let scrollElementId: string
@@ -33,6 +34,7 @@ const ChatBox: React.FC = () => {
     const chatBoxRef: React.MutableRefObject<any> = useRef(null)
     const messagesRef: React.MutableRefObject<any> = useRef(null)
     const resultsEndRef: React.MutableRefObject<any> = useRef(null)
+    const svgRef: React.MutableRefObject<any> = useRef(null)
 
     const isVisible = useOnScreen(resultsEndRef)
     
@@ -45,6 +47,16 @@ const ChatBox: React.FC = () => {
     const [detailedExpanded, setDetailedExpanded] = useState(false)
     const [addingPsg, setAddingPsg] = useState(false)
     const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
+    const [windowWidth, setWindowWidth] = useState(0)
+    const [windowHeight, setWindowHeight] = useState(0)
+
+    const [pointOneX, setPointOneX] = useState(10)
+    const [pointOneY, setPointOneY] = useState(10)
+    const [pointTwoX, setPointTwoX] = useState(100)
+    const [pointTwoY, setPointTwoY] = useState(10)
+    const [pointThreeX, setPointThreeX] = useState(100)
+    const [pointThreeY, setPointThreeY] = useState(100)
+
     
     const { data: session }: any = useSession()
   
@@ -67,10 +79,90 @@ const ChatBox: React.FC = () => {
     )
 
     useEffect(() => {
+        setWindowWidth(window.innerWidth)
+        setWindowHeight(window.innerHeight)
         document.addEventListener('click', handlePageClick)
 
         return () => document.removeEventListener('click', handlePageClick)
     }, [])
+
+    const cursorPosition = () => {
+        var sel = document.getSelection()
+        if (!sel) return
+
+        sel.modify("extend", "backward", "paragraphboundary")
+        var pos = sel.toString().length
+        if(sel.anchorNode != undefined) sel.collapseToEnd()
+    
+        return pos
+    }
+
+    const getCaretTopPoint = () => {
+        const sel = document.getSelection()
+        if (!sel || sel.rangeCount <= 0) return
+
+        const r = sel.getRangeAt(0)
+        let rect
+        let r2
+        // supposed to be textNode in most cases
+        // but div[contenteditable] when empty
+        const node: any = r.startContainer
+        const offset = r.startOffset
+
+        if (offset > 0) {
+          // new range, don't influence DOM state
+          r2 = document.createRange()
+          r2.setStart(node, (offset - 1))
+          r2.setEnd(node, offset)
+          // https://developer.mozilla.org/en-US/docs/Web/API/range.getBoundingClientRect
+          // IE9, Safari?(but look good in Safari 8)
+          rect = r2.getBoundingClientRect()
+          return { left: rect.right, top: rect.top }
+        } else if (offset < node.length) {
+          r2 = document.createRange()
+          // similar but select next on letter
+          r2.setStart(node, offset)
+          r2.setEnd(node, (offset + 1))
+          rect = r2.getBoundingClientRect()
+          return { left: rect.left, top: rect.top }
+        } else { // textNode has length
+          // https://developer.mozilla.org/en-US/docs/Web/API/Element.getBoundingClientRect
+          rect = node.getBoundingClientRect()
+          const styles = getComputedStyle(node)
+          const lineHeight = parseInt(styles.lineHeight)
+          const fontSize = parseInt(styles.fontSize)
+          // roughly half the whitespace... but not exactly
+          const delta = (lineHeight - fontSize) / 2
+          return { left: rect.left, top: (rect.top + delta) }
+        }
+      }
+
+    useEffect(() => {
+        if (addingPsg) {
+            const psgSelectorLeft = document.getElementById('psgSelector')?.getBoundingClientRect().left
+            const psgSelectorRight = document.getElementById('psgSelector')?.getBoundingClientRect().right
+            const psgSelectorBottom  = document.getElementById('psgSelector')?.getBoundingClientRect().bottom
+            
+            let inputLeft  = textAreaRef.current?.getBoundingClientRect().left
+            let inputTop  = textAreaRef.current?.getBoundingClientRect().top
+            
+            if (!psgSelectorLeft || !psgSelectorRight || !psgSelectorBottom) return
+            
+            setPointOneX(psgSelectorLeft + 5)
+            setPointOneY(psgSelectorBottom)
+            setPointTwoX(psgSelectorRight - 5)
+            setPointTwoY(psgSelectorBottom)
+            
+            if (textAreaRef.current.innerHTML) {
+                setPointThreeX(getCaretTopPoint()?.left + 5)
+                setPointThreeY(getCaretTopPoint()?.top + 15)
+            } else {
+                setPointThreeX(inputLeft + 5)
+                setPointThreeY(inputTop + 15)
+            }
+            // textAreaRef.current.blur()
+        }
+    }, [addingPsg])
 
     useEffect(() => {
         const now = Date.now()
@@ -229,7 +321,6 @@ const ChatBox: React.FC = () => {
         if (!msg.likes.length || !e.target.classList.contains(styles.msgContent)) return
         document.getElementById(msg._id + '-likes')?.classList.toggle(styles.show)
     }
-
     return (
         <div className={styles.selectedGroup}>
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
@@ -278,12 +369,19 @@ const ChatBox: React.FC = () => {
                         ))}
                         <div ref={resultsEndRef} className={styles.resultsEnd}></div>
                     </div>
-                    {addingPsg ? <PsgSelector textArea={textAreaRef.current} setAddingPsg={setAddingPsg} /> : null}
+                    {addingPsg ? 
+                    <>
+                        <PsgSelector textArea={textAreaRef.current} setAddingPsg={setAddingPsg} />
+                        <svg className={styles.triangle} ref={svgRef} width={windowWidth} height={windowHeight}>
+                            <polygon points={`${pointOneX},${pointOneY} ${pointTwoX},${pointTwoY} ${pointThreeX},${pointThreeY}`} fill='rgb(255,0,0)' stroke='rgb(255,0,0)' strokeWidth='2' />
+                        </svg>
+                    </>
+                    : null}
                 </div>
 
                 <div style={{pointerEvents: addingPsg ? 'none' : 'all'} } className={styles.chatInputArea}>
                     <button onClick={() => setAddingPsg(true)} className={styles.addPsgBtn}>Insert Passage</button>
-                    <div suppressContentEditableWarning={true} contentEditable={true} ref={textAreaRef} className={styles.input}></div>
+                    <div ref={textAreaRef} contentEditable={true} suppressContentEditableWarning={true} className={styles.input}></div>
                     <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
                 </div>
             </div>

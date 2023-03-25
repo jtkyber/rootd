@@ -44,6 +44,7 @@ const Home: NextPage = () => {
         session ?
         <>
           <div className={styles.userGroups}>
+            <h4 className={styles.title}>My Groups</h4>
             {
               userGroups.length ?
                 userGroups?.map((group, i) => (

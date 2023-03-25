@@ -9,7 +9,7 @@ const Nav: React.FC = () => {
     return (
         <div className={styles.container}>
             <div className={styles.left}>
-                <h1>Bible Study</h1>
+                <h1>Bible Chat</h1>
             </div>
             <div className={styles.right}>
                 {
@@ -28,7 +28,7 @@ const Nav: React.FC = () => {
                             : router.pathname === '/groupSearch'
                                 ?
                                 <>
-                                    <Link href='/home'>Back</Link>
+                                    <Link href='/home'>My Groups</Link>
                                     <Link href='/groupSearch'>DMs</Link>
                                     <Link href='/groupSearch'>Notifications</Link>
                                     <Link href='/groupSearch'>Settings</Link>

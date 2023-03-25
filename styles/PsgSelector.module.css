@@ -14,8 +14,7 @@
     margin-bottom: 3rem;
     display: flex;
     flex-flow: column nowrap;
-    padding: 1rem;
-    padding-top: 0.5rem;
+    padding: 0.5rem 1rem;
     align-items: center;
 
     & .exit {
@@ -129,20 +128,36 @@
         & button {
             width: max-content;
             height: max-content;
-            background-color: $red_brown;
+            background-color: transparent;
             border: none;
-            border-radius: 0.5rem;
             color: $light_grey;
-            padding: 0.2rem 0.5rem;
 
             @mixin fadeOnHover;
-            
+
             &.backBtn {
                 justify-self: flex-start;
+
+                & .backArrow {
+                    height: 0.8rem;
+                    width: auto;
+                    transform: rotate(180deg);
+                }
             }   
 
             &.submitBtn {
                 justify-self: flex-end;
+
+                & .nextArrow {
+                    height: 0.8rem;
+                    width: auto;
+                }
+
+                & .checkmark {
+                    height: 0.8rem;
+                    width: auto;
+                    stroke: green;
+                    fill: green;
+                }
             }
         }
     }

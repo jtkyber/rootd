@@ -23,7 +23,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <> 
-      <Head><title>Bible Study App</title></Head>
+      <Head><title>Bible Chat</title></Head>
           <SessionProvider session={pageProps.session}>
             <Provider store={store}>
               <QueryClientProvider client={queryClient}>

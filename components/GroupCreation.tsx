@@ -5,7 +5,7 @@ import bookNames from '../bookNames.json'
 import styles from '../styles/GroupCreation.module.css'
 import axios from 'axios'
 import { IUserState } from '../redux/userSlice'
-import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { useAppSelector } from '../redux/hooks'
 import { useRouter } from 'next/router'
 import { IGroup } from '../models/groupModel'
 
@@ -28,8 +28,6 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
     const tagInputRef: React.MutableRefObject<any> = useRef(null)
 
     const router = useRouter()
-
-    const dispatch = useAppDispatch()
 
     const sectionNames = ["Name", "Summary", "Books", "Characters", "Tags", "Private"]
 
@@ -111,6 +109,12 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
         }
     }
 
+
+    const handleOnTagInputChange = (e) => {
+        if (e.target.value.slice(-1) === ',' && currentTagValue.length) handleAddTag() 
+        else setCurrentTagValue(e.target.value)
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.groupCreationContainer}>
@@ -186,7 +190,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                                         ref={tagInputRef}
                                         className={styles.tagInput} 
                                         type="text" 
-                                        onChange={(e) => setCurrentTagValue(e.target.value)}
+                                        onChange={handleOnTagInputChange}
                                         maxLength={20}
                                     />
                                     <button 

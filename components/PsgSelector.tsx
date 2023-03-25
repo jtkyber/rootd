@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import books from '../books.json'
-import parse from 'html-react-parser'
 import styles from '../styles/PsgSelector.module.css'
+import arrow from '../public/arrow.svg'
+import checkmark from '../public/checkmark.svg'
+import Image from 'next/image'
 
 const initialPsgContent = {
     book: '',
@@ -102,15 +104,18 @@ const PsgSelector = ({ textArea, setAddingPsg }) => {
             : `${psgContent.book} ${psgContent.starting.chapter}:${psgContent.starting.verse}`
 
             const passageHTML = `<span class='passageLink' contentEditable='false' id=${passage.replaceAll(' ', '%20')}>${passage}</span>`
-            textArea.innerHTML = textArea.innerHTML + passageHTML
+            const lastEl = textArea.children[textArea.children.length-1]
+            if (lastEl && lastEl.tagName == 'DIV') {
+                lastEl.innerHTML = lastEl.innerHTML + passageHTML
+            } else textArea.innerHTML = textArea.innerHTML + passageHTML
             setAddingPsg(false)
         }
     }
 
     return (
-        <form className={styles.container} onSubmit={handleSubmit}>
+        <form id='psgSelector' className={styles.container} onSubmit={handleSubmit}>
             <div className={styles.exit}><button onClick={() => setAddingPsg(false)} type='button'>X</button></div>
-            <h4 className={styles.title}>{ starting ? 'Select Starting Verse' : 'Select Ending Verse' }</h4>
+            <h5 className={styles.title}>{ starting ? 'Select Starting Verse' : 'Select Ending Verse' }</h5>
             <div className={styles.optionContainer}>
                 <div ref={bookResultsRef} className={styles.bookResults}>
                     {
@@ -124,8 +129,12 @@ const PsgSelector = ({ textArea, setAddingPsg }) => {
                 <input disabled={!psgContent.book.length} placeholder='Verse' onChange={(e) => handleInputChange(e)} value={starting ? (psgContent.starting.verse > 0 ? psgContent.starting.verse : '') : (psgContent.ending.verse > 0 ? psgContent.ending.verse : '')} className={`${styles.option} ${styles.verse}`} type='text'></input>
             </div>
             <div className={styles.buttonContainer}>
-                {!starting ? <button onClick={() => setStarting(true)} className={styles.backBtn} type='button'>Back</button> : null}
-                <button className={styles.submitBtn} type='submit'>{starting ? 'Next' : 'Finish'}</button>
+                {!starting ? <button onClick={() => setStarting(true)} className={styles.backBtn} type='button'>
+                    <Image className={styles.backArrow} alt='back arrow' src={arrow}></Image>
+                </button> : null}
+                <button className={styles.submitBtn} type='submit'>
+                    {starting ? <Image className={styles.nextArrow} alt='next arrow' src={arrow}></Image> : <Image className={styles.checkmark} alt='finish button' src={checkmark}></Image>}
+                </button>
             </div>
         </form>
     )

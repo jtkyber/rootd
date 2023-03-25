@@ -24,6 +24,16 @@
         z-index: 100;
         @mixin miniScrollbar;
 
+        & .title {
+            width: 100%;
+            text-align: center;
+            color: $moss_green_vibrant;
+            font-weight: 600;
+            box-shadow: inset 0 0 0.3rem 0 black;
+            border-radius: 0.5rem;
+            padding: 0.3rem 0.5rem;
+        }
+
         & .singleGroup {
             width: 100%;
             aspect-ratio: 1/1;
@@ -106,6 +116,19 @@
                 overflow-y: auto;
                 padding: 0 2rem;
                 @mixin customScrollbar;
+
+                & svg {
+                    pointer-events: none;
+                    top: 0;
+                    left: 0;
+                    position: fixed;
+                    z-index: 100000;
+
+                    & polygon {
+                        fill: rgba(0, 0, 0, 0.3);
+                        stroke: none;
+                    }
+                }
                 
                 & .messages {
                     padding: 5rem 1rem 1rem 1rem;
@@ -135,7 +158,7 @@
                             padding: 0.5rem;
                             width: 100%;
                             max-width: max-content;
-                            font-weight: lighter;
+                            font-weight: 400;
                             white-space: pre-wrap;
                             color: $red_brown;
 
@@ -255,30 +278,31 @@
 
             & .chatInputArea {
                 position: relative;
-                height: max-content;
                 box-shadow: $sectionShadow;
-                display: flex;
-                flex-flow: row nowrap;
-                justify-content: center;
+                display: grid;
+                grid-template-columns: 1fr max-content 1fr;
+                grid-template-rows: 4rem;
                 align-items: center;
-                padding: 0.5rem 0;
+                justify-items: center;
                 gap: 0.5rem;
+                padding: 0.5rem 0;
 
                 & .addPsgBtn {
-                    width: min-content;
+                    width: max-content;
                     height: max-content;
                     background-color: transparent;
                     border: none;
                     border-radius: 0.5rem;
-                    color: $red_brown;
+                    color: blue;
                     padding: 0.5rem;
+                    justify-self: end;
+
                     @mixin fadeOnHover;
                 }
 
                 & .input {
                     width: 20rem;
-                    line-height: 1.3rem;
-                    height: calc(3 * 1.3rem + 1rem);
+                    height: 100%;
                     overflow-y: auto;
                     padding: 0.5rem;
                     background-color: inherit;
@@ -295,12 +319,13 @@
 
                 & .sendMsgBtn {
                     width: max-content;
-                    height: 2rem;
+                    height: max-content;
                     background-color: $red_brown;
                     border: none;
                     border-radius: 0.5rem;
                     color: $light_grey;
                     padding: 0.5rem;
+                    justify-self: start;
 
                     @mixin fadeOnHover;
                 }
