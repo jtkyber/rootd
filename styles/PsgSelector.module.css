@@ -16,26 +16,38 @@
     flex-flow: column nowrap;
     padding: 0.5rem 1rem;
     align-items: center;
+    gap: 0.3rem;
 
-    & .exit {
+    & .topDiv {
         width: 100%;
-        text-align: right;
+        display: grid;
+        grid-template-columns: 1fr max-content;
+        justify-items: center;
+        
+        & .title {
+            font-weight: 600;
+            color: $red_brown_dark;
+            margin-bottom: 0.5rem;
+            justify-self: center;
+            padding-left: 0.5rem;
+        }
 
-        & button {
+        & .exit {
+            width: max-content;
+            height: 100%;
+            text-align: right;
             background-color: transparent;
             border: none;
             color: $red_brown_dark;
             font-weight: 600;
-
+            justify-self: end;
+            display: flex;
+            align-items: flex-start;
+    
             @mixin fadeOnHover
         }
     }
 
-    & .title {
-        font-weight: 600;
-        color: $red_brown_dark;
-        margin-bottom: 0.5rem;
-    }
 
     & .optionContainer {
         position: relative;

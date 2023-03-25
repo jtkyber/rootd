@@ -15,7 +15,6 @@ import Image from 'next/image'
 import PsgSelector from './PsgSelector'
 import parse from 'html-react-parser'
 import { useOnScreen } from '../utils/hooks'
-import $ from 'jquery'
 
 
 let scrollElementId: string
@@ -35,6 +34,7 @@ const ChatBox: React.FC = () => {
     const messagesRef: React.MutableRefObject<any> = useRef(null)
     const resultsEndRef: React.MutableRefObject<any> = useRef(null)
     const svgRef: React.MutableRefObject<any> = useRef(null)
+    const psgSelectorRef: React.MutableRefObject<any> = useRef(null)
 
     const isVisible = useOnScreen(resultsEndRef)
     
@@ -50,12 +50,12 @@ const ChatBox: React.FC = () => {
     const [windowWidth, setWindowWidth] = useState(0)
     const [windowHeight, setWindowHeight] = useState(0)
 
-    const [pointOneX, setPointOneX] = useState(10)
-    const [pointOneY, setPointOneY] = useState(10)
-    const [pointTwoX, setPointTwoX] = useState(100)
-    const [pointTwoY, setPointTwoY] = useState(10)
-    const [pointThreeX, setPointThreeX] = useState(100)
-    const [pointThreeY, setPointThreeY] = useState(100)
+    const [pointOneX, setPointOneX] = useState(0)
+    const [pointOneY, setPointOneY] = useState(0)
+    const [pointTwoX, setPointTwoX] = useState(0)
+    const [pointTwoY, setPointTwoY] = useState(0)
+    const [pointThreeX, setPointThreeX] = useState(0)
+    const [pointThreeY, setPointThreeY] = useState(0)
 
     
     const { data: session }: any = useSession()
@@ -82,19 +82,18 @@ const ChatBox: React.FC = () => {
         setWindowWidth(window.innerWidth)
         setWindowHeight(window.innerHeight)
         document.addEventListener('click', handlePageClick)
+        window.addEventListener('resize', handleWindowResize)
 
-        return () => document.removeEventListener('click', handlePageClick)
+        return () => {
+            document.removeEventListener('click', handlePageClick)
+            window.removeEventListener('resize', handleWindowResize)
+        }
     }, [])
 
-    const cursorPosition = () => {
-        var sel = document.getSelection()
-        if (!sel) return
-
-        sel.modify("extend", "backward", "paragraphboundary")
-        var pos = sel.toString().length
-        if(sel.anchorNode != undefined) sel.collapseToEnd()
-    
-        return pos
+    const handleWindowResize = () => {
+        setWindowWidth(window.innerWidth)
+        setWindowHeight(window.innerHeight)
+        setSvgPosition()
     }
 
     const getCaretTopPoint = () => {
@@ -137,8 +136,12 @@ const ChatBox: React.FC = () => {
         }
       }
 
-    useEffect(() => {
+    const setSvgPosition = () => {
         if (addingPsg) {
+            textAreaRef.current.focus()
+            document.execCommand('selectAll', false, '')
+            document.getSelection()?.collapseToEnd()
+
             const psgSelectorLeft = document.getElementById('psgSelector')?.getBoundingClientRect().left
             const psgSelectorRight = document.getElementById('psgSelector')?.getBoundingClientRect().right
             const psgSelectorBottom  = document.getElementById('psgSelector')?.getBoundingClientRect().bottom
@@ -152,17 +155,36 @@ const ChatBox: React.FC = () => {
             setPointOneY(psgSelectorBottom)
             setPointTwoX(psgSelectorRight - 5)
             setPointTwoY(psgSelectorBottom)
+
+            const pointAtInput = getCaretTopPoint()
             
-            if (textAreaRef.current.innerHTML) {
-                setPointThreeX(getCaretTopPoint()?.left + 5)
-                setPointThreeY(getCaretTopPoint()?.top + 15)
+            const pointXAtInput = pointAtInput?.left + 5
+            const pointYAtInput = pointAtInput?.top + 15
+            const lastEl = textAreaRef.current.children[textAreaRef.current.children.length-1]
+            const containsOnlySpaces = textAreaRef.current.innerText.replace(/\s/g, '').length === 0
+            
+            if (containsOnlySpaces && textAreaRef.current?.children.length) {
+                while (textAreaRef.current.firstChild) textAreaRef.current.removeChild(textAreaRef.current.firstChild)
+            }
+            
+            if (pointXAtInput && pointYAtInput) {
+                console.log(1)
+                setPointThreeX(pointXAtInput)
+                setPointThreeY(pointYAtInput)
+            } else if (pointXAtInput && lastEl) {
+                console.log(2)
+                setPointThreeX(inputLeft + 10)
+                setPointThreeY(textAreaRef.current?.getBoundingClientRect().bottom - 15)
             } else {
+                console.log(3)
                 setPointThreeX(inputLeft + 5)
                 setPointThreeY(inputTop + 15)
             }
-            // textAreaRef.current.blur()
+            textAreaRef.current.blur()
         }
-    }, [addingPsg])
+    }
+
+    useEffect(() => setSvgPosition(), [addingPsg])
 
     useEffect(() => {
         const now = Date.now()
@@ -172,7 +194,7 @@ const ChatBox: React.FC = () => {
       }, [isVisible])
 
     const handlePageClick = (e) => {
-        if (e.target.classList.contains('passageLink') && !e.target.parentElement.classList.contains(styles.input)) {
+        if (e.target.classList.contains('passageLink')) {
             window.open(`https://www.biblegateway.com/passage/?search=${e.target.id}&version=${user.bVersion}`, '_blank')
         }
     }
@@ -321,6 +343,7 @@ const ChatBox: React.FC = () => {
         if (!msg.likes.length || !e.target.classList.contains(styles.msgContent)) return
         document.getElementById(msg._id + '-likes')?.classList.toggle(styles.show)
     }
+
     return (
         <div className={styles.selectedGroup}>
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
@@ -371,7 +394,7 @@ const ChatBox: React.FC = () => {
                     </div>
                     {addingPsg ? 
                     <>
-                        <PsgSelector textArea={textAreaRef.current} setAddingPsg={setAddingPsg} />
+                        <PsgSelector textArea={textAreaRef.current} setAddingPsg={setAddingPsg} psgSelectorRef={psgSelectorRef} />
                         <svg className={styles.triangle} ref={svgRef} width={windowWidth} height={windowHeight}>
                             <polygon points={`${pointOneX},${pointOneY} ${pointTwoX},${pointTwoY} ${pointThreeX},${pointThreeY}`} fill='rgb(255,0,0)' stroke='rgb(255,0,0)' strokeWidth='2' />
                         </svg>

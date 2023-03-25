@@ -17,7 +17,7 @@ const initialPsgContent = {
     }
 }
 
-const PsgSelector = ({ textArea, setAddingPsg }) => {
+const PsgSelector = ({ textArea, setAddingPsg, psgSelectorRef }) => {
     const [ starting, setStarting ] = useState(true)
     const [ bookIndex, setBookIndex ] = useState(0)
     const [ bookResults, setBookResults ] = useState<number[]>([])
@@ -105,7 +105,10 @@ const PsgSelector = ({ textArea, setAddingPsg }) => {
 
             const passageHTML = `<span class='passageLink' contentEditable='false' id=${passage.replaceAll(' ', '%20')}>${passage}</span>`
             const lastEl = textArea.children[textArea.children.length-1]
-            if (lastEl && lastEl.tagName == 'DIV') {
+            if (lastEl && lastEl.tagName === 'DIV') {
+                if (lastEl.children[0]?.tagName === 'BR') {
+                    lastEl.children[0].remove()
+                }
                 lastEl.innerHTML = lastEl.innerHTML + passageHTML
             } else textArea.innerHTML = textArea.innerHTML + passageHTML
             setAddingPsg(false)
@@ -113,9 +116,11 @@ const PsgSelector = ({ textArea, setAddingPsg }) => {
     }
 
     return (
-        <form id='psgSelector' className={styles.container} onSubmit={handleSubmit}>
-            <div className={styles.exit}><button onClick={() => setAddingPsg(false)} type='button'>X</button></div>
-            <h5 className={styles.title}>{ starting ? 'Select Starting Verse' : 'Select Ending Verse' }</h5>
+        <form ref={psgSelectorRef} id='psgSelector' className={styles.container} onSubmit={handleSubmit}>
+            <div className={styles.topDiv}>
+                <h5 className={styles.title}>{ starting ? 'Select Starting Verse' : 'Select Ending Verse' }</h5>
+                <button className={styles.exit} onClick={() => setAddingPsg(false)} type='button'>X</button>
+            </div>
             <div className={styles.optionContainer}>
                 <div ref={bookResultsRef} className={styles.bookResults}>
                     {
