@@ -66,6 +66,10 @@ const groupSearch = () => {
     fetchNextPage()
   }, [isVisible, status])
 
+  useEffect(() => {
+    if (!isFetching) sortGroups()
+  }, [isFetching])
+
   async function fetchGroups({ pageParam = 0 }) {
     try {
       const res = await axios.get(`/api/findGroups?keyword=${options.keyword}&characters=${JSON.stringify(options.characters)}&books=${JSON.stringify(options.books)}&includePrivate=${options.includePrivate}&cursor=${pageParam}&limit=10`)
@@ -149,7 +153,7 @@ const groupSearch = () => {
   const sortGroups = (): void => {
     if(!data?.pages[0]) return
     const dataTemp = data?.pages.map(page => page.data).flat()
-
+    
     switch(currentSort.name) {
       case 'name':
         if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.name.localeCompare(b.name)) 
@@ -159,37 +163,38 @@ const groupSearch = () => {
         if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.members.length - b.members.length) 
         else dataTemp.sort((a, b) => b.members.length - a.members.length)
         break
-        case 'lastActive':
-          if (currentSort.dir === 'down') {
-            dataTemp.sort((a, b) => {
-              const dateA = new Date(a.lastActive)
-              const dateB = new Date(b.lastActive)
-              return dateB.getTime() - dateA.getTime()
-            })
-          } else dataTemp.sort((a, b) => {
+      case 'lastActive':
+        if (currentSort.dir === 'down') {
+          dataTemp.sort((a, b) => {
             const dateA = new Date(a.lastActive)
             const dateB = new Date(b.lastActive)
-            return dateA.getTime() - dateB.getTime()
+            return dateB.getTime() - dateA.getTime()
           })
-          break
-        case 'isPrivate':
-          if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.isPrivate - b.isPrivate) 
-          else dataTemp.sort((a, b) => b.isPrivate - a.isPrivate)
-          break
+        } else dataTemp.sort((a, b) => {
+          const dateA = new Date(a.lastActive)
+          const dateB = new Date(b.lastActive)
+          return dateA.getTime() - dateB.getTime()
+        })
+        break
+      case 'isPrivate':
+        if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.isPrivate - b.isPrivate) 
+        else dataTemp.sort((a, b) => b.isPrivate - a.isPrivate)
+        break
     }
 
-
+    
     function sliceIntoChunks(arr, chunkSize) {
       const res: any[] = []
       for (let i = 0; i < arr.length; i += chunkSize) {
         const chunk = arr.slice(i, i + chunkSize);
+        if (!chunk.length) return false
         res.push(chunk);
       }
       return res
     }
-
+    
     queryClient.setQueryData(['groups', [options, page]], (prev: any) => {
-      const dataChunked = sliceIntoChunks(dataTemp, prev?.pages[0].cursor)
+      const dataChunked = sliceIntoChunks(dataTemp, prev?.pages[0].cursor || prev?.pages[0].data.length)
       return {
         ...data,
         pages: prev?.pages.map((page, i) => {
