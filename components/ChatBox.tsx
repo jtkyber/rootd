@@ -273,13 +273,17 @@ const ChatBox: React.FC = () => {
     }
 
     const filterBadWords = (text) => {
-        const textArray = text.split(' ')
-        const filteredArray = textArray.map((word: string) => {
-            if (badWords.includes(word.toLowerCase())) {
-                return word[0] + '•'.repeat(word.length - 2) + word[word.length - 1]
-            } else return word
-        })
-        return filteredArray.join(' ')
+        for (let word of badWords) {
+            if (text.toLowerCase().includes(word)) {
+                const indexOfBadWordLastChar = text.lastIndexOf(word) + word.length - 1
+                if (
+                    (text[text.lastIndexOf(word) - 1] && text[text.lastIndexOf(word) - 1].match(/[a-z]/i))
+                    || (text[indexOfBadWordLastChar + 1] && text[indexOfBadWordLastChar + 1].match(/[a-z]/i))
+                ) continue
+                text = text.replaceAll(word, `${word[0]}${'•'.repeat(word.length - 2)}${word[word.length - 1]}`)
+            }
+        }
+        return text
     }
 
     const options = {
