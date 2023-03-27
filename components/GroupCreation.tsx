@@ -192,6 +192,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                                         type="text" 
                                         onChange={handleOnTagInputChange}
                                         maxLength={20}
+                                        disabled={values.tags.length >= 5}
                                     />
                                     <button 
                                         onClick={handleAddTag}  

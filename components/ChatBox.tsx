@@ -15,6 +15,7 @@ import Image from 'next/image'
 import PsgSelector from './PsgSelector'
 import parse from 'html-react-parser'
 import { useOnScreen } from '../utils/hooks'
+import badWords from '../badWords.json'
 
 
 let scrollElementId: string
@@ -271,6 +272,31 @@ const ChatBox: React.FC = () => {
         }))
     }
 
+    const filterBadWords = (text) => {
+        const textArray = text.split(' ')
+        const filteredArray = textArray.map((word: string) => {
+            if (badWords.includes(word.toLowerCase())) {
+                return word[0] + '•'.repeat(word.length - 2) + word[word.length - 1]
+            } else return word
+        })
+        return filteredArray.join(' ')
+    }
+
+    const options = {
+        replace: domNode => {
+            if (!domNode) {
+                return
+            }
+      
+            if (domNode.type === 'text') {
+                domNode.data = filterBadWords(domNode.data)
+                return domNode
+            } 
+            
+            return domNode
+        }
+    }
+
     function handleSendMsgClick () {
         const msgData: (Partial<IMsg> & IGroupId) = {
             groupId: selectedGroup._id,
@@ -366,7 +392,7 @@ const ChatBox: React.FC = () => {
                                 >
                                     <h5 className={styles.msgAuthor}>{msg.author}</h5>
                                     <h4 onClick={(e) => showLikeNames(e, msg)} className={styles.msgContent}>
-                                        {parse(msg.content)}
+                                        {parse(msg.content, options)}
                                         <LikeIcon 
                                             isAuthor={msg.author === user.username}
                                             msgLikes={msg.likes.length} 
