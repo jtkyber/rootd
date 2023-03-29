@@ -1,8 +1,8 @@
 import { pusher } from '../../../lib/index.js';
 
 const handler = (req, res) => {
-    const { socketId, channelName, username } = req.body
-
+    const { socket_id, channel_name, username } = req.body
+    
     const randomString = Math.random().toString(36).slice(2)
 
     const presenceData = {
@@ -13,7 +13,8 @@ const handler = (req, res) => {
     }
 
     try {
-        const auth = pusher.authenticate(socketId, channelName, presenceData)
+        const auth = pusher.authorizeChannel(socket_id, channel_name, presenceData)
+        res.json(auth)
     } catch(err) {
         console.log(err)
     }

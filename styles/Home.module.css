@@ -345,13 +345,13 @@
             height: 100%;
             background-color: $light_grey;
             box-shadow: none;
-            display: flex;
-            flex-flow: column nowrap;
-            align-items: center;
-            justify-content: flex-start;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: max-content max-content 1fr;
+            justify-items: center;
             padding: 1rem;
             color: $red_brown;
-            gap: 0.5rem;
+            gap: 1rem;
             z-index: 100;
             transform: translate(100%);
             transition: transform ease-in 0.2s, box-shadow 0s 0.2s;
@@ -361,16 +361,74 @@
                 transform: translate(0);
                 box-shadow: $sectionShadow;
             }
-            
-            & .name {
-                font-weight: 600;
-                text-align: center;
-                width: 100%;
+
+            & .sectionOne {
+                display: flex;
+                flex-flow: column nowrap;
+                justify-content: center;
+                gap: 0.2rem;
+
+                & .name {
+                    font-weight: 600;
+                    text-align: center;
+                    width: 100%;
+                }
+    
+                & .summary {
+                    font-weight: 400;
+                }
             }
 
-            & .summary {
-                font-weight: 400;
+            & .sectionTwo {
+                display: flex;
+                flex-flow: column nowrap;
+                justify-content: center;
+                gap: 0.2rem;
+
+                & h3 {
+                    font-weight: 600;
+                    text-align: center;
+                    width: 100%;
+                }
+                
+                & .members {
+                    display: flex;
+                    flex-flow: row wrap;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    width: 100%;
+
+                    & .member {
+                        font-weight: 400;
+
+                        &.inGroup {
+                            color: $moss_green_vibrant;
+                        }
+                    }
+                }
             }
+            
+            & .bottomSection {
+                display: flex;
+                flex-flow: row;
+                align-self: end;
+                gap: 1rem;
+
+                & button {
+                    background-color: transparent;
+                    border: none;
+                    font-weight: 600;
+
+                    &.leaveGroup {
+                        color: $grey_blue;
+                    }
+        
+                    &.removeGroup {
+                        color: $deep_red;
+                    }
+                }
+            }
+
 
             & .expandGroupDetailsBtn {
                 position: absolute;

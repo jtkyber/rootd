@@ -2,24 +2,33 @@ import { ObjectId } from "bson"
 import { Schema, model, models, ObjectId as objectId } from "mongoose"
 
 export interface IDm {
-    author: string,
-    content: string,
-    date: Date | number,
-    isLiked: boolean,
+    author: string
+    content: string
+    date: Date | number
+    isLiked: boolean
     isRead: boolean
 }
 
+export interface INotification {
+    content: string
+    date: Date | number
+    notificationType: string
+    groupId?: string
+    read: boolean
+}
+
 interface IUsr {
-    username: string,
-    password: string,
-    email: string,
-    gender: string,
-    bVersion: string,
-    groups: string[],
-    notifications: string[],
-    directMsgs: IDm[],
-    dmPeople: string[],
+    username: string
+    password: string
+    email: string
+    gender: string
+    bVersion: string
+    groups: string[]
+    notifications: INotification[]
+    directMsgs: IDm[]
+    dmPeople: string[]
     strikes: string[] // Reasons for strikes
+    currentGroup: string | null
 }
 
 export interface IUser extends IUsr {
@@ -38,6 +47,17 @@ export const dmSchema = new Schema<IDm>({
         type: Boolean,
         default: false
     },
+})
+
+export const notificationSchema = new Schema<INotification>({
+    content: String,
+    date: Date,
+    notificationType: String,
+    groupId: String,
+    read: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const userSchema = new Schema<IUsr>({
@@ -68,7 +88,7 @@ const userSchema = new Schema<IUsr>({
         required: false
     },
     notifications: {
-        type: [String],
+        type: [notificationSchema],
         required: false
     },
     directMsgs: {
@@ -82,9 +102,13 @@ const userSchema = new Schema<IUsr>({
     strikes: {
         type: [String],
         required: false
+    },
+    currentGroup: {
+        type: String || null,
+        default: null,
     }
 })
 
-const User = models.User1 || model('User1', userSchema, 'users')
+const User = models.User2 || model('User2', userSchema, 'users')
 
 export default User

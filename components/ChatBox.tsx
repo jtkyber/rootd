@@ -7,15 +7,16 @@ import { IGroup, IMsg } from '../models/groupModel'
 import { useState, useEffect, useRef } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import styles from '../styles/Home.module.css'
 import { IUserState } from '../redux/userSlice'
-import LikeIcon from '../components/LikeIcon'
+import LikeIcon from './LikeIcon'
+import GroupDetails from './GroupDetails'
 import LikeIconSVG from '../public/like-icon.svg'
 import Image from 'next/image'
 import PsgSelector from './PsgSelector'
 import parse from 'html-react-parser'
 import { useOnScreen } from '../utils/hooks'
 import badWords from '../badWords.json'
+import styles from '../styles/Home.module.css'
 
 
 let scrollElementId: string
@@ -45,11 +46,11 @@ const ChatBox: React.FC = () => {
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
     
     const [channel, setChannel]: any = useState(null)
-    const [detailedExpanded, setDetailedExpanded] = useState(false)
     const [addingPsg, setAddingPsg] = useState(false)
     const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
     const [windowWidth, setWindowWidth] = useState(0)
     const [windowHeight, setWindowHeight] = useState(0)
+    const [onlineMembers, setOnlineMembers] = useState<string[]>([])
 
     const [pointOneX, setPointOneX] = useState(0)
     const [pointOneY, setPointOneY] = useState(0)
@@ -212,18 +213,33 @@ const ChatBox: React.FC = () => {
 
     useEffect(() => {
         if (!pusher) return
-        if (selectedGroup) {
-           setChannel(pusher.subscribe(selectedGroup._id))
-        }
+        if (selectedGroup) setChannel(pusher.subscribe(`presence-${selectedGroup._id}`))
 
         return () => {
-            pusher.unsubscribe(selectedGroup._id)
+            sendJoinedGroup()
+            pusher.unsubscribe(`presence-${selectedGroup._id}`)
             setChannel(null)
         }
     }, [selectedGroup])
-
+    
+    const sendJoinedGroup = async () => {
+        await axios.get(`/api/pusher/updateMemberStatus?username=${user.username}&channelName=${selectedGroup._id}`)
+    }
+    
     useEffect(() => {
         if (!channel) return
+        
+        channel.bind('pusher:subscription_succeeded', (data) => {
+            sendJoinedGroup()
+            const onlineMembs = Object.keys(data?.members).map(key => data?.members[key].username)
+            if (onlineMembs.length) setOnlineMembers(onlineMembs)
+        })
+
+        channel.bind('update-online-members', data => {
+            const onlineMembs = Object.keys(channel.members.members).map(key => channel.members.members[key].username)
+            if (onlineMembs.length) setOnlineMembers(onlineMembs)
+        })
+        
         channel.bind('fetch-new-group-msgs', data => {
             if (data.username !== user.username) addMessage(JSON.parse(data.msg))
         })
@@ -237,6 +253,8 @@ const ChatBox: React.FC = () => {
         })
 
         return () => {
+            channel.unbind('pusher:subscription_succeeded')
+            channel.unbind('update-online-members')
             channel.unbind('fetch-new-group-msgs')
             channel.unbind('set-msg-like')
         }
@@ -288,9 +306,7 @@ const ChatBox: React.FC = () => {
 
     const options = {
         replace: domNode => {
-            if (!domNode) {
-                return
-            }
+            if (!domNode) return
       
             if (domNode.type === 'text') {
                 domNode.data = filterBadWords(domNode.data)
@@ -431,20 +447,14 @@ const ChatBox: React.FC = () => {
                     </>
                     : null}
                 </div>
-
+                    
                 <div style={{pointerEvents: addingPsg ? 'none' : 'all'} } className={styles.chatInputArea}>
                     <button onClick={() => setAddingPsg(true)} className={styles.addPsgBtn}>Insert Passage</button>
                     <div ref={textAreaRef} contentEditable={true} suppressContentEditableWarning={true} className={styles.input}></div>
                     <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
                 </div>
             </div>
-            <div className={`${styles.groupDetails} ${detailedExpanded ? styles.show : null}`}>
-                <h2 className={styles.name}>{selectedGroup.name}</h2>
-                <h5 className={styles.summary}>{selectedGroup.summary}</h5>
-                <button onClick={() => setDetailedExpanded(!detailedExpanded)} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>
-                    <div className={styles.arrow}></div>
-                </button>
-            </div>
+            <GroupDetails selectedGroup={selectedGroup} username={user.username} onlineMembers={onlineMembers} />
         </div>
     )
 }
