@@ -11,9 +11,14 @@ export default async function handler(
         await connectMongo()
         const { username, groupId }: any = req.body
 
-        const user: IUser | any = await User.findOneAndUpdate({ username: username }, { $pull: { groups: groupId }}, { new: true })
+        const user: IUser | any = await User.updateOne({ username: username }, { 
+            $pull: { 
+                groups: groupId,
+                lastSeenMsgs: { groupId: groupId}
+            }
+        }).catch(err => {throw new Error(err)})
 
-        if (user.acknowledged) await Group.updateOne({ _id: groupId }, { $pull: { members: username }})
+        if (user?.modifiedCount > 0) await Group.updateOne({ _id: groupId }, { $pull: { members: username }})
         else throw new Error('could not retrieve user')
 
         res.json(user)

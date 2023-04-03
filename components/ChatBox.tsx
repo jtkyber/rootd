@@ -7,7 +7,7 @@ import { IGroup, IMsg } from '../models/groupModel'
 import { useState, useEffect, useRef } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { IUserState } from '../redux/userSlice'
+import { IUserState, setUser } from '../redux/userSlice'
 import LikeIcon from './LikeIcon'
 import GroupDetails from './GroupDetails'
 import LikeIconSVG from '../public/like-icon.svg'
@@ -16,7 +16,13 @@ import PsgSelector from './PsgSelector'
 import parse from 'html-react-parser'
 import { useOnScreen } from '../utils/hooks'
 import badWords from '../badWords.json'
+import { getFormattedDateFromISO } from '../utils/dates'
 import styles from '../styles/Home.module.css'
+import throttle from '../utils/throttle'
+import debounce from '../utils/debounce'
+import { useDispatch } from 'react-redux'
+import { ILastSeenMsg } from '../models/userModel'
+import scrollToMessage from '../utils/scrollToMessage'
 
 
 let scrollElementId: string
@@ -41,6 +47,8 @@ const ChatBox: React.FC = () => {
     const isVisible = useOnScreen(resultsEndRef)
     
     const queryClient = useQueryClient()
+
+    const dispatch = useDispatch()
 
     const user: IUserState = useAppSelector(state => state.user.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
@@ -85,12 +93,118 @@ const ChatBox: React.FC = () => {
         setWindowHeight(window.innerHeight)
         document.addEventListener('click', handlePageClick)
         window.addEventListener('resize', handleWindowResize)
-
+        
         return () => {
             document.removeEventListener('click', handlePageClick)
             window.removeEventListener('resize', handleWindowResize)
         }
     }, [])
+
+    useEffect(() => {
+        if (!user?.lastSeenMsgs?.length || !selectedGroup._id || status === 'loading') return
+        scrollToMessage(user.lastSeenMsgs, selectedGroup._id)
+     }, [selectedGroup, status])
+    
+    useEffect(() => setSvgPosition(), [addingPsg])
+    
+    useEffect(() => {
+        const now = Date.now()
+        if (!isVisible || isFetching || (now - lastNextPageFetchTime) < 250 || !hasNextPage) return
+        setLastNextPageFetchTime(now)
+        handleLoadMore()
+    }, [isVisible])
+    
+    useEffect(() => {
+        if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
+            pusher = new Pusher(process.env.PUSHER_KEY, {
+                cluster: process.env.PUSHER_CLUSTER,
+                authEndpoint: `/api/pusher/auth`,
+                auth: {params: {username: user.username}}
+            })
+        }
+    }, [user.username])
+    
+    useEffect(() => {
+        if (!pusher) return
+        if (selectedGroup) setChannel(pusher.subscribe(`presence-${selectedGroup._id}`))
+        if (chatBoxRef.current) chatBoxRef.current.addEventListener('scroll', handleChatScroll)
+        
+        return () => {
+            sendJoinedGroup()
+            pusher.unsubscribe(`presence-${selectedGroup._id}`)
+            setChannel(null)
+            if (chatBoxRef.current) chatBoxRef.current.removeEventListener('scroll', handleChatScroll)
+        }
+    }, [selectedGroup])
+    
+    useEffect(() => {
+        if (!channel) return
+        
+        channel.bind('pusher:subscription_succeeded', (data) => {
+            sendJoinedGroup()
+            const onlineMembs = Object.keys(data?.members).map(key => data?.members[key].username)
+            if (onlineMembs.length) setOnlineMembers(onlineMembs)
+        })
+        
+        channel.bind('update-online-members', data => {
+            const onlineMembs = Object.keys(channel.members.members).map(key => channel.members.members[key].username)
+            if (onlineMembs.length) setOnlineMembers(onlineMembs)
+        })
+        
+        channel.bind('fetch-new-group-msgs', data => {
+            if (data.username !== user.username) addMessage(JSON.parse(data.msg))
+        })
+        
+        channel.bind('set-msg-like', data => {
+            if (data.liker === user.username) return
+            if (data.isAdded) {
+                setNewMsgLikes(data.msg, true, data.liker)
+            }
+            else setNewMsgLikes(data.msg, false, data.liker)
+        })
+        
+        return () => {
+            channel.unbind('pusher:subscription_succeeded')
+            channel.unbind('update-online-members')
+            channel.unbind('fetch-new-group-msgs')
+            channel.unbind('set-msg-like')
+        }
+    }, [channel, data, user.username])
+    
+    // const scrollToMessage = () => {
+    //     if (!user?.lastSeenMsgs?.length || !selectedGroup._id || status === 'loading') return
+
+    //     for (const msg of user.lastSeenMsgs) {
+    //         if (msg.groupId.toString() === selectedGroup._id.toString()) {
+    //             const lastMsgSeen = document.getElementById(msg.msgId.toString())
+    //             lastMsgSeen?.scrollIntoView()
+    //             break
+    //         }
+    //     }
+    // }
+
+    const setNewMsgLastSeen = debounce(async(i) => {
+        const msgId = messagesRef.current?.children?.[i]?.id
+        if (!msgId) return
+        const res = await axios.put('/api/setLastSeenMsgId', {
+            userId: user._id,
+            msgId: msgId,
+            groupId: selectedGroup._id
+        })
+        const resData: ILastSeenMsg[] = res.data
+        dispatch(setUser({...user, lastSeenMsgs: resData}))
+    }, 1000)
+
+    const handleChatScroll = () => {
+        for (let i = messagesRef.current.children.length - 1; i >= 0; i--) {
+            if (
+                messagesRef.current.children[i].getBoundingClientRect().bottom < window.innerHeight
+                && messagesRef.current.children[i].getBoundingClientRect().bottom < (window.innerHeight - 100)
+            ) {
+                setNewMsgLastSeen(i)
+            }
+        }
+    }
 
     const handleWindowResize = () => {
         setWindowWidth(window.innerWidth)
@@ -186,104 +300,34 @@ const ChatBox: React.FC = () => {
         }
     }
 
-    useEffect(() => setSvgPosition(), [addingPsg])
-
-    useEffect(() => {
-        const now = Date.now()
-        if (!isVisible || isFetching || (now - lastNextPageFetchTime) < 250 || !hasNextPage) return
-        setLastNextPageFetchTime(now)
-        handleLoadMore()
-      }, [isVisible])
+    
+    const sendJoinedGroup = async () => {
+        await axios.get(`/api/pusher/updateMemberStatus?username=${user.username}&channelName=${selectedGroup._id}`)
+    }
 
     const handlePageClick = (e) => {
         if (e.target.classList.contains('passageLink')) {
             window.open(`https://www.biblegateway.com/passage/?search=${e.target.id}&version=${user.bVersion}`, '_blank')
         }
     }
-
-    useEffect(() => {
-        if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
-            pusher = new Pusher(process.env.PUSHER_KEY, {
-                cluster: process.env.PUSHER_CLUSTER,
-                authEndpoint: `/api/pusher/auth`,
-                auth: {params: {username: user.username}}
-            })
-        }
-    }, [user.username])
-
-    useEffect(() => {
-        if (!pusher) return
-        if (selectedGroup) setChannel(pusher.subscribe(`presence-${selectedGroup._id}`))
-
-        return () => {
-            sendJoinedGroup()
-            pusher.unsubscribe(`presence-${selectedGroup._id}`)
-            setChannel(null)
-        }
-    }, [selectedGroup])
-    
-    const sendJoinedGroup = async () => {
-        await axios.get(`/api/pusher/updateMemberStatus?username=${user.username}&channelName=${selectedGroup._id}`)
-    }
-    
-    useEffect(() => {
-        if (!channel) return
-        
-        channel.bind('pusher:subscription_succeeded', (data) => {
-            sendJoinedGroup()
-            const onlineMembs = Object.keys(data?.members).map(key => data?.members[key].username)
-            if (onlineMembs.length) setOnlineMembers(onlineMembs)
-        })
-
-        channel.bind('update-online-members', data => {
-            const onlineMembs = Object.keys(channel.members.members).map(key => channel.members.members[key].username)
-            if (onlineMembs.length) setOnlineMembers(onlineMembs)
-        })
-        
-        channel.bind('fetch-new-group-msgs', data => {
-            if (data.username !== user.username) addMessage(JSON.parse(data.msg))
-        })
-
-        channel.bind('set-msg-like', data => {
-            if (data.liker === user.username) return
-            if (data.isAdded) {
-                setNewMsgLikes(data.msg, true, data.liker)
-            }
-            else setNewMsgLikes(data.msg, false, data.liker)
-        })
-
-        return () => {
-            channel.unbind('pusher:subscription_succeeded')
-            channel.unbind('update-online-members')
-            channel.unbind('fetch-new-group-msgs')
-            channel.unbind('set-msg-like')
-        }
-    }, [channel, data, user.username])
     
     async function fetchGroupMessages ({ pageParam = 0 }) {
         if (!selectedGroup._id) return null
         try {
-            const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=10`)
+            const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=100`)
             return res.data
         } catch (err) {
             console.log(err)
         }
     }
-
-    function isToday (someDate) {
-        const today = new Date()
-        return someDate.getDate() == today.getDate() &&
-        someDate.getMonth() == today.getMonth() &&
-        someDate.getFullYear() == today.getFullYear()
-    }
-
+    
     function addMessage(newData) {
         queryClient.setQueryData(['groupMessages', selectedGroup._id], (prev: any) => ({
-        ...data,
-        pages: prev?.pages.map((page, i) => {
+            ...data,
+            pages: prev?.pages.map((page, i) => {
             if (i === 0) return {
-            ...page,
-            data: [newData.data, ...page.data]
+                ...page,
+                data: [newData.data, ...page.data]
             } 
             else return page
         })
@@ -297,8 +341,8 @@ const ChatBox: React.FC = () => {
                 if (
                     (text[text.lastIndexOf(word) - 1] && text[text.lastIndexOf(word) - 1].match(/[a-z]/i))
                     || (text[indexOfBadWordLastChar + 1] && text[indexOfBadWordLastChar + 1].match(/[a-z]/i))
-                ) continue
-                text = text.replaceAll(word, `${word[0]}${'•'.repeat(word.length - 2)}${word[word.length - 1]}`)
+                    ) continue
+                    text = text.replaceAll(word, `${word[0]}${'•'.repeat(word.length - 2)}${word[word.length - 1]}`)
             }
         }
         return text
@@ -316,7 +360,7 @@ const ChatBox: React.FC = () => {
             return domNode
         }
     }
-
+    
     function handleSendMsgClick () {
         const msgData: (Partial<IMsg> & IGroupId) = {
             groupId: selectedGroup._id,
@@ -398,11 +442,7 @@ const ChatBox: React.FC = () => {
                     <div ref={messagesRef} className={styles.messages}>
                         {data?.pages.map((page, i, row1) => (
                         <Fragment key={i}>
-                            {page?.data.map((msg: IMsg, j, row2) => {
-                                const dateObj = new Date(msg.date)
-                                const date = dateObj.toLocaleDateString()
-                                const time = dateObj.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}).replace(/\s+/g, '').toLocaleLowerCase()
-                                return (
+                            {page?.data.map((msg: IMsg, j, row2) => {return (
                                 <div key={j} id={msg._id} 
                                     className={`
                                     ${styles.msg} 
@@ -420,7 +460,7 @@ const ChatBox: React.FC = () => {
                                             likedByUser={likedByUser(msg) ? true : false} 
                                         />
                                     </h4>
-                                    <h6 className={styles.msgDate}>{`${isToday(dateObj) ? '' : date + ' '}${time}`}</h6>
+                                    <h6 className={styles.msgDate}>{getFormattedDateFromISO(msg.date)}</h6>
                                     <div id={msg._id + '-likes'} className={styles.msgLikeNames}>
                                         {
                                             msg.likes.map((name, i) => {

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
+import NotificationCenter from './NotificationCenter'
 import styles from '../styles/Nav.module.css'
 
 const Nav: React.FC = () => {
@@ -22,7 +23,7 @@ const Nav: React.FC = () => {
                             <>
                                 <Link href='/groupSearch'>Find Group</Link>
                                 <Link href='/home'>DMs</Link>
-                                <Link href='/home'>Notifications</Link>
+                                <NotificationCenter />
                                 <Link href='/home'>Settings</Link>
                             </>
                             : router.pathname === '/groupSearch'
@@ -30,7 +31,7 @@ const Nav: React.FC = () => {
                                 <>
                                     <Link href='/home'>My Groups</Link>
                                     <Link href='/groupSearch'>DMs</Link>
-                                    <Link href='/groupSearch'>Notifications</Link>
+                                    <NotificationCenter />
                                     <Link href='/groupSearch'>Settings</Link>
                                 </>
                                 : null

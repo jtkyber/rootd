@@ -1,5 +1,5 @@
-import { ObjectId } from "bson"
-import { Schema, model, models, ObjectId as objectId } from "mongoose"
+import { ObjectId } from "mongodb"
+import mongoose, { Schema, model, models } from "mongoose"
 
 export interface IDm {
     author: string
@@ -9,15 +9,25 @@ export interface IDm {
     isRead: boolean
 }
 
+interface INotifGroup {
+    id: ObjectId
+    name: string
+}
+
 export interface INotification {
+    _id: ObjectId
     content: string
     date: Date | number
     notificationType: string
-    groupId?: string
-    read: boolean
+    read?: boolean
+    group?: INotifGroup
+    msgId?: ObjectId
+    likers?: string[]
+    groupName?: string
 }
 
-interface IUsr {
+export interface IUser {
+    _id: ObjectId
     username: string
     password: string
     email: string
@@ -29,13 +39,15 @@ interface IUsr {
     dmPeople: string[]
     strikes: string[] // Reasons for strikes
     currentGroup: string | null
+    lastSeenMsgs?: ILastSeenMsg[]
 }
 
-export interface IUser extends IUsr {
-    _id: string
+export interface ILastSeenMsg {
+    msgId: ObjectId
+    groupId: ObjectId
 }
 
-export const dmSchema = new Schema<IDm>({
+const dmSchema = new Schema<IDm>({
     author: String,
     content: String,
     date: Date,
@@ -49,18 +61,37 @@ export const dmSchema = new Schema<IDm>({
     },
 })
 
+const notifGroupSchema = new Schema<INotifGroup>({
+    id: mongoose.Schema.Types.ObjectId,
+    name: String
+})
+
+const lastSeenMsgSchema = new Schema<ILastSeenMsg>({
+    msgId: mongoose.Schema.Types.ObjectId,
+    groupId: mongoose.Schema.Types.ObjectId
+})
+
 export const notificationSchema = new Schema<INotification>({
+    _id: mongoose.Schema.Types.ObjectId,
     content: String,
     date: Date,
     notificationType: String,
-    groupId: String,
+    group: notifGroupSchema,
+    msgId: ObjectId,
+    likers: [String],
     read: {
         type: Boolean,
         default: false
-    }
+    },
+    groupName: String
 })
 
-const userSchema = new Schema<IUsr>({
+const userSchema = new Schema<IUser>({
+    _id:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        unique: true
+    } ,
     username: {
         type: String,
         required: true,
@@ -106,9 +137,10 @@ const userSchema = new Schema<IUsr>({
     currentGroup: {
         type: String || null,
         default: null,
-    }
+    },
+    lastSeenMsgs: [lastSeenMsgSchema]
 })
 
-const User = models.User2 || model('User2', userSchema, 'users')
+const User = models.User13 || model('User13', userSchema, 'users')
 
 export default User

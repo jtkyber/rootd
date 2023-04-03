@@ -20,9 +20,20 @@ export default async function handler(
         if (groupTest.members.includes(userName)) throw new Error('User already in group')
 
 
-        const group = await Group.findByIdAndUpdate(groupId, { $push: {members: userName}}, { new: true })
+        const group = await Group.findByIdAndUpdate(groupId, { 
+            $push: {members: userName}
+        }, { new: true })
+
         if (group.members.includes(userName)) {
-            const user = await User.findByIdAndUpdate(userId, { $push: {groups: {$each: [groupId], $position: 0}}}, { new: true })
+            const user = await User.findByIdAndUpdate(userId, { 
+                $push: {
+                    groups: {$each: [groupId], $position: 0},
+                    lastSeenMsgs: {
+                        msgId: null,
+                        groupId: groupId
+                    }
+                }
+            }, { new: true })
             res.json(user)
         } else throw new Error('User not able to be added to group')
 

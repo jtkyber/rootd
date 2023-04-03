@@ -24,9 +24,7 @@ const Home: NextPage = () => {
     if (session.user) {
       (async () => {
         const updatedUser: IUserState = await getUser(session.user.email)
-        if (!user?.bVersion) {
-          if (updatedUser) dispatch(setUser(updatedUser))
-        }
+        if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
 
         if (updatedUser.groups.length) {
           const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
@@ -35,13 +33,8 @@ const Home: NextPage = () => {
       })()
     }
   }, [])
-
-  useEffect(() => { if (userGroups[0]) dispatch(setSelectedGroup(userGroups[0])) }, [userGroups])
-
-  // useEffect(() => {
-  //   if (!selectedGroup) return
-  //   axios.put('/api/')
-  // }, [selectedGroup])
+  
+  useEffect(() => { if (userGroups[0] && !selectedGroup._id) dispatch(setSelectedGroup(userGroups[0])) }, [userGroups])
 
   return (
     <div className={styles.container}>

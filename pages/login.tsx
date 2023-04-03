@@ -33,15 +33,7 @@ const register: NextPage = () => {
             if (status?.ok) {
                 const user: IUserState = await getUser(email.value)
                 if (user.username) {
-                    dispatch(setUser({
-                        username: user.username,
-                        bVersion: user.bVersion,
-                        groups: user.groups,
-                        notifications: user.notifications,
-                        dmPeople: user.dmPeople,
-                        strikes: user.strikes,
-                        directMsgs: user.directMsgs
-                    }))
+                    dispatch(setUser({...user}))
                     router.replace(`${status?.url}`)
                 }
             }

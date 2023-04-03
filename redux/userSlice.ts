@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IDm } from "../models/userModel"
+import { IDm, ILastSeenMsg } from "../models/userModel"
+import { ObjectId } from "mongodb"
 
 export interface IUserState {
+    _id: ObjectId | null
     username: string
     bVersion: string
     groups: string[]
@@ -9,6 +11,7 @@ export interface IUserState {
     dmPeople: IDm[]
     strikes: any[]
     directMsgs: any[]
+    lastSeenMsgs: ILastSeenMsg[]
 }
 
 interface IState {
@@ -19,6 +22,7 @@ interface IState {
 
 const initialState: IState = {
     user: {
+        _id: null,
         username: '',
         bVersion: '',
         groups: [],
@@ -26,6 +30,7 @@ const initialState: IState = {
         dmPeople: [],
         strikes: [],
         directMsgs: [],
+        lastSeenMsgs: []
     },
     pusher: null,
     channel: null

@@ -47,6 +47,63 @@
         justify-content: flex-end;
         align-items: center;
         padding-right: 3rem;
-        gap: 1rem;
+
+        & a, & .navigationContainer {
+            height: 100%;
+            padding: 0 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        & a {
+            @mixin fadeOnHover;
+            cursor: pointer;
+        }
+
+        & .navigationContainer {
+            position: relative;
+
+            & svg {
+                fill: white;
+                opacity: 0.8;
+                width: 20px;
+                cursor: pointer;
+
+                @mixin fadeOnHover;
+            }
+
+            & .notificationDropdown {
+                position: fixed;
+                top: calc($nav_height);
+                right: 0;
+                width: 15rem;
+                height: 20rem;
+                box-shadow: $sectionShadow;
+                border-bottom-left-radius: 0.5rem;
+                background-color: $light_grey;
+                display: none;
+
+                &.active {
+                    display: block;
+                }
+
+                & .notification {
+                    width: 100%;
+                    height: max-content;
+                    text-align: center;
+                    border-bottom: 1px solid black;
+                    padding: 0.5rem;
+                    color: $red_brown;
+                    cursor: pointer;
+
+                    &.read {
+                        opacity: 0.6
+                    }
+
+                    @mixin fadeOnHover;
+                }
+            }
+        }
+
     }
 }
