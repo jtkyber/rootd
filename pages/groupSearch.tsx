@@ -265,7 +265,7 @@ const groupSearch = () => {
                       return <div onClick={(e) => handleResultClick(e)} className={styles.result} key={j}>
                         <h3 className={styles.name}>{group.name}</h3>
                         {
-                          user.groups.includes(group._id)
+                          group?._id && user.groups.includes(group._id.toString())
                           ? <h5 className={styles.joined}>Joined</h5>
                           : <button onClick={() => handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
                         }

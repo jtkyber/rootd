@@ -9,7 +9,7 @@ export interface IGroupState {
 const initialState: IGroupState = {
     userGroups: [],
     selectedGroup: {
-        _id: null,
+        _id: '',
         name: '',
         members: [],
         isPrivate: false,
