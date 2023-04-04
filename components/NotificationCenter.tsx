@@ -30,16 +30,14 @@ const NotificationCenter = () => {
     }
 
     const markNotificationAsRead = async (notification:  INotification) => {
-        const res = await axios.put('/api/markNotificationAsRead', {
+        await axios.put('/api/markNotificationAsRead', {
             userId: user._id,
             notificationId: notification._id
         })
-        const data = res.data
-        if (data?.notifications) dispatch(setUser({...user, notifications: data.notifications}))
     }
 
     const onNotificationClick = async (notification:  INotification) => {
-        markNotificationAsRead(notification)
+        await markNotificationAsRead(notification)
 
         switch(notification.notificationType) {
             case 'message-like':
@@ -51,7 +49,10 @@ const NotificationCenter = () => {
                             groupId: selectedGroup._id
                         })
                         const resData: ILastSeenMsg[] = res.data
-                        dispatch(setUser({...user, lastSeenMsgs: resData}))
+                        dispatch(setUser({...user, lastSeenMsgs: resData, notifications: user.notifications.map(notif => {
+                            if (notif._id === notification._id) return {...notif, read: true}
+                            return notif
+                        })}))
                         if (router.pathname !== '/home') router.replace('/home')
                         dispatch(setSelectedGroup(group))
                         scrollToMessage(resData, selectedGroup._id)
