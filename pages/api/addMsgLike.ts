@@ -14,34 +14,33 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { msg, name, channel }: any = req.body
-        await Group.findOneAndUpdate(
-            { "messages._id" : msg._id},
-            { "$addToSet": {
-                "messages.$.likes": name.toString()
-            }},
-            {new: false}
-        ).then(async (docs1) => {
-            const msgs = docs1.messages.filter(m => m._id.toString() === msg._id)
-            if (msgs[0]?.likes?.includes(name)) {
-                await Group.findOneAndUpdate(
-                    { "messages._id" : msg._id },
-                    { "$pull": {
-                        "messages.$.likes": name.toString()
-                    }}
-                )
-                await pusher.trigger(channel, 'set-msg-like', {msg: msg, isAdded: false, liker: name})
-                res.json(false)
-            } else {
-                await pusher.trigger(channel, 'set-msg-like', {msg: msg, isAdded: true, liker: name})
+        const { groupId, groupName, msgId, name, channel }: any = req.body
+
+        await Group.updateOne({ _id : groupId },
+        { 
+            $addToSet: { "messages.$[i].likes": name.toString() }
+        }, 
+        {
+            arrayFilters: [ { 'i._id': msgId } ],
+        }).then(async docs1 => {
+            if (docs1.modifiedCount > 0) {
+                await pusher.trigger(`presence-${groupId}`, 'set-msg-like', {msgId: msgId, isAdded: true, liker: name})
+                await pusher.trigger(`${channel}`, 'update-notifications', {notificationType: 'message-like', msgId: msgId, newLiker: name, groupId: groupId, groupName: groupName})
                 res.json(true)
+            } else {
+                await Group.updateOne({ _id : groupId }, {
+                    $pull: { "messages.$[i].likes": name.toString() },
+                }, 
+                {
+                    arrayFilters: [ { 'i._id': msgId } ],
+                }).then(async docs2 => {
+                    if (docs2.modifiedCount > 0) {
+                        await pusher.trigger(`presence-${groupId}`, 'set-msg-like', {msgId: msgId, isAdded: false, liker: name})
+                        res.json(false)
+                    } else throw new Error('Error occured when setting message like')
+                })
             }
-            
         })
-            
-
-            
-
     } catch(err) {
         console.log(err)
         res.status(400).end(err)

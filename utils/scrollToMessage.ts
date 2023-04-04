@@ -1,6 +1,6 @@
 export default function scrollToMessage(msgs, selectedGroupId) {
     for (const msg of msgs) {
-        if (msg.groupId.toString() === selectedGroupId.toString()) {
+        if (msg?.msgId && msg?.groupId?.toString() === selectedGroupId?.toString()) {
             const lastMsgSeen = document.getElementById(msg.msgId.toString())
             lastMsgSeen?.scrollIntoView()
             break

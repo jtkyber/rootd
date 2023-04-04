@@ -1,15 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../../connectDB'
-import User from '../../../models/userModel'
+import User, { IUser } from '../../../models/userModel'
 import bcrypt from 'bcrypt'
-
-type Data = {
-  name: string
-}
+import mongoose from 'mongoose'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Partial<IUser>>
   ) {
     try {
         const { username, password, email, gender, bVersion } = req.body;
@@ -17,14 +14,15 @@ export default async function handler(
         bcrypt.genSalt(10, (_err, salt): void => {
             bcrypt.hash(password, salt, async (_err, hash) => {
                 User.create({
+                    _id: new mongoose.Types.ObjectId,
                     username: username, 
                     password: hash,
                     email: email,
                     gender: gender,
                     bVersion: bVersion
-                }, (error, newUser) => {
-                    const userClone = (({ password, ...object }) => object)(newUser._doc)
-                    if (userClone?._id) {
+                }, (error, docs) => {
+                    if (docs?._id) {
+                        const userClone = (({ password, ...object }) => object)(docs?._doc)
                         res.json(userClone)
                     } else {
                         if (error.code === 11000) {

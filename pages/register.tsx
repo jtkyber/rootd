@@ -30,6 +30,7 @@ const register: NextPage = () => {
                 gender: gender?.value,
                 bVersion: bVersion?.value,
             })
+
     
             const newUser = res.data
     

@@ -1,52 +1,40 @@
-import { Schema, model, models } from "mongoose"
+import mongoose, { Schema, model, models } from "mongoose"
+import { ObjectId } from "mongodb"
 
 // export interface IDate {
 //     dateNow: string,
 //     dateFormatted: string
 // }
 
-interface IMessage {
-    author: string,
-    content: string,
-    date: Date | number,
-    likes: string[],
+export interface IMessage {
+    _id: string
+    author: string
+    authorId: ObjectId
+    content: string
+    date: Date | number
+    likes: string[]
     psgReference?: string
 }
 
-export interface IMsg {
-    _id: string,
-    author: string,
-    content: string,
-    date: Date | number,
-    likes: string[],
-    psgReference?: string
-}
 
-interface IGrp {
-    name: string,
-    members: string[], // usernames 
-    messages?: IMsg[],
-    isPrivate: boolean,
-    summary: string,
-    tags: string[],
-    characters?: string[],
-    books: string[],
-    date: Date | number,
-    lastActive: Date | number,
+export interface IGroup {
+    _id: ObjectId | null
+    name: string
+    members: string[]
+    messages?: IMessage[]
+    isPrivate: boolean
+    summary: string
+    tags: string[]
+    characters?: string[]
+    books: string[]
+    date: Date | number
+    lastActive: Date | number
     groupAdmin?: string | null
 }
 
-export interface IGroup extends IGrp {
-    _id: string
-}
-
-// export const dateSchema = new Schema<IDate>({
-//     dateNow: String,
-//     dateFormatted: String
-// })
-
 export const msgSchema = new Schema<IMessage>({
     author: String,
+    authorId: mongoose.Schema.Types.ObjectId,
     content: String,
     date: Date,
     likes: [String],
@@ -56,7 +44,12 @@ export const msgSchema = new Schema<IMessage>({
     }
 })
 
-const groupSchema = new Schema<IGrp>({
+const groupSchema = new Schema<IGroup>({
+    _id:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        unique: true
+    },
     name: {
         type: String,
         required: true
@@ -103,6 +96,6 @@ const groupSchema = new Schema<IGrp>({
     }
 })
 
-const Group = models.Group1 || model('Group1', groupSchema, 'groups')
+const Group = models.Group2 || model('Group2', groupSchema, 'groups')
 
 export default Group

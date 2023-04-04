@@ -1,11 +1,12 @@
 import React from 'react'
 import { Fragment } from 'react'
-import Pusher from 'pusher-js'
+import{ PresenceChannel } from 'pusher-js'
 import { useSession } from 'next-auth/react'
+import { ObjectId } from 'mongodb'
 import axios from 'axios'
-import { IGroup, IMsg } from '../models/groupModel'
+import { IGroup, IMessage } from '../models/groupModel'
 import { useState, useEffect, useRef } from 'react'
-import { useAppSelector } from '../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { IUserState, setUser } from '../redux/userSlice'
 import LikeIcon from './LikeIcon'
@@ -18,24 +19,17 @@ import { useOnScreen } from '../utils/hooks'
 import badWords from '../badWords.json'
 import { getFormattedDateFromISO } from '../utils/dates'
 import styles from '../styles/Home.module.css'
-import throttle from '../utils/throttle'
 import debounce from '../utils/debounce'
-import { useDispatch } from 'react-redux'
 import { ILastSeenMsg } from '../models/userModel'
 import scrollToMessage from '../utils/scrollToMessage'
 
 
 let scrollElementId: string
 
-interface IGroupId {
-  groupId: string
-}
-
-let pusher
 let lastMsgClickedDate
 let lastMsgClicked
 
-const ChatBox: React.FC = () => {
+const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     const textAreaRef: React.MutableRefObject<any> = useRef(null)
     const chatAreaRef: React.MutableRefObject<any> = useRef(null)
     const chatBoxRef: React.MutableRefObject<any> = useRef(null)
@@ -48,12 +42,11 @@ const ChatBox: React.FC = () => {
     
     const queryClient = useQueryClient()
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const user: IUserState = useAppSelector(state => state.user.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
     
-    const [channel, setChannel]: any = useState(null)
     const [addingPsg, setAddingPsg] = useState(false)
     const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
     const [windowWidth, setWindowWidth] = useState(0)
@@ -70,7 +63,7 @@ const ChatBox: React.FC = () => {
     
     const { data: session }: any = useSession()
   
-    const sendMessage = useMutation((msgData: (Partial<IMsg> & IGroupId)) => {
+    const sendMessage = useMutation((msgData: (Partial<IMessage> & ObjectId)) => {
         return axios.post('/api/postGroupMsg', msgData)
         }, {
             onSuccess: async (newData) => {
@@ -115,73 +108,44 @@ const ChatBox: React.FC = () => {
     }, [isVisible])
     
     useEffect(() => {
-        if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
-            pusher = new Pusher(process.env.PUSHER_KEY, {
-                cluster: process.env.PUSHER_CLUSTER,
-                authEndpoint: `/api/pusher/auth`,
-                auth: {params: {username: user.username}}
-            })
-        }
-    }, [user.username])
-    
-    useEffect(() => {
-        if (!pusher) return
-        if (selectedGroup) setChannel(pusher.subscribe(`presence-${selectedGroup._id}`))
         if (chatBoxRef.current) chatBoxRef.current.addEventListener('scroll', handleChatScroll)
         
         return () => {
             sendJoinedGroup()
-            pusher.unsubscribe(`presence-${selectedGroup._id}`)
-            setChannel(null)
             if (chatBoxRef.current) chatBoxRef.current.removeEventListener('scroll', handleChatScroll)
         }
     }, [selectedGroup])
     
     useEffect(() => {
-        if (!channel) return
+        if (!channels?.[1]) return
         
-        channel.bind('pusher:subscription_succeeded', (data) => {
+        channels?.[1].bind('pusher:subscription_succeeded', (data) => {
             sendJoinedGroup()
             const onlineMembs = Object.keys(data?.members).map(key => data?.members[key].username)
             if (onlineMembs.length) setOnlineMembers(onlineMembs)
         })
         
-        channel.bind('update-online-members', data => {
-            const onlineMembs = Object.keys(channel.members.members).map(key => channel.members.members[key].username)
+        channels?.[1].bind('update-online-members', data => {
+            const onlineMembs = Object.keys(channels?.[1].members.members).map(key => channels?.[1].members.members[key].username)
             if (onlineMembs.length) setOnlineMembers(onlineMembs)
         })
         
-        channel.bind('fetch-new-group-msgs', data => {
+        channels?.[1].bind('fetch-new-group-msgs', data => {
             if (data.username !== user.username) addMessage(JSON.parse(data.msg))
         })
         
-        channel.bind('set-msg-like', data => {
+        channels?.[1].bind('set-msg-like', data => {
             if (data.liker === user.username) return
-            if (data.isAdded) {
-                setNewMsgLikes(data.msg, true, data.liker)
-            }
-            else setNewMsgLikes(data.msg, false, data.liker)
+            setNewMsgLikes(data.msgId, data.isAdded, data.liker)
         })
         
         return () => {
-            channel.unbind('pusher:subscription_succeeded')
-            channel.unbind('update-online-members')
-            channel.unbind('fetch-new-group-msgs')
-            channel.unbind('set-msg-like')
+            channels?.[1].unbind('pusher:subscription_succeeded')
+            channels?.[1].unbind('update-online-members')
+            channels?.[1].unbind('fetch-new-group-msgs')
+            channels?.[1].unbind('set-msg-like')
         }
-    }, [channel, data, user.username])
-    
-    // const scrollToMessage = () => {
-    //     if (!user?.lastSeenMsgs?.length || !selectedGroup._id || status === 'loading') return
-
-    //     for (const msg of user.lastSeenMsgs) {
-    //         if (msg.groupId.toString() === selectedGroup._id.toString()) {
-    //             const lastMsgSeen = document.getElementById(msg.msgId.toString())
-    //             lastMsgSeen?.scrollIntoView()
-    //             break
-    //         }
-    //     }
-    // }
+    }, [channels, data, user.username])
 
     const setNewMsgLastSeen = debounce(async(i) => {
         const msgId = messagesRef.current?.children?.[i]?.id
@@ -362,9 +326,10 @@ const ChatBox: React.FC = () => {
     }
     
     function handleSendMsgClick () {
-        const msgData: (Partial<IMsg> & IGroupId) = {
+        const msgData: (Partial<IMessage> & any) = {
             groupId: selectedGroup._id,
-            author: session.user.username,
+            author: user.username,
+            authorId: user._id,
             content: textAreaRef.current.innerHTML,
             date: new Date,
             psgReference: ''
@@ -383,7 +348,7 @@ const ChatBox: React.FC = () => {
         scrollElementId = ''
     }
 
-    const setNewMsgLikes = (msg, isAdded, liker = user.username) => {
+    const setNewMsgLikes = (msgId, isAdded, liker = user.username) => {
         queryClient.setQueryData(['groupMessages', selectedGroup._id], (prev: any) => {
             return {
                 ...data,
@@ -393,7 +358,7 @@ const ChatBox: React.FC = () => {
                   data: page.data.map((m, j) => {
                     return {
                         ...m,
-                        likes: m._id === msg._id ? 
+                        likes: m._id === msgId ? 
                             isAdded ? [...m.likes, liker] : m.likes.filter(like => like !== liker)
                         : m.likes
                     }
@@ -405,26 +370,28 @@ const ChatBox: React.FC = () => {
     }
 
     const postMsgLike = async (msg) => {
-        const res = await axios.post('/api/addMsgLike', {
-            msg: msg,
+        const res = await axios.put('/api/addMsgLike', {
+            groupId: selectedGroup._id,
+            groupName: selectedGroup.name,
+            msgId: msg._id,
             name: user.username,
-            channel: selectedGroup._id
+            channel: msg.authorId
         })
-        if (res.data) setNewMsgLikes(msg, true) 
-        else setNewMsgLikes(msg, false)
+        if (res.data === true) setNewMsgLikes(msg._id, true) 
+        else setNewMsgLikes(msg._id, false)
     }
 
-    const handleMsgLikeClick = (msg: IMsg, e?: React.TouchEvent<HTMLDivElement>): void => {
+    const handleMsgLikeClick = (msg: IMessage, e?: React.TouchEvent<HTMLDivElement>): void => {
         if (msg.author === user.username) return
         const timeSinceLastMsgClick = Date.now() - lastMsgClickedDate
         lastMsgClickedDate = Date.now()
 
-        if (!e)  postMsgLike(msg)
+        if (!e) postMsgLike(msg)
         else if ((lastMsgClicked === e.target) && timeSinceLastMsgClick > 0 && timeSinceLastMsgClick < 300) postMsgLike(msg) 
         else lastMsgClicked = e.target
     }
 
-    const likedByUser = (msg: IMsg): boolean => {
+    const likedByUser = (msg: IMessage): boolean => {
         if (msg.likes.includes(user.username)) return true
         return false
     }
@@ -442,7 +409,7 @@ const ChatBox: React.FC = () => {
                     <div ref={messagesRef} className={styles.messages}>
                         {data?.pages.map((page, i, row1) => (
                         <Fragment key={i}>
-                            {page?.data.map((msg: IMsg, j, row2) => {return (
+                            {page?.data.map((msg: IMessage, j, row2) => {return (
                                 <div key={j} id={msg._id} 
                                     className={`
                                     ${styles.msg} 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import NotificationBellIcon from './NotificationBellIcon'
 import styles from '../styles/Nav.module.css'
 import { IUserState, setUser } from '../redux/userSlice'
@@ -10,7 +10,7 @@ import { setSelectedGroup } from '../redux/groupSlice'
 import { useRouter } from 'next/router'
 import scrollToMessage from '../utils/scrollToMessage'
 
-const NotificationCenter = ({  }) => {
+const NotificationCenter = () => {
     const [active, setActive] = useState(false)
     const user: IUserState = useAppSelector(state => state.user.user)
     const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
@@ -19,6 +19,15 @@ const NotificationCenter = ({  }) => {
     const dispatch = useAppDispatch()
 
     const router = useRouter()
+
+    useEffect(() => {
+        document.addEventListener('click', closeNotifications)
+        return () => document.removeEventListener('click', closeNotifications)
+    }, [])
+
+    const closeNotifications = (e) => {
+        if (!(e.target as SVGSVGElement).classList.contains(styles.bellIcon)) setActive(false)
+    }
 
     const markNotificationAsRead = async (notification:  INotification) => {
         const res = await axios.put('/api/markNotificationAsRead', {
@@ -35,7 +44,7 @@ const NotificationCenter = ({  }) => {
         switch(notification.notificationType) {
             case 'message-like':
                 for (const group of userGroups) {
-                    if (group?._id.toString() === notification?.group?.id.toString()) {
+                    if (group?._id?.toString() === notification?.group?.id.toString()) {
                         const res = await axios.put('/api/setLastSeenMsgId', {
                             userId: user._id,
                             msgId: notification.msgId,
@@ -55,9 +64,11 @@ const NotificationCenter = ({  }) => {
         <div className={styles.navigationContainer}>
             <NotificationBellIcon active={active} setActive={setActive} />
             
+            <h5 className={styles.unreadCount}>{user?.notifications.filter(notif => !notif.read).length}</h5>
+
             <div className={`${styles.notificationDropdown} ${active ? styles.active : null}`}>
                 {
-                    user.notifications.map((notif: INotification, i: number) => {
+                    user?.notifications?.map((notif: INotification, i: number) => {
                         return <div onClick={() => onNotificationClick(notif)} key={i} className={`${styles.notification} ${notif.read ? styles.read : null}`}>
                             {
                                 notif.notificationType === 'message-like' && notif?.likers?.length && notif?.group ?

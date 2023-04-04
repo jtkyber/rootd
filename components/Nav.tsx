@@ -3,8 +3,9 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import NotificationCenter from './NotificationCenter'
 import styles from '../styles/Nav.module.css'
+import Pusher from 'pusher-js/types/src/core/pusher'
 
-const Nav: React.FC = () => {
+const Nav = ({ pusher }: {pusher: Pusher | null}) => {
     const router = useRouter()
 
     return (

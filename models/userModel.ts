@@ -87,7 +87,7 @@ export const notificationSchema = new Schema<INotification>({
 })
 
 const userSchema = new Schema<IUser>({
-    _id:{
+    _id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         unique: true
@@ -141,6 +141,6 @@ const userSchema = new Schema<IUser>({
     lastSeenMsgs: [lastSeenMsgSchema]
 })
 
-const User = models.User13 || model('User13', userSchema, 'users')
+const User = models.User15 || model('User15', userSchema, 'users')
 
 export default User

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
-import Group, { IMsg } from '../../models/groupModel';
+import Group, { IMessage } from '../../models/groupModel';
 
 type Data = {
   name: string
@@ -13,9 +13,10 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { groupId, author, content, date, psgReference }: any = req.body
-        const msg: Partial<IMsg> = {
+        const { groupId, author, authorId, content, date, psgReference }: any = req.body
+        const msg: Partial<IMessage> = {
             author,
+            authorId,
             content,
             date,
             psgReference

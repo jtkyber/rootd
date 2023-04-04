@@ -1,8 +1,9 @@
-import React from 'react';
+import React from 'react'
+import styles from '../styles/Nav.module.css'
 
 const NotificationBellIcon = ({ active, setActive }) => {
     return (
-        <svg onClick={() => setActive(!active)} fill="#000000" height="35px" width="35px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 611.999 611.999" xmlSpace="preserve">
+        <svg className={styles.bellIcon} onClick={() => setActive(!active)} fill="#000000" height="35px" width="35px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 611.999 611.999" xmlSpace="preserve">
             <g>
                 <g>
                     <g>

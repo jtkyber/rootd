@@ -10,8 +10,9 @@ import { IUserState, setUser } from '../redux/userSlice'
 import getUser from '../utils/getUser'
 import styles from '../styles/Home.module.css'
 import Link from 'next/link'
+import { PresenceChannel } from 'pusher-js'
 
-const Home: NextPage = () => {
+const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
   const dispatch = useAppDispatch()
 
   const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
@@ -56,7 +57,7 @@ const Home: NextPage = () => {
               : <Link href='/groupSearch'>Find Group</Link>
             }
           </div>
-         <ChatBox />
+         <ChatBox channels={channels} />
         </>
         : <h1>Not Authorized</h1>
       }
