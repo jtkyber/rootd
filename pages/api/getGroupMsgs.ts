@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
-import Group, { IGroup, IMsg } from '../../models/groupModel';
+import Group, { IGroup, IMessage } from '../../models/groupModel';
 
 type Data = {
-  data: IMsg[],
+  data: IMessage[],
   cursor: number | null
 }
 
@@ -18,7 +18,7 @@ export default async function handler(
       const group: (IGroup | null) = await Group.findById(groupId, {messages: {$slice: [parseInt(cursor), parseInt(limit)]}})
       if (!group) throw new Error('Group not found')
       if (!group.messages) throw new Error('Messages not found')
-      const messages: IMsg[] = group.messages
+      const messages: IMessage[] = group.messages
 
       res.json({
         data: messages,

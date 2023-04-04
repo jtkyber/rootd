@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
-import Group, { IGroup, IMsg } from '../../models/groupModel';
+import Group, { IGroup, IMessage } from '../../models/groupModel';
 
 type Data = {
   name: string
