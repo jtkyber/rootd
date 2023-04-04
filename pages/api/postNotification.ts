@@ -76,7 +76,13 @@ export default async function handler(
                         } 
                     },
                     {
-                        arrayFilters: [ { 'i.likers': { $nin: newLiker } } ]
+                        arrayFilters: [ 
+                            { 
+                                'i.likers': { $nin: newLiker }, 
+                                'i.notificationType': 'message-like',
+                                'i.msgId': msgId
+                            }
+                        ]
                     }
                 )
                 .then(async docs1 => {
