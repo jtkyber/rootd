@@ -6,21 +6,23 @@ export interface IGroupState {
     selectedGroup: IGroup
 }
 
+export const initialSelectedGroupState = {
+    _id: null,
+    name: '',
+    members: [],
+    isPrivate: false,
+    summary: '',
+    tags: [],
+    characters: [],
+    books: [],
+    date: Date.now(),
+    lastActive: Date.now(),
+    groupAdmin: null
+}
+
 const initialState: IGroupState = {
     userGroups: [],
-    selectedGroup: {
-        _id: null,
-        name: '',
-        members: [],
-        isPrivate: false,
-        summary: '',
-        tags: [],
-        characters: [],
-        books: [],
-        date: Date.now(),
-        lastActive: Date.now(),
-        groupAdmin: null
-    }
+    selectedGroup: initialSelectedGroupState
 }
 
 export const groupSlice = createSlice({

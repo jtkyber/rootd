@@ -81,13 +81,17 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         }
     )
 
+    const refetch = () => queryClient.resetQueries({ queryKey: ['groupMessages', selectedGroup._id], type: 'active' })
+
     useEffect(() => {
         setWindowWidth(window.innerWidth)
         setWindowHeight(window.innerHeight)
         document.addEventListener('click', handlePageClick)
         window.addEventListener('resize', handleWindowResize)
+        if (data) refetch()
         
         return () => {
+            
             document.removeEventListener('click', handlePageClick)
             window.removeEventListener('resize', handleWindowResize)
         }
@@ -109,8 +113,11 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     
     useEffect(() => {
         if (chatBoxRef.current) chatBoxRef.current.addEventListener('scroll', handleChatScroll)
-        
+
+        const interval = setInterval(() => periodicallyCheckGroupMembers(), 5000)
+
         return () => {
+            clearInterval(interval)
             sendJoinedGroup()
             if (chatBoxRef.current) chatBoxRef.current.removeEventListener('scroll', handleChatScroll)
         }
@@ -120,9 +127,11 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         if (!channels?.[1]) return
         
         channels?.[1].bind('pusher:subscription_succeeded', (data) => {
-            sendJoinedGroup()
             const onlineMembs = Object.keys(data?.members).map(key => data?.members[key].username)
-            if (onlineMembs.length) setOnlineMembers(onlineMembs)
+            if (onlineMembs.length) {
+                sendJoinedGroup()
+                setOnlineMembers(onlineMembs)
+            }
         })
         
         channels?.[1].bind('update-online-members', data => {
@@ -146,6 +155,13 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
             channels?.[1].unbind('set-msg-like')
         }
     }, [channels, data, user.username])
+
+    const periodicallyCheckGroupMembers = () => {
+        if (channels?.[1]?.members?.members) {
+            const onlineMembs = Object.keys(channels?.[1].members.members).map(key => channels?.[1].members.members[key].username)
+            if (onlineMembs.length) setOnlineMembers(onlineMembs)
+        }
+    }
 
     const setNewMsgLastSeen = debounce(async(i) => {
         const msgId = messagesRef.current?.children?.[i]?.id

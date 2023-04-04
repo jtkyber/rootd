@@ -7,6 +7,8 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { IGroup } from '../models/groupModel'
 import Pusher, { PresenceChannel } from 'pusher-js'
 import axios from 'axios'
+import { INotification } from '../models/userModel'
+import { useRouter } from 'next/router'
 
 const Layout = (props) => {
     const user: IUserState = useAppSelector(state => state.user.user)
@@ -15,6 +17,8 @@ const Layout = (props) => {
     const [channels, setChannels]: any = useState<PresenceChannel[] | []>([])
     
     const dispatch = useAppDispatch()
+
+    const router = useRouter()
 
     useEffect(() => {
         if (!user._id) return
@@ -30,7 +34,7 @@ const Layout = (props) => {
 
     useEffect(() => {
         if (!pusher || !user._id) return
-        if (selectedGroup) {
+        if (selectedGroup && router.pathname === '/home') {
             const channelsTemp = [`${user._id}`, `presence-${selectedGroup._id}`].map(channelName => {
                 return pusher.subscribe(channelName)
             })
@@ -40,15 +44,15 @@ const Layout = (props) => {
         }
         
         return () => {
-            if (selectedGroup && channels.length) {
-                for (const channelName of channels) {
+            if (pusher.channels.channels) {
+                for (const channelName in pusher.channels.channels) {
                     pusher.unsubscribe(channelName)
                 }
             }
             setChannels([])
         }
-    }, [user._id, selectedGroup])
-
+    }, [user._id, selectedGroup, router.pathname])
+    
     useEffect(() => {
         if (!channels?.[0]) return
         channels?.[0].bind('update-notifications', data => {
@@ -58,17 +62,21 @@ const Layout = (props) => {
         return () => {
             channels?.[0].unbind('update-notifications')
         }
-    }, [user._id, channels])
+    }, [channels])
 
     const updateNotifications = async (data) => {
-        const res = await axios.post('/api/postNotification', {
-            notificationType: data.notificationType,
-            msgId: data.msgId,
-            newLiker: data.newLiker,
-            userId: user._id,
-            groupId: data.groupId,
-            groupName: data.groupName
-        })
+        let res
+        switch(data.notificationType) {
+            case 'message-like':
+                res = await axios.post('/api/postNotification', {
+                    notificationType: data.notificationType,
+                    msgId: data.msgId,
+                    newLiker: data.newLiker,
+                    userId: user._id,
+                    groupId: data.groupId,
+                    groupName: data.groupName
+                })
+        }
 
         if (res.data) {
             dispatch(setUser({...user, notifications: res.data}))

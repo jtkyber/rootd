@@ -55,7 +55,7 @@ const NotificationCenter = () => {
                         })}))
                         if (router.pathname !== '/home') router.replace('/home')
                         dispatch(setSelectedGroup(group))
-                        scrollToMessage(resData, selectedGroup._id)
+                        await setTimeout(() => scrollToMessage(resData, selectedGroup._id), 500)
                     }
                 }
         }

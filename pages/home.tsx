@@ -4,7 +4,7 @@ import axios from 'axios'
 import { IGroup } from '../models/groupModel'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
-import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
+import { initialSelectedGroupState, setSelectedGroup, setUserGroups } from '../redux/groupSlice'
 import ChatBox from '../components/ChatBox'
 import { IUserState, setUser } from '../redux/userSlice'
 import getUser from '../utils/getUser'
@@ -32,6 +32,10 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
           if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
         }
       })()
+    }
+
+    return () => {
+      // dispatch(setSelectedGroup(initialSelectedGroupState))
     }
   }, [])
   
