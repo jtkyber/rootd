@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { ILastSeenMsg, INotification } from '../models/userModel'
 import axios from 'axios'
 import { IGroup } from '../models/groupModel'
-import { setSelectedGroup } from '../redux/groupSlice'
+import { initialSelectedGroupState, setSelectedGroup } from '../redux/groupSlice'
 import { useRouter } from 'next/router'
 import scrollToMessage from '../utils/scrollToMessage'
 
@@ -38,7 +38,7 @@ const NotificationCenter = () => {
         })
 
         setNotificationArray(notifArrTemp)
-    }, [user?.notifications])
+    }, [user?.notifications, router.pathname])
 
 
     const closeNotifications = (e) => {
@@ -57,25 +57,23 @@ const NotificationCenter = () => {
 
         switch(notification.notificationType) {
             case 'message-like':
-                for (const group of userGroups) {
-                    if (group?._id?.toString() === notification?.group?.id.toString()) {
-                        const res = await axios.put('/api/setLastSeenMsgId', {
-                            userId: user._id,
-                            msgId: notification.msgId,
-                            groupId: selectedGroup._id
-                        })
-                        const resData: ILastSeenMsg[] = res.data
-                        
-                        dispatch(setUser({...user, lastSeenMsgs: resData, notifications: user.notifications.map(notif => {
-                            if (notif._id === notification._id) return {...notif, read: true}
-                            return notif
-                        })}))
-                        
-                        if (router.pathname !== '/home') router.replace('/home')
-                        dispatch(setSelectedGroup(group))
-                        await setTimeout(() => scrollToMessage(resData, selectedGroup._id), 500)
-                    }
-                }
+                const res = await axios.put('/api/setLastSeenMsgId', {
+                    userId: user._id,
+                    msgId: notification.msgId,
+                    groupId: notification.group?.id
+                })
+                const resData: ILastSeenMsg[] = res.data
+
+                dispatch(setUser({...user, notifications: user.notifications.map(notif => {
+                    if (notif._id === notification._id) return {...notif, read: true}
+                    return notif
+                })}))
+                
+                if (router.pathname !== '/home') router.replace('/home')
+                const selectedGroupTemp = userGroups.find(g => g._id === notification.group?.id)
+                dispatch(setSelectedGroup(selectedGroupTemp || selectedGroup))
+
+                scrollToMessage(resData, selectedGroup._id)
         }
     }
 

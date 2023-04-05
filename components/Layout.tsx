@@ -31,7 +31,7 @@ const Layout = (props) => {
             setPusher(pusher)
         }
     }, [user._id])
-
+    
     useEffect(() => {
         if (!pusher || !user._id) return
         if (selectedGroup && router.pathname === '/home') {

@@ -91,7 +91,6 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         if (data) refetch()
         
         return () => {
-            
             document.removeEventListener('click', handlePageClick)
             window.removeEventListener('resize', handleWindowResize)
         }
@@ -180,7 +179,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
             if (
                 messagesRef.current.children[i].getBoundingClientRect().bottom < window.innerHeight
                 && messagesRef.current.children[i].getBoundingClientRect().bottom < (window.innerHeight - 100)
-            ) {
+                ) {
                 setNewMsgLastSeen(i)
             }
         }
