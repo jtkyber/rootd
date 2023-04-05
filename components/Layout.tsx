@@ -31,7 +31,7 @@ const Layout = (props) => {
             setPusher(pusher)
         }
     }, [user._id])
-    
+
     useEffect(() => {
         if (!pusher || !user._id) return
         if (selectedGroup && router.pathname === '/home') {
@@ -58,16 +58,17 @@ const Layout = (props) => {
         channels?.[0].bind('update-notifications', data => {
             updateNotifications(data)
         })
-
+        
         return () => {
             channels?.[0].unbind('update-notifications')
         }
     }, [channels])
-
+    
     const updateNotifications = async (data) => {
         let res
         switch(data.notificationType) {
             case 'message-like':
+                if (selectedGroup._id === data.groupId) return
                 res = await axios.post('/api/postNotification', {
                     notificationType: data.notificationType,
                     msgId: data.msgId,
