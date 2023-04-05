@@ -12,6 +12,7 @@ import scrollToMessage from '../utils/scrollToMessage'
 
 const NotificationCenter = () => {
     const [active, setActive] = useState(false)
+    const [notificationArray, setNotificationArray] = useState<JSX.Element[]>([])
     const user: IUserState = useAppSelector(state => state.user.user)
     const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
@@ -24,6 +25,21 @@ const NotificationCenter = () => {
         document.addEventListener('click', closeNotifications)
         return () => document.removeEventListener('click', closeNotifications)
     }, [])
+
+    useEffect(() => {
+        const notifArrTemp: JSX.Element[] = user?.notifications?.slice()?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)).map((notif: INotification, i: number) => {
+            return <div onClick={() => onNotificationClick(notif)} key={i} className={`${styles.notification} ${notif.read ? styles.read : null}`}>
+                {
+                    notif.notificationType === 'message-like' && notif?.likers?.length && notif?.group ?
+                        <h5>{notif?.likers?.[0]} {notif.likers.length > 1 ? 'and ' + (notif.likers.length - 1) + ` other${notif.likers.length > 2 ? 's' : ''}` : ''} liked your message in "{notif.group.name}"</h5>
+                    : null
+                }
+            </div>
+        })
+
+        setNotificationArray(notifArrTemp)
+    }, [user?.notifications])
+
 
     const closeNotifications = (e) => {
         if (!(e.target as SVGSVGElement).classList.contains(styles.bellIcon)) setActive(false)
@@ -49,10 +65,12 @@ const NotificationCenter = () => {
                             groupId: selectedGroup._id
                         })
                         const resData: ILastSeenMsg[] = res.data
+                        
                         dispatch(setUser({...user, lastSeenMsgs: resData, notifications: user.notifications.map(notif => {
                             if (notif._id === notification._id) return {...notif, read: true}
                             return notif
                         })}))
+                        
                         if (router.pathname !== '/home') router.replace('/home')
                         dispatch(setSelectedGroup(group))
                         await setTimeout(() => scrollToMessage(resData, selectedGroup._id), 500)
@@ -68,17 +86,7 @@ const NotificationCenter = () => {
             <h5 className={styles.unreadCount}>{user?.notifications.filter(notif => !notif.read).length}</h5>
 
             <div className={`${styles.notificationDropdown} ${active ? styles.active : null}`}>
-                {
-                    user?.notifications?.map((notif: INotification, i: number) => {
-                        return <div onClick={() => onNotificationClick(notif)} key={i} className={`${styles.notification} ${notif.read ? styles.read : null}`}>
-                            {
-                                notif.notificationType === 'message-like' && notif?.likers?.length && notif?.group ?
-                                    <h5>{notif?.likers?.[0]} {notif.likers.length > 1 ? 'and ' + (notif.likers.length - 1) + ` other${notif.likers.length > 2 ? 's' : ''}` : ''} liked your message in "{notif.group.name}"</h5>
-                                : null
-                            }
-                        </div>
-                    })
-                }
+                { notificationArray }
             </div>
         </div>
     )

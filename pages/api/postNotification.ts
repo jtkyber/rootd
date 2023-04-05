@@ -48,7 +48,7 @@ export default async function handler(
                 }
 
                 const getNotifications = async () => {
-                    const user: IUser | null = await User.findById(userId)
+                    const user: IUser | null = await User.findById(userId).sort({ 'notifications.date': -1})
                     if (user?.notifications) {
                         return user.notifications
                     }
