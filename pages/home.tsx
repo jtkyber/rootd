@@ -17,7 +17,7 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
 
   const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
   const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
-  const user: IUserState = useAppSelector(state => state.user.user)
+  const user: IUserState = useAppSelector(state => state.user)
   
   const { data: session }: any = useSession()
 

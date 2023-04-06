@@ -48,7 +48,7 @@
         align-items: center;
         padding-right: 3rem;
 
-        & a, & .navigationContainer {
+        & a, & .navigationContainer, & .settingsContainer {
             height: 100%;
             padding: 0 0.5rem;
             display: flex;
@@ -67,6 +67,7 @@
                 fill: white;
                 opacity: 0.8;
                 width: 20px;
+                height: auto;
                 cursor: pointer;
 
                 @mixin fadeOnHover;
@@ -106,7 +107,7 @@
                     width: 100%;
                     height: max-content;
                     text-align: center;
-                    border-bottom: 1px solid black;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
                     padding: 0.7rem;
                     color: $red_brown;
                     cursor: pointer;
@@ -114,6 +115,57 @@
                     &.read {
                         opacity: 0.6
                     }
+
+                    @mixin fadeOnHover;
+                }
+            }
+        }
+
+        & .settingsContainer {
+            position: relative;
+
+            & .settingsIcon {
+                opacity: 0.8;
+                width: 20px;
+                height: auto;
+                cursor: pointer;
+                
+                @mixin fadeOnHover;
+                
+                & path {
+                    fill: white;
+                    opacity: 0.8;
+                }
+
+                & * {
+                    pointer-events: none;
+                }
+            }
+
+            & .settingsDropdown {
+                position: fixed;
+                top: calc($nav_height);
+                right: 0;
+                width: 10rem;
+                height: 20rem;
+                box-shadow: $sectionShadow;
+                border-bottom-left-radius: 0.5rem;
+                background-color: $light_grey;
+                display: none;
+
+                &.active {
+                    display: block;
+                }
+
+                & .setting {
+                    width: 100%;
+                    height: max-content;
+                    text-align: center;
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+                    padding: 0.3rem;
+                    color: $red_brown;
+                    cursor: pointer;
+                    font-weight: 600;
 
                     @mixin fadeOnHover;
                 }

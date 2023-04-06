@@ -44,7 +44,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
 
     const dispatch = useAppDispatch()
 
-    const user: IUserState = useAppSelector(state => state.user.user)
+    const user: IUserState = useAppSelector(state => state.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
     
     const [addingPsg, setAddingPsg] = useState(false)

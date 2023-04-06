@@ -1,9 +1,14 @@
 import React from 'react'
+import { setActiveDropdown } from '../redux/appSlice'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import styles from '../styles/Nav.module.css'
 
-const NotificationBellIcon = ({ active, setActive }) => {
+const NotificationBellIcon = () => {
+    const activeDropdown: string = useAppSelector(state => state.app.activeDropdown)
+    const dispatch = useAppDispatch()
+
     return (
-        <svg className={styles.bellIcon} onClick={() => setActive(!active)} fill="#000000" height="35px" width="35px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 611.999 611.999" xmlSpace="preserve">
+        <svg className={styles.bellIcon} fill="#000000" height="35px" width="35px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 611.999 611.999" xmlSpace="preserve">
             <g>
                 <g>
                     <g>

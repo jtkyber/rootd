@@ -1,12 +1,32 @@
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
 import NotificationCenter from './NotificationCenter'
 import styles from '../styles/Nav.module.css'
 import Pusher from 'pusher-js/types/src/core/pusher'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { setActiveDropdown } from '../redux/appSlice'
+import Settings from './Settings'
 
 const Nav = ({ pusher }: {pusher: Pusher | null}) => {
     const router = useRouter()
+    const dispatch = useAppDispatch()
+
+    const activeDropdown: string = useAppSelector(state => state.app.activeDropdown)
+
+    useEffect(() => {
+        document.addEventListener('click', closeNotifications)
+        return () => document.removeEventListener('click', closeNotifications)
+    }, [activeDropdown])
+
+    const closeNotifications = (e) => {
+        const el = e.target as SVGSVGElement
+        if (el.classList.contains(styles.bellIcon)){
+            dispatch(setActiveDropdown(activeDropdown === 'notifications' ? '' : 'notifications'))
+        } else if (el.classList.contains(styles.settingsIcon)) {
+            dispatch(setActiveDropdown(activeDropdown === 'settings' ? '' : 'settings'))
+        } else dispatch(setActiveDropdown(''))
+    }
 
     return (
         <div className={styles.container}>
@@ -25,7 +45,7 @@ const Nav = ({ pusher }: {pusher: Pusher | null}) => {
                                 <Link href='/groupSearch'>Find Group</Link>
                                 <Link href='/home'>DMs</Link>
                                 <NotificationCenter />
-                                <Link href='/home'>Settings</Link>
+                                <Settings />
                             </>
                             : router.pathname === '/groupSearch'
                                 ?
@@ -33,7 +53,7 @@ const Nav = ({ pusher }: {pusher: Pusher | null}) => {
                                     <Link href='/home'>My Groups</Link>
                                     <Link href='/groupSearch'>DMs</Link>
                                     <NotificationCenter />
-                                    <Link href='/groupSearch'>Settings</Link>
+                                    <Settings />
                                 </>
                                 : null
                 }

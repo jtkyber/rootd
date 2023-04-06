@@ -14,27 +14,16 @@ export interface IUserState {
     lastSeenMsgs: ILastSeenMsg[]
 }
 
-interface IState {
-    user: IUserState
-    pusher: any
-    channel: any
-}
-
-const initialState: IState = {
-    user: {
-        _id: null,
-        username: '',
-        bVersion: '',
-        groups: [],
-        notifications: [],
-        dmPeople: [],
-        strikes: [],
-        directMsgs: [],
-        lastSeenMsgs: []
-    },
-    pusher: null,
-    channel: null
-    
+const initialState: IUserState = {
+    _id: null,
+    username: '',
+    bVersion: '',
+    groups: [],
+    notifications: [],
+    dmPeople: [],
+    strikes: [],
+    directMsgs: [],
+    lastSeenMsgs: []
 }
 
 export const userSlice = createSlice({
@@ -42,17 +31,19 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action: PayloadAction<IUserState>) => {
-            state.user = action.payload
-        },
-        setPusher: (state, action: PayloadAction<any>) => {
-            state.pusher = action.payload
-        },
-        setChannel: (state, action: PayloadAction<any>) => {
-            state.channel = action.payload
-        },
+            state._id = action.payload._id,
+            state.username = action.payload.username,
+            state.bVersion = action.payload.bVersion,
+            state.groups = action.payload.groups,
+            state.notifications = action.payload.notifications,
+            state.dmPeople = action.payload.dmPeople,
+            state.strikes = action.payload.strikes,
+            state.directMsgs = action.payload.directMsgs,
+            state.lastSeenMsgs = action.payload.lastSeenMsgs
+        }
     }
 })
 
-export const { setUser, setPusher, setChannel } = userSlice.actions
+export const { setUser } = userSlice.actions
 
 export default userSlice.reducer

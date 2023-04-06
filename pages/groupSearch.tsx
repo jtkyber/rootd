@@ -46,7 +46,7 @@ const groupSearch = () => {
 
   const dispatch = useAppDispatch()
 
-  const user: IUserState = useAppSelector(state => state.user.user)
+  const user: IUserState = useAppSelector(state => state.user)
   const currentSort: ICurSort = useAppSelector(state => state.search.currentSort)
 
   const resultsEndRef: React.MutableRefObject<any> = useRef(null)

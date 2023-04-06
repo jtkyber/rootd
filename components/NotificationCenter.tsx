@@ -6,25 +6,21 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { ILastSeenMsg, INotification } from '../models/userModel'
 import axios from 'axios'
 import { IGroup } from '../models/groupModel'
-import { initialSelectedGroupState, setSelectedGroup } from '../redux/groupSlice'
+import { setSelectedGroup } from '../redux/groupSlice'
 import { useRouter } from 'next/router'
 import scrollToMessage from '../utils/scrollToMessage'
+import { setActiveDropdown } from '../redux/appSlice'
 
 const NotificationCenter = () => {
-    const [active, setActive] = useState(false)
     const [notificationArray, setNotificationArray] = useState<JSX.Element[]>([])
-    const user: IUserState = useAppSelector(state => state.user.user)
+    const user: IUserState = useAppSelector(state => state.user)
     const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
+    const activeDropdown: string = useAppSelector(state => state.app.activeDropdown)
 
     const dispatch = useAppDispatch()
 
     const router = useRouter()
-
-    useEffect(() => {
-        document.addEventListener('click', closeNotifications)
-        return () => document.removeEventListener('click', closeNotifications)
-    }, [])
 
     useEffect(() => {
         const notifArrTemp: JSX.Element[] = user?.notifications?.slice()?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)).map((notif: INotification, i: number) => {
@@ -42,7 +38,7 @@ const NotificationCenter = () => {
 
 
     const closeNotifications = (e) => {
-        if (!(e.target as SVGSVGElement).classList.contains(styles.bellIcon)) setActive(false)
+        if (!(e.target as SVGSVGElement).classList.contains(styles.bellIcon)) dispatch(setActiveDropdown(''))
     }
 
     const markNotificationAsRead = async (notification:  INotification) => {
@@ -79,7 +75,7 @@ const NotificationCenter = () => {
 
     return (
         <div className={styles.navigationContainer}>
-            <NotificationBellIcon active={active} setActive={setActive} />
+            <NotificationBellIcon />
             
             {
                 user?.notifications.filter(notif => !notif.read).length > 0
@@ -87,7 +83,7 @@ const NotificationCenter = () => {
                 : null
             }
 
-            <div className={`${styles.notificationDropdown} ${active ? styles.active : null}`}>
+            <div className={`${styles.notificationDropdown} ${activeDropdown === 'notifications' ? styles.active : null}`}>
                 { notificationArray }
             </div>
         </div>

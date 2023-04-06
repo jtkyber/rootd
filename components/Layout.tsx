@@ -11,7 +11,7 @@ import { INotification } from '../models/userModel'
 import { useRouter } from 'next/router'
 
 const Layout = (props) => {
-    const user: IUserState = useAppSelector(state => state.user.user)
+    const user: IUserState = useAppSelector(state => state.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
     const [pusher, setPusher] = useState<Pusher | null>(null)
     const [channels, setChannels]: any = useState<PresenceChannel[] | []>([])
