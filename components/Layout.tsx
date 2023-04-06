@@ -68,7 +68,7 @@ const Layout = (props) => {
         let res
         switch(data.notificationType) {
             case 'message-like':
-                if (selectedGroup._id === data.groupId) return
+                if ((selectedGroup._id === data.groupId) && (router.pathname === '/home')) return
                 res = await axios.post('/api/postNotification', {
                     notificationType: data.notificationType,
                     msgId: data.msgId,
@@ -79,9 +79,7 @@ const Layout = (props) => {
                 })
         }
 
-        if (res.data) {
-            dispatch(setUser({...user, notifications: res.data}))
-        }
+        if (res.data) dispatch(setUser({...user, notifications: res.data}))
     }
 
     const renderChildren = () => {
