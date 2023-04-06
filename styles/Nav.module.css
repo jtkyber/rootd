@@ -46,7 +46,7 @@
         flex-flow: row nowrap;
         justify-content: flex-end;
         align-items: center;
-        padding-right: 3rem;
+        padding-right: 1rem;
 
         & a, & .navigationContainer, & .settingsContainer {
             height: 100%;
@@ -90,7 +90,7 @@
                 top: calc($nav_height);
                 right: 0;
                 width: 15rem;
-                height: 20rem;
+                height: max-content;
                 box-shadow: $sectionShadow;
                 border-bottom-left-radius: 0.5rem;
                 background-color: $light_grey;
@@ -146,8 +146,8 @@
                 position: fixed;
                 top: calc($nav_height);
                 right: 0;
-                width: 10rem;
-                height: 20rem;
+                width: 15rem;
+                height: max-content;
                 box-shadow: $sectionShadow;
                 border-bottom-left-radius: 0.5rem;
                 background-color: $light_grey;
@@ -162,7 +162,7 @@
                     height: max-content;
                     text-align: center;
                     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-                    padding: 0.3rem;
+                    padding: 0.5rem;
                     color: $red_brown;
                     cursor: pointer;
                     font-weight: 600;

@@ -263,15 +263,12 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
             }
             
             if (pointXAtInput && pointYAtInput) {
-                console.log(1)
                 setPointThreeX(pointXAtInput)
                 setPointThreeY(pointYAtInput)
             } else if (pointXAtInput && lastEl) {
-                console.log(2)
                 setPointThreeX(inputLeft + 10)
                 setPointThreeY(textAreaRef.current?.getBoundingClientRect().bottom - 15)
             } else {
-                console.log(3)
                 setPointThreeX(inputLeft + 5)
                 setPointThreeY(inputTop + 15)
             }
