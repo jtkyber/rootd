@@ -81,7 +81,11 @@ const NotificationCenter = () => {
         <div className={styles.navigationContainer}>
             <NotificationBellIcon active={active} setActive={setActive} />
             
-            <h5 className={styles.unreadCount}>{user?.notifications.filter(notif => !notif.read).length}</h5>
+            {
+                user?.notifications.filter(notif => !notif.read).length > 0
+                ? <h5 className={styles.unreadCount}>{user?.notifications.filter(notif => !notif.read).length}</h5>
+                : null
+            }
 
             <div className={`${styles.notificationDropdown} ${active ? styles.active : null}`}>
                 { notificationArray }
