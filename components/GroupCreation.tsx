@@ -31,7 +31,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
 
     const sectionNames = ["Name", "Summary", "Books", "Characters", "Tags", "Private"]
 
-    const user: IUserState = useAppSelector(state => state.user.user)
+    const user: IUserState = useAppSelector(state => state.user)
 
     const [sectionIndex, setSectionIndex] = useState(0)
     const [currentTagValue, setCurrentTagValue] = useState('')
