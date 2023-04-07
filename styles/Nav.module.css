@@ -123,6 +123,10 @@
                     color: $red_brown;
                     cursor: pointer;
 
+                    & * {
+                        pointer-events: none;
+                    }
+
                     &.read {
                         opacity: 0.6
                     }

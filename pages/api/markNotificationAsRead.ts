@@ -17,7 +17,10 @@ export default async function handler(
 
         const user = await User.findOneAndUpdate({ _id: userId },
             { 
-                $set: { "notifications.$[i].read": true }
+                $set: { 
+                    "notifications.$[i].read": true,
+                    "notifications.$[i].date": Date.now()
+                }
             },
             {
                 arrayFilters: [ { 'i._id': notificationId } ],

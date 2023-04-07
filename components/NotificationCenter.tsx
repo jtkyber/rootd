@@ -23,7 +23,11 @@ const NotificationCenter = () => {
     const router = useRouter()
 
     useEffect(() => {
-        const notifArrTemp: JSX.Element[] = user?.notifications?.slice()?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date)).map((notif: INotification, i: number) => {
+        const notifArrTemp: JSX.Element[] = 
+        user?.notifications?.slice()
+        ?.filter(n => !n.read || (n.read && (Date.now() - Date.parse(n.date) < 10000)))
+        ?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+        ?.map((notif: INotification, i: number) => {
             return <div onClick={() => onNotificationClick(notif)} key={i} className={`${styles.notification} ${notif.read ? styles.read : null}`}>
                 {
                     notif.notificationType === 'message-like' && notif?.likers?.length && notif?.group ?
@@ -34,14 +38,15 @@ const NotificationCenter = () => {
         })
 
         setNotificationArray(notifArrTemp)
-    }, [user?.notifications, router.pathname])
+    }, [user?.notifications, router.pathname, userGroups])
 
 
-    const closeNotifications = (e) => {
-        if (!(e.target as SVGSVGElement).classList.contains(styles.bellIcon)) dispatch(setActiveDropdown(''))
-    }
+    // const closeNotifications = (e) => {
+    //     if (!(e.target as SVGSVGElement).classList.contains(styles.bellIcon)) dispatch(setActiveDropdown(''))
+    // }
 
     const markNotificationAsRead = async (notification:  INotification) => {
+        if (notification?.read) return
         await axios.put('/api/markNotificationAsRead', {
             userId: user._id,
             notificationId: notification._id

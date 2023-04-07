@@ -7,7 +7,7 @@ import { getSession, useSession } from 'next-auth/react'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { ICurSort, setCurrentSort } from '../redux/searchSlice'
 import { IUserState, setUser } from '../redux/userSlice'
-import { setSelectedGroup } from '../redux/groupSlice'
+import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
 import { IGroup } from '../models/groupModel'
 import { useOnScreen } from '../utils/hooks'
 import getUser from '../utils/getUser'
@@ -80,10 +80,15 @@ const groupSearch = () => {
   }
 
   useEffect(() => {
-    if (session.user && !user?.bVersion) {
+    if (session.user) {
       (async () => {
         const updatedUser: IUserState = await getUser(session.user.email)
-        if (updatedUser) dispatch(setUser(updatedUser))
+        if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
+        
+        if (updatedUser.groups.length) {
+          const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
+          if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
+        }
       })()
     }
 

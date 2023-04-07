@@ -26,16 +26,12 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
       (async () => {
         const updatedUser: IUserState = await getUser(session.user.email)
         if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
-
+        
         if (updatedUser.groups.length) {
           const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
           if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
         }
       })()
-    }
-
-    return () => {
-      // dispatch(setSelectedGroup(initialSelectedGroupState))
     }
   }, [])
   
