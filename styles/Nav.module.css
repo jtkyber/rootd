@@ -5,7 +5,6 @@
     height: $nav_height;
     background-color: $red_brown;
     box-shadow: 0 0 1rem 0 $red_brown_dark;
-    color: $light_grey;
     display: flex;
     flex-flow: row nowrap;
     position: sticky;
@@ -37,6 +36,18 @@
         justify-content: flex-start;
         align-items: center;
         padding-left: 3rem;
+
+        & .logo {
+            height: 80%;
+            width: auto;
+            cursor: pointer;
+
+            @mixin fadeOnHover;
+
+            & * {
+                fill: $light_grey;
+            }
+        }
     }
 
     & .right {
@@ -58,14 +69,14 @@
         & a {
             @mixin fadeOnHover;
             cursor: pointer;
+            color: $light_grey;
         }
 
         & .navigationContainer {
             position: relative;
 
             & .bellIcon {
-                fill: white;
-                opacity: 0.8;
+                fill: $light_grey;
                 width: 20px;
                 height: auto;
                 cursor: pointer;
@@ -133,8 +144,7 @@
                 @mixin fadeOnHover;
                 
                 & path {
-                    fill: white;
-                    opacity: 0.8;
+                    fill: $light_grey;
                 }
 
                 & * {

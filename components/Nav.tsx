@@ -7,6 +7,8 @@ import Pusher from 'pusher-js/types/src/core/pusher'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { setActiveDropdown } from '../redux/appSlice'
 import Settings from './Settings'
+import Image from 'next/image'
+import Logo from './Logo'
 
 const Nav = ({ pusher }: {pusher: Pusher | null}) => {
     const router = useRouter()
@@ -31,7 +33,7 @@ const Nav = ({ pusher }: {pusher: Pusher | null}) => {
     return (
         <div className={styles.container}>
             <div className={styles.left}>
-                <h1>Bible Chat</h1>
+                <Logo />
             </div>
             <div className={styles.right}>
                 {
