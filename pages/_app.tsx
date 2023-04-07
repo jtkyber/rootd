@@ -23,17 +23,20 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <> 
-      <Head><title>Bible Chat</title></Head>
-          <SessionProvider session={pageProps.session}>
-            <Provider store={store}>
-              <QueryClientProvider client={queryClient}>
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </QueryClientProvider>
-            </Provider>
-          </SessionProvider>
+      <Head>
+        <title>Bible Chat</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <SessionProvider session={pageProps.session}>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </Provider>
+      </SessionProvider>
     </>
   )
 }
