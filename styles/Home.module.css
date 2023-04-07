@@ -272,6 +272,13 @@
 
                         @mixin fadeOnHover;
                     }
+
+                    & .loadingMsgs {
+                        width: max-content;
+                        height: max-content;
+                        transform: scale(0.7);
+                        transform-origin: 0 100%;
+                    }
                 }
             }
             

@@ -22,6 +22,7 @@ import styles from '../styles/Home.module.css'
 import debounce from '../utils/debounce'
 import { ILastSeenMsg } from '../models/userModel'
 import scrollToMessage from '../utils/scrollToMessage'
+import LoadingAnimation from './LoadingAnimation'
 
 
 let scrollElementId: string
@@ -102,6 +103,10 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
      }, [selectedGroup, status])
     
     useEffect(() => setSvgPosition(), [addingPsg])
+
+    useEffect(() => {
+        console.log(isFetching)
+    }, [isFetching])
     
     useEffect(() => {
         const now = Date.now()
@@ -290,7 +295,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     async function fetchGroupMessages ({ pageParam = 0 }) {
         if (!selectedGroup._id) return null
         try {
-            const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=100`)
+            const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=10`)
             return res.data
         } catch (err) {
             console.log(err)
@@ -455,7 +460,12 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                             })}
                             </Fragment>
                         ))}
-                        <div ref={resultsEndRef} className={styles.resultsEnd}></div>
+                        {
+                            isFetching 
+                            ? <div className={styles.loadingMsgs}><LoadingAnimation /></div>
+                            : null
+                        }
+                        <div ref={resultsEndRef}></div>
                     </div>
                     {addingPsg ? 
                     <>

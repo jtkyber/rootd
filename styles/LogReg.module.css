@@ -20,6 +20,14 @@
         border-radius: 1rem;
         box-shadow: inset 0 0 0.7rem 0rem $red_brown_dark;
 
+        
+        & .loading {
+            width: max-content;
+            height: max-content;
+            transform: scale(0.60);
+            margin: -1.6rem 0;
+        }
+
         & h1 {
             color: $red_brown;
             font-weight: 400;
@@ -36,12 +44,16 @@
             color: $red_brown_dark;
             outline: none;
 
-            &::placeholder {
-                color: $red_brown_dark;
+            &:focus {
+                border-color: green;
+            }
+            
+            &:invalid:focus {
+                border-color: red;
             }
 
-            &:focus {
-                border: 0.15rem solid $red_brown_dark;
+            &::placeholder {
+                color: $red_brown_dark;
             }
         }
         
