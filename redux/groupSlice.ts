@@ -10,6 +10,7 @@ export const initialSelectedGroupState = {
     _id: null,
     name: '',
     members: [],
+    memberCount: 0,
     isPrivate: false,
     summary: '',
     tags: [],
