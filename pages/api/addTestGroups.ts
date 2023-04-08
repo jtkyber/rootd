@@ -29,10 +29,13 @@ export default async function handler(
 
             const isPrivate = Math.random() < 0.5
 
+            const members = rw(Math.floor(Math.random() * (21 - 3 + 1) + 3))
+            
             const newGroup: IGroup | any = await Group.insertMany({
                 _id: new mongoose.Types.ObjectId,
                 name: rw({ exactly: 2, join: ' ' }),
-                members: rw(Math.floor(Math.random() * (21 - 3 + 1) + 3)),
+                members: members,
+                memberCount: members.length,
                 isPrivate: isPrivate,
                 summary: rw({ exactly: 20, join: ' ' }),
                 tags: rw(5),

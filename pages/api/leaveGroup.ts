@@ -19,7 +19,10 @@ export default async function handler(
             }
         }).catch(err => {throw new Error(err)})
 
-        if (user?.modifiedCount > 0) await Group.updateOne({ _id: groupId }, { $pull: { members: username }})
+        if (user?.modifiedCount > 0) await Group.updateOne({ _id: groupId }, { 
+            $pull: { members: username },
+            $inc: { memberCount: -1 }
+        })
         else throw new Error('could not retrieve user')
 
         res.json(true)

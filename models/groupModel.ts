@@ -1,11 +1,6 @@
 import mongoose, { Schema, model, models } from "mongoose"
 import { ObjectId } from "mongodb"
 
-// export interface IDate {
-//     dateNow: string,
-//     dateFormatted: string
-// }
-
 export interface IMessage {
     _id: string
     author: string
@@ -21,6 +16,7 @@ export interface IGroup {
     _id: ObjectId | null
     name: string
     members: string[]
+    memberCount: number
     messages?: IMessage[]
     isPrivate: boolean
     summary: string
@@ -57,6 +53,11 @@ const groupSchema = new Schema<IGroup>({
     members: {
         type: [String],
         required: true
+    },
+    memberCount: {
+        type: Number,
+        required: true,
+        default: 0
     },
     messages: {
         type: [msgSchema],
@@ -96,6 +97,6 @@ const groupSchema = new Schema<IGroup>({
     }
 })
 
-const Group = models.Group2 || model('Group2', groupSchema, 'groups')
+const Group = models.Group4 || model('Group4', groupSchema, 'groups')
 
 export default Group

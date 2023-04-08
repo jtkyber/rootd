@@ -21,7 +21,8 @@ export default async function handler(
 
 
         const group = await Group.findByIdAndUpdate(groupId, { 
-            $push: {members: userName}
+            $push: { members: userName },
+            $inc: { memberCount: 1 }
         }, { new: true })
 
         if (group.members.includes(userName)) {
