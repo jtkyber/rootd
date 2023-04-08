@@ -57,7 +57,7 @@ const register: NextPage = () => {
             <form onSubmit={handleSubmit}>
                 <h1>Login</h1>
                 <input disabled={isLoading} id="email" type="email" placeholder='email' required />
-                <input minLength={6} disabled={isLoading} id="password" type="password" placeholder='password' required />
+                <input minLength={3} disabled={isLoading} id="password" type="password" placeholder='password' required />
                 {
                     isLoading
                     ? <div className={styles.loading}><LoadingAnimation /></div>
