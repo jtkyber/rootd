@@ -16,6 +16,7 @@ import GroupCreation from '../components/GroupCreation'
 import characters from '../characters.json'
 import bookNames from '../bookNames.json'
 import styles from '../styles/GroupSearch.module.css'
+import LoadingAnimation from '../components/LoadingAnimation';
 
 interface IOptions {
   keyword: string,
@@ -264,9 +265,9 @@ const groupSearch = () => {
               </div>
             </div>
             <div className={styles.searchResults}>
-              {data?.pages.map((page, i) => (
+              {data?.pages?.map((page, i) => (
                   <Fragment key={i}>
-                    {page?.data.map((group: IGroup, j) => {
+                    {page?.data?.map((group: IGroup, j) => {
                       return <div onClick={(e) => handleResultClick(e)} className={styles.result} key={j}>
                         <h3 className={styles.name}>{group.name}</h3>
                         {
@@ -284,7 +285,12 @@ const groupSearch = () => {
                     })}
                   </Fragment>
                 ))}
-                <div ref={resultsEndRef} className={styles.resultsEnd}></div>
+                <div ref={resultsEndRef}></div>
+                {
+                    isFetching 
+                    ? <div className={styles.loadingMsgs}><LoadingAnimation /></div>
+                    : null
+                }
             </div>
     
             {creatingGroup ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={session.user._id} /> : null}

@@ -4,6 +4,7 @@ import Group, { IGroup } from '../../models/groupModel';
 import rw from 'random-words'
 import characters from '../../characters.json'
 import books from '../../books.json'
+import mongoose from 'mongoose';
 
 
 export default async function handler(
@@ -29,6 +30,7 @@ export default async function handler(
             const isPrivate = Math.random() < 0.5
 
             const newGroup: IGroup | any = await Group.insertMany({
+                _id: new mongoose.Types.ObjectId,
                 name: rw({ exactly: 2, join: ' ' }),
                 members: rw(Math.floor(Math.random() * (21 - 3 + 1) + 3)),
                 isPrivate: isPrivate,

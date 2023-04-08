@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
 import Group, { IGroup } from '../../models/groupModel';
-import rw from 'random-words'
-import characters from '../../characters.json'
-import books from '../../books.json'
+import mongoose from 'mongoose';
 
 interface IQuery {
     username: string
@@ -24,6 +22,7 @@ export default async function handler(
         const { username, name, summary, books, characters, tags, isPrivate }: any = req.body
 
         const group: IGroup = await Group.create({
+            _id: new mongoose.Types.ObjectId,
             name: name,
             isPrivate: isPrivate,
             summary: summary,

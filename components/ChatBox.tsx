@@ -103,10 +103,6 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
      }, [selectedGroup, status])
     
     useEffect(() => setSvgPosition(), [addingPsg])
-
-    useEffect(() => {
-        console.log(isFetching)
-    }, [isFetching])
     
     useEffect(() => {
         const now = Date.now()
@@ -295,7 +291,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     async function fetchGroupMessages ({ pageParam = 0 }) {
         if (!selectedGroup._id) return null
         try {
-            const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=10`)
+            const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=100`)
             return res.data
         } catch (err) {
             console.log(err)
