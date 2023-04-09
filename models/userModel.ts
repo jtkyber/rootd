@@ -141,6 +141,6 @@ const userSchema = new Schema<IUser>({
     lastSeenMsgs: [lastSeenMsgSchema]
 })
 
-const User = models.User15 || model('User15', userSchema, 'users')
+const User = models.User17 || model('User17', userSchema, 'users')
 
 export default User

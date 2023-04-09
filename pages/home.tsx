@@ -33,7 +33,7 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
         }
       })()
     }
-  }, [])
+  }, [user._id])
   
   useEffect(() => { if (userGroups[0] && !selectedGroup._id) dispatch(setSelectedGroup(userGroups[0])) }, [userGroups])
 

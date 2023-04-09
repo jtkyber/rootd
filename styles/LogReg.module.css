@@ -31,7 +31,11 @@
         & h1 {
             color: $red_brown;
             font-weight: 400;
-            margin-bottom: 1rem;
+        }
+
+        & .errorMessage {
+            color: red;
+            font-weight: 600;
         }
 
         & input {

@@ -8,7 +8,7 @@ type Data = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<any>
   ) {
     try {
         await connectMongo()
@@ -17,11 +17,7 @@ export default async function handler(
         const groupIdArray = JSON.parse(groupIds)
         if (!groupIdArray[0]) throw new Error('No group IDs provided')
 
-        const userGroups: any = []
-        for (const groupId of groupIdArray) {
-            const group = await Group.findById(groupId, { messages: 0 })
-            userGroups.push(group)
-        }
+        const userGroups = await Group.find({ _id: { $in: groupIdArray }}, { messages: 0 })
 
         res.json(userGroups)
     } catch(err) {

@@ -15,6 +15,7 @@ const register: NextPage = () => {
     const dispatch = useAppDispatch()
 
     const [isLoading, setIsLoading] = useState(false)
+    const [errMessage, setErrMessage] = useState('')
 
     const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
@@ -25,6 +26,7 @@ const register: NextPage = () => {
 
         try {
             setIsLoading(true)
+            setErrMessage('')
 
             if (email == null || password == null) return
     
@@ -43,8 +45,9 @@ const register: NextPage = () => {
                 } else throw new Error('Incorrect email or password')
             } else throw new Error('Incorrect email or password')
         } catch (err) {
-            console.log(err)
+            console.log(err.message)
             setIsLoading(false)
+            if (err?.message) setErrMessage(err.message)
         }
     }
 
@@ -56,6 +59,7 @@ const register: NextPage = () => {
         <div className={styles.container}>
             <form onSubmit={handleSubmit}>
                 <h1>Login</h1>
+                <h5 className={styles.errorMessage}>{errMessage}</h5>
                 <input disabled={isLoading} id="email" type="email" placeholder='email' required />
                 <input minLength={3} disabled={isLoading} id="password" type="password" placeholder='password' required />
                 {
