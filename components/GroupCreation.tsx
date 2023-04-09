@@ -26,6 +26,7 @@ interface IValues {
 const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
     const progressMapRef: React.MutableRefObject<any> = useRef(null)
     const tagInputRef: React.MutableRefObject<any> = useRef(null)
+    const btnRef: React.MutableRefObject<any> = useRef(null)
 
     const router = useRouter()
 
@@ -42,6 +43,17 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
             if (i > 0) progressMapRef.current.children[i].disabled = true
         }
     }, [])
+
+    useEffect(() => {
+        document.addEventListener('keyup', handleKeyUp)
+
+        return () => document.removeEventListener('keyup', handleKeyUp)
+    }, [btnRef.current])
+
+    const handleKeyUp = (e) => {
+        if (e.code !== 'Enter') return
+        btnRef?.current.click()
+    }
 
     const goToNextSection = (index) => {
         setSectionIndex(index)
@@ -135,6 +147,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                         sectionIndex === 0 
                             ? 
                             <>
+                                <h5 className={styles.instructions}>Choose a name for your group</h5>
                                 <input 
                                     onChange={(e) => setValues({...values, name: e.target.value})} 
                                     type='text'
@@ -144,6 +157,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                         : sectionIndex === 1 
                             ? 
                             <>
+                                <h5 className={styles.instructions}>Explain what your group is about</h5>
                                 <textarea 
                                     className={styles.summary}
                                     onChange={(e) => setValues({...values, summary: e.target.value})} 
@@ -153,6 +167,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                         : sectionIndex === 2 
                             ? 
                             <>
+                                <h5 className={styles.instructions}>Select at least one book of the Bible</h5>
                                 <DropDown 
                                     key='books2'
                                     idEnd='books2'
@@ -165,6 +180,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                         : sectionIndex === 3 
                             ? 
                             <>
+                                <h5 className={styles.instructions}>Select at least one Bible character (optional)</h5>
                                 <DropDown 
                                     key='characters2'
                                     idEnd='characters2'
@@ -176,47 +192,54 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                             </>
                         : sectionIndex === 4 
                             ? 
-                            <div className={styles.tagContainer}>
-                                <div className={styles.tags}>
-                                    { values.tags.map((tag, i) => (
-                                    <h5 
-                                        onClick={(e) => setValues({...values, tags: values.tags.filter(item => item !== (e.target as HTMLHeadingElement).innerText)})} 
-                                        className={styles.tag} 
-                                        key={i}>{tag}
-                                    </h5>)) }
+                            <>
+                                <h5 className={styles.instructions}>Add at least two tags related to your group</h5>
+                                <div className={styles.tagContainer}>
+                                    <div className={styles.tags}>
+                                        { values.tags.map((tag, i) => (
+                                        <h5 
+                                            onClick={(e) => setValues({...values, tags: values.tags.filter(item => item !== (e.target as HTMLHeadingElement).innerText)})} 
+                                            className={styles.tag} 
+                                            key={i}>{tag}
+                                        </h5>)) }
+                                    </div>
+                                    <div className={styles.tagInputContainer}>
+                                        <input 
+                                            ref={tagInputRef}
+                                            className={styles.tagInput} 
+                                            type="text" 
+                                            onChange={handleOnTagInputChange}
+                                            maxLength={20}
+                                            disabled={values.tags.length >= 5}
+                                        />
+                                        <button 
+                                            onClick={handleAddTag}  
+                                            className={styles.addTagBtn}
+                                            disabled={values.tags.length >= 5}>
+                                            +
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className={styles.tagInputContainer}>
-                                    <input 
-                                        ref={tagInputRef}
-                                        className={styles.tagInput} 
-                                        type="text" 
-                                        onChange={handleOnTagInputChange}
-                                        maxLength={20}
-                                        disabled={values.tags.length >= 5}
-                                    />
-                                    <button 
-                                        onClick={handleAddTag}  
-                                        className={styles.addTagBtn}
-                                        disabled={values.tags.length >= 5}>
-                                        +
-                                    </button>
-                                </div>
-                            </div>
+                            </>
                         : sectionIndex === 5 
                             ? 
-                            <div className={styles.isPrivateContainer}>
-                                <label htmlFor='isPrivateCheckbox'>Make group private</label>
-                                <input 
-                                    onChange={(e) => setValues({...values, private: !values.private})} 
-                                    type='checkbox'
-                                    checked={values.private}
-                                    id='isPrivateCheckbox'
-                                />
-                            </div>
+                            <>
+                                <h5 className={styles.instructions}>Private groups require a password to join</h5>
+                                <div className={styles.isPrivateContainer}>
+                                    <label htmlFor='isPrivateCheckbox'>Make group private</label>
+                                    <input 
+                                        onChange={(e) => setValues({...values, private: !values.private})} 
+                                        type='checkbox'
+                                        checked={values.private}
+                                        id='isPrivateCheckbox'
+                                    />
+                                </div>
+                            </>
                         : null
                     }
                     </div>
                     <button 
+                        ref={btnRef}
                         onClick={() => sectionIndex <= 5 ? runChecks() : null} 
                         className={styles.nextBtn}>{sectionIndex < 5 ? 'Next' : 'Finish'}
                     </button>
