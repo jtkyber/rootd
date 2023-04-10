@@ -3,6 +3,7 @@ import styles from '../styles/Home.module.css'
 import axios from 'axios'
 import { IGroup } from '../models/groupModel'
 import { useRouter } from 'next/router'
+import GroupDetailsArrow from './GroupDetailsArrow'
 
 const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGroup: IGroup, username: string, onlineMembers: string[]}) => {
     const [detailedExpanded, setDetailedExpanded] = useState(false)
@@ -43,7 +44,9 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
             </div>
 
             <button onClick={() => setDetailedExpanded(!detailedExpanded)} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>
-                <div className={styles.arrow}></div>
+                {/* <div className={styles.arrow}></div>
+                <div className={styles.textBox}></div> */}
+                <GroupDetailsArrow />
             </button>
         </div>
     )

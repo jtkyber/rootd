@@ -361,10 +361,10 @@
             gap: 1rem;
             z-index: 100;
             transform: translate(100%);
-            transition: transform ease-in 0.2s, box-shadow 0s 0.2s;
+            transition: transform linear 0.2s, box-shadow 0s 0.2s;
             
             &.show {
-                transition: transform ease-out 0.2s, box-shadow 0s 0s;
+                transition: transform linear 0.2s, box-shadow 0s 0s;
                 transform: translate(0);
                 box-shadow: $sectionShadow;
             }
@@ -440,7 +440,7 @@
 
 
             & .expandGroupDetailsBtn {
-                position: absolute;
+                /* position: absolute;
                 top: 0;
                 left: 0;
                 width: 2.5rem;
@@ -452,7 +452,7 @@
                 overflow: hidden;
                 transform-origin: center;
                 transition: transform ease-in 0.2s;
-                transform: rotate(0) translate(-2.5rem);
+                transform: rotate(0) translate(-100%);
                 margin-top: 0.8rem;
                 
                 &.show {
@@ -473,6 +473,66 @@
                     transform: rotate(45deg) translate(50%, -50%);
                 }
             
+                & .textBox {
+                    width: 4rem;
+                    height: 3rem;
+                } */
+
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: max-content;
+                transform: rotate(0) translate(-100%);
+                background-color: transparent;
+                border: none;
+                margin-top: 0.7rem;
+                
+                
+                & svg {
+                    margin-right: -0.2rem;
+                    height: 42px;
+                    width: auto;
+                    transform-origin: 0 0;
+                    transition: transform 0.2s linear;
+                    overflow: visible;
+                    
+                    filter: url(#inset-shadow);
+                    
+                    & path {
+                        transform-origin: 0 50%;
+                        transition: transform 0.2s linear;
+                        
+                        &:nth-child(2) {
+                            fill: $light_grey;
+                        }
+                        &:nth-child(3) {
+                            fill: $light_grey;
+                        }
+                        &:nth-child(4) {
+                            fill: $grey_blue;
+                        }
+                    }
+                }
+
+                &.show {
+                    margin-left: 0.5rem;
+
+                    & svg {
+                        transform: translateX(100%) scale(0.4);
+                        filter: none;
+                        
+                        & path {
+                            fill: $grey_blue;
+                            &:nth-child(2) {
+                                transform: scaleY(0.5) translate(-30px);
+                            }
+                            &:nth-child(4) {
+                                fill: transparent;
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }

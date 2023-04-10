@@ -140,7 +140,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         })
         
         channels?.[1].bind('fetch-new-group-msgs', data => {
-            if (data.username !== user.username) addMessage(JSON.parse(data.msg))
+            if (data?.username !== user?.username) addMessage(JSON?.parse?.(data.msg))
         })
         
         channels?.[1].bind('set-msg-like', data => {
