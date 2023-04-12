@@ -16,22 +16,10 @@ export default async function handler(
 
         const { notificationType, groupId, groupName, msgId, newLiker, userId }: any = req.body
 
-        let data;
-
         switch (notificationType) {
-
             case 'new-group-message':
-                // data = await User.updateMany({ 
-                //     groups: groupId,
-                //     'notifications.groupId': groupId,
-                //     'notifications.notificationType': 'new-group-message',
-                //     'notifications.read': false
-                // },
-                // {
-                //     $inc: {'notifications.$.numOfMsgs': 1}
-                // }
-                // )
-                // break
+                console.log(notificationType)
+                break
 
             case 'message-like':
                 const newNotificationObject: INotification = {

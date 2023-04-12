@@ -17,6 +17,7 @@ import characters from '../characters.json'
 import bookNames from '../bookNames.json'
 import styles from '../styles/GroupSearch.module.css'
 import LoadingAnimation from '../components/LoadingAnimation';
+import NotAuthorizedScreen from '../components/NotAuthorizedScreen';
 
 interface IOptions {
   keyword: string,
@@ -300,7 +301,7 @@ const groupSearch = () => {
     
             {creatingGroup ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={session.user._id} /> : null}
           </>
-          : <h1>Not Authorized</h1>
+          : <NotAuthorizedScreen />
         }
       </div>
   )

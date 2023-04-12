@@ -44,8 +44,6 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
             </div>
 
             <button onClick={() => setDetailedExpanded(!detailedExpanded)} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>
-                {/* <div className={styles.arrow}></div>
-                <div className={styles.textBox}></div> */}
                 <GroupDetailsArrow />
             </button>
         </div>

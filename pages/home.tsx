@@ -11,6 +11,7 @@ import getUser from '../utils/getUser'
 import styles from '../styles/Home.module.css'
 import Link from 'next/link'
 import { PresenceChannel } from 'pusher-js'
+import NotAuthorizedScreen from '../components/NotAuthorizedScreen'
 
 const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
   const dispatch = useAppDispatch()
@@ -22,7 +23,7 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
   const { data: session }: any = useSession()
 
   useEffect(() => {
-    if (session.user) {
+    if (session?.user) {
       (async () => {
         const updatedUser: IUserState = await getUser(session.user.email)
         if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
@@ -59,7 +60,7 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
           </div>
          <ChatBox channels={channels} />
         </>
-        : <h1>Not Authorized</h1>
+        : <NotAuthorizedScreen />
       }
     </div>
   )

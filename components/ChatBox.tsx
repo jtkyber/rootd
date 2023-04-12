@@ -387,8 +387,8 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
             groupId: selectedGroup._id,
             groupName: selectedGroup.name,
             msgId: msg._id,
-            name: user.username,
-            channel: msg.authorId
+            likerName: user.username,
+            authorID: msg.authorId
         })
         if (res.data === true) setNewMsgLikes(msg._id, true) 
         else setNewMsgLikes(msg._id, false)

@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { pusher } from '../../lib/index.js'
 import connectMongo from '../../connectDB'
-import Group, { IGroup } from '../../models/groupModel'
+import Group from '../../models/groupModel'
+import axios from 'axios'
+import User from '../../models/userModel.js'
+// import postNotification  from './postNotification.js'
 
 type Data = {
   name: string
@@ -14,28 +17,53 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { groupId, groupName, msgId, name, channel }: any = req.body
+        const { groupId, groupName, msgId, likerName, authorID }: any = req.body
+
+        const postNotification = async () => {
+            await axios.post('http://localhost:3000/api/postNotification', {
+                notificationType: 'message-like',
+                msgId: msgId,
+                newLiker: likerName,
+                userId: authorID,
+                groupId: groupId,
+                groupName: groupName
+            })
+        }
 
         await Group.updateOne({ _id : groupId },
         { 
-            $addToSet: { "messages.$[i].likes": name.toString() }
+            $addToSet: { "messages.$[i].likes": likerName.toString() }
         }, 
         {
             arrayFilters: [ { 'i._id': msgId } ],
         }).then(async docs1 => {
             if (docs1.modifiedCount > 0) {
-                await pusher.trigger(`presence-${groupId}`, 'set-msg-like', {msgId: msgId, isAdded: true, liker: name})
-                await pusher.trigger(`${channel}`, 'update-notifications', {notificationType: 'message-like', msgId: msgId, newLiker: name, groupId: groupId, groupName: groupName})
+                await pusher.trigger(`presence-${groupId}`, 'set-msg-like', { msgId: msgId, isAdded: true, liker: likerName })
+                
+                const pusherRes = await pusher.get({ path: `/channels/${authorID}` })
+                
+                if (pusherRes.status === 200) {
+                    const body = await pusherRes.json()
+                    if (!body.occupied) {
+                        postNotification()
+                    } else {
+                        await pusher.trigger(
+                            `${authorID}`, 
+                            'update-notifications', 
+                            { notificationType: 'message-like', msgId: msgId, newLiker: likerName, groupId: groupId, groupName: groupName }
+                        )
+                    }
+                }
                 res.json(true)
             } else {
                 await Group.updateOne({ _id : groupId }, {
-                    $pull: { "messages.$[i].likes": name.toString() },
+                    $pull: { "messages.$[i].likes": likerName.toString() },
                 }, 
                 {
                     arrayFilters: [ { 'i._id': msgId } ],
                 }).then(async docs2 => {
                     if (docs2.modifiedCount > 0) {
-                        await pusher.trigger(`presence-${groupId}`, 'set-msg-like', {msgId: msgId, isAdded: false, liker: name})
+                        await pusher.trigger(`presence-${groupId}`, 'set-msg-like', { msgId: msgId, isAdded: false, liker: likerName })
                         res.json(false)
                     } else throw new Error('Error occured when setting message like')
                 })
