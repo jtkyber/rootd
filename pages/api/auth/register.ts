@@ -23,7 +23,7 @@ export default async function handler(
                 User.create({
                     _id: new mongoose.Types.ObjectId,
                     username: username, 
-                    password: hash,
+                    password: password === 'Signed Up With Google' ? password : hash,
                     email: email,
                     gender: gender,
                     bVersion: bVersion

@@ -84,14 +84,14 @@ const groupSearch = () => {
   }
 
   useEffect(() => {
-    if (session.user) {
+    if (session?.user) {
       (async () => {
         const updatedUser: IUserState = await getUser(session.user.email)
         if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
         
-        if (updatedUser.groups.length) {
+        if (updatedUser?.groups?.length) {
           const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
-          if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
+          if (userGroups?.data[0]) dispatch(setUserGroups(userGroups.data))
         }
       })()
     }
@@ -277,7 +277,7 @@ const groupSearch = () => {
                       return <div onClick={(e) => handleResultClick(e)} className={styles.result} key={j}>
                         <h3 className={styles.name}>{group.name}</h3>
                         {
-                          group?._id && user.groups.includes(group._id.toString())
+                          group?._id && user?.groups.includes(group._id.toString())
                           ? <h5 className={styles.joined}>Joined</h5>
                           : <button onClick={() => handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
                         }

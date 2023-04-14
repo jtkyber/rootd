@@ -28,7 +28,7 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
         const updatedUser: IUserState = await getUser(session.user.email)
         if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
         
-        if (updatedUser.groups.length) {
+        if (updatedUser?.groups?.length) {
           const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
           if (userGroups.data[0]) dispatch(setUserGroups(userGroups.data))
         }

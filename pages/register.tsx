@@ -48,14 +48,19 @@ const register: NextPage = () => {
         }
     }
 
-    const handleGoogleSignIn = async () => {
-        signIn('google', { callbackUrl: `/home` })
+    const handleGoogleSignUp = async (e) => {
+        e.preventDefault()
+        try {
+            await signIn('google', { callbackUrl: `/continue-signup` })
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (
         <div className={styles.container}>
             <form onSubmit={handleSubmit}>
-                <h1>Register</h1>
+                <h1>Sign Up</h1>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
                 <input minLength={3} maxLength={20} disabled={isLoading} id="username" type="text" placeholder='username' required />
                 <input minLength={6} disabled={isLoading} id="password" type="password" placeholder='password' required />
@@ -77,8 +82,8 @@ const register: NextPage = () => {
                     ? <div className={styles.loading}><LoadingAnimation /></div>
                     : <button type="submit">Submit</button>
                 }
-                <button disabled={isLoading} onClick={handleGoogleSignIn} className={styles.buttonCustom}>Sign in with Google</button>
-                <Link href='/login' replace>Log In</Link>
+                <button disabled={isLoading} onClick={handleGoogleSignUp} className={styles.buttonCustom}>Sign up with Google</button>
+                <span className={styles.logRegSwitch}>Already have an account? <Link href='/login' replace>Log In</Link></span>
             </form>
         </div>
     )

@@ -73,8 +73,11 @@
             @mixin fadeOnHover;
         }
 
-        & a {
-            color: $red_brown_dark;
+        & .logRegSwitch {
+            color: black;
+            & a {
+                color: $grey_blue_vibrant;
+            }
         }
 
         & select {
@@ -84,7 +87,7 @@
             color: $red_brown_dark;
             width: 100%;
 
-            option {
+            & option {
                 color: $red_brown_dark;
             }
         }
