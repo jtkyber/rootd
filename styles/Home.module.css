@@ -364,7 +364,6 @@
             transition: transform linear 0.2s, box-shadow 0s 0.2s;
             
             &.show {
-                transition: transform linear 0.2s, box-shadow 0s 0s;
                 transform: translate(0);
                 box-shadow: $sectionShadow;
             }
@@ -480,10 +479,8 @@
                 }
 
                 &.show {
-                    margin-left: 0.5rem;
-
                     & svg {
-                        transform: translateX(100%) scale(0.4);
+                        transform: translateX(150%) scale(0.4) scaleX(-1);
                         filter: none;
 
                         &:hover {
