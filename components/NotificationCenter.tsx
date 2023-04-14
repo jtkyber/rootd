@@ -9,10 +9,10 @@ import { IGroup } from '../models/groupModel'
 import { setSelectedGroup } from '../redux/groupSlice'
 import { useRouter } from 'next/router'
 import scrollToMessage from '../utils/scrollToMessage'
-import { setActiveDropdown } from '../redux/appSlice'
 
 const NotificationCenter = () => {
     const [notificationArray, setNotificationArray] = useState<JSX.Element[]>([])
+    
     const user: IUserState = useAppSelector(state => state.user)
     const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)

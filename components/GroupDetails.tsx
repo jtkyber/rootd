@@ -7,8 +7,20 @@ import GroupDetailsArrow from './GroupDetailsArrow'
 
 const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGroup: IGroup, username: string, onlineMembers: string[]}) => {
     const [detailedExpanded, setDetailedExpanded] = useState(false)
+    const [memberArray, setMemberArray] = useState<JSX.Element[]>([])
 
     const router = useRouter()
+
+    useEffect(() => {
+        const memberArrayTemp: JSX.Element[] = 
+        selectedGroup?.members?.slice()
+        ?.sort((a, b) => onlineMembers.includes(a) ? -1 : 1)
+        ?.map((member, i) => (
+            <h5 className={`${styles.member} ${ onlineMembers.includes(member) ? styles.inGroup : null}`} key={i}>{member}</h5>
+        ))
+
+        setMemberArray(memberArrayTemp)
+    }, [selectedGroup, onlineMembers])
 
     const leaveGroup = async () => {
         const res = await axios.put('/api/leaveGroup', {
@@ -29,11 +41,7 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
                     <div className={styles.sectionTwo}>
                         <h3>Members</h3>
                         <div className={styles.members}>
-                            {
-                                selectedGroup.members.map((member, i) => (
-                                    <h5 className={`${styles.member} ${ onlineMembers.includes(member) ? styles.inGroup : null}`} key={i}>{member}</h5>
-                                ))
-                            }
+                            { memberArray }
                         </div>
                     </div>
 
