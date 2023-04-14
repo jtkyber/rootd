@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { NextPage } from 'next'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signIn } from 'next-auth/react'
@@ -12,6 +12,8 @@ const register: NextPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [errMessage, setErrMessage] = useState('')
 
+    const usernameRef: React.MutableRefObject<any> = useRef(null)
+
     const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
         try {
@@ -19,7 +21,7 @@ const register: NextPage = () => {
             setErrMessage('')
             const form = e.target as HTMLFormElement
     
-            const username: HTMLInputElement | null = form.querySelector('#username')
+            const username: HTMLInputElement | null = usernameRef?.current
             const password: HTMLInputElement | null = form.querySelector('#password')
             const email: HTMLInputElement | null = form.querySelector('#email')
             const gender: HTMLInputElement | null = form.querySelector('#gender')
@@ -42,7 +44,6 @@ const register: NextPage = () => {
                 router.replace('/login')
             } else throw new Error('Could not Register')
         } catch (err) {
-            console.log(err.message)
             setIsLoading(false)
             if (err?.response?.data) setErrMessage(err.response.data)
         }
@@ -62,7 +63,7 @@ const register: NextPage = () => {
             <form onSubmit={handleSubmit}>
                 <h1>Sign Up</h1>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
-                <input minLength={3} maxLength={20} disabled={isLoading} id="username" type="text" placeholder='username' required />
+                <input ref={usernameRef} minLength={3} maxLength={20} disabled={isLoading} type="text" placeholder='username' required />
                 <input minLength={6} disabled={isLoading} id="password" type="password" placeholder='password' required />
                 <input disabled={isLoading} id="email" type="email" placeholder='email' required />
                 <div className={styles.genderAndVersion}>

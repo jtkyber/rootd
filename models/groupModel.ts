@@ -8,7 +8,8 @@ export interface IMessage {
     content: string
     date: Date | number
     likes: string[]
-    psgReference?: string
+    psgReference?: string,
+    authorProfileImg: string
 }
 
 
@@ -35,6 +36,10 @@ export const msgSchema = new Schema<IMessage>({
     date: Date,
     likes: [String],
     psgReference: {
+        type: String,
+        required: false
+    },
+    authorProfileImg: {
         type: String,
         required: false
     }
@@ -97,6 +102,6 @@ const groupSchema = new Schema<IGroup>({
     }
 })
 
-const Group = models.Group4 || model('Group4', groupSchema, 'groups')
+const Group = models.Group5 || model('Group5', groupSchema, 'groups')
 
 export default Group

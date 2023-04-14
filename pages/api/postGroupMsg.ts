@@ -13,13 +13,14 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { groupId, author, authorId, content, date, psgReference }: any = req.body
+        const { groupId, author, authorId, content, date, psgReference, authorProfileImg }: any = req.body
         const msg: Partial<IMessage> = {
             author,
             authorId,
             content,
             date,
-            psgReference
+            psgReference,
+            authorProfileImg
         }
         
         await Group.findByIdAndUpdate(groupId, {

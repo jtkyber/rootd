@@ -30,7 +30,6 @@ const FinishRegister: NextPage = () => {
         if (!(username?.value && password && email && gender?.value && bVersion?.value)) {
           throw new Error ('Please fill out all fields')
         }
-        console.log(username?.value, password, email, gender?.value, bVersion?.value)
 
         const res = await axios.post('/api/auth/register', {
             username: username.value,
@@ -49,7 +48,6 @@ const FinishRegister: NextPage = () => {
             router.replace('/login')
         } else throw new Error('Could not Register')
     } catch (err) {
-        console.log(err.message)
         setIsLoading(false)
         if (err?.response?.data) setErrMessage(err.response.data)
     }
@@ -62,7 +60,7 @@ const FinishRegister: NextPage = () => {
            <form onSubmit={handleSubmit}>
                 <h1>Finish Singing Up</h1>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
-                <input minLength={3} maxLength={20} disabled={isLoading} id="username" type="text" placeholder='username' autoComplete='off' required />
+                <input minLength={3} maxLength={20} disabled={isLoading} id="username" type="text" placeholder='username' autoComplete='name' required />
                 <div className={styles.genderAndVersion}>
                     <select disabled={isLoading} id="gender" name='gender' defaultValue='Gender' required>
                         <option value="Gender" disabled hidden>Gender</option>

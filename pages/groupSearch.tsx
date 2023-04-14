@@ -226,8 +226,8 @@ const groupSearch = () => {
   const handleJoinGroup = async (group) => {
     try {
       const res = await axios.post('/api/joinGroup', {
-        userId: session.user._id,
-        userName: session.user.username,
+        userId: user._id,
+        userName: user.username,
         groupId: group._id,
       })
 
@@ -299,7 +299,7 @@ const groupSearch = () => {
                 }
             </div>
     
-            {creatingGroup ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={session.user._id} /> : null}
+            {creatingGroup && user?._id ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={user._id.toString()} /> : null}
           </>
           : <NotAuthorizedScreen />
         }

@@ -45,7 +45,6 @@ const register: NextPage = () => {
                 } else throw new Error('Incorrect email or password')
             } else throw new Error('Incorrect email or password')
         } catch (err) {
-            console.log(err.message)
             setIsLoading(false)
             if (err?.message) setErrMessage(err.message)
         }

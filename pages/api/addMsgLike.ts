@@ -3,12 +3,6 @@ import { pusher } from '../../lib/index.js'
 import connectMongo from '../../connectDB'
 import Group from '../../models/groupModel'
 import axios from 'axios'
-import User from '../../models/userModel.js'
-// import postNotification  from './postNotification.js'
-
-type Data = {
-  name: string
-}
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,9 +12,17 @@ export default async function handler(
         await connectMongo()
 
         const { groupId, groupName, msgId, likerName, authorID }: any = req.body
-
+        
+        const notificationBody = {
+            notificationType: 'message-like',
+            msgId: msgId,
+            newLiker: likerName,
+            userId: authorID,
+            groupId: groupId,
+            groupName: groupName
+        }
         const postNotification = async () => {
-            await axios.post('http://localhost:3000/api/postNotification', {
+            await axios.post(`${process.env.CURRENT_BASE_URL}/api/postNotification`, {
                 notificationType: 'message-like',
                 msgId: msgId,
                 newLiker: likerName,
@@ -44,8 +46,8 @@ export default async function handler(
                 
                 if (pusherRes.status === 200) {
                     const body = await pusherRes.json()
-                    if (!body.occupied) {
-                        postNotification()
+                    if (!body?.occupied) {
+                        await postNotification()
                     } else {
                         await pusher.trigger(
                             `${authorID}`, 

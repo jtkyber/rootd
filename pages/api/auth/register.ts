@@ -10,6 +10,7 @@ export default async function handler(
   ) {
     try {
         const { username, password, email, gender, bVersion } = req.body
+        console.log(req.body)
         await connectMongo()
         if (username == null || password == null || email == null || gender == null || bVersion == null) throw new Error('Please fill out all fields')
         else if (gender === 'Gender' || bVersion === 'Prefered Bible Version') throw new Error('Please fill out all fields')

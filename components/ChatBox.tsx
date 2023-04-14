@@ -345,7 +345,8 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
             authorId: user._id,
             content: textAreaRef.current.innerHTML,
             date: new Date,
-            psgReference: ''
+            psgReference: '',
+            authorProfileImg: session?.user?.image ? session.user.image : null
         }
 
         sendMessage.mutate(msgData)
@@ -414,6 +415,15 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         document.getElementById(msg._id + '-likes')?.classList.toggle(styles.show)
     }
 
+    const getInitials = (uN: string): string => {
+        let initials: string
+        const usernameArray = uN.split(' ')
+
+        if (usernameArray.length > 1) initials = usernameArray[0][0] + usernameArray[1][0]
+        else initials = uN[0] + uN[1]
+        return initials.toUpperCase()
+    }
+
     return (
         <div className={styles.selectedGroup}>
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
@@ -426,11 +436,17 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                                 <div key={j} id={msg._id} 
                                     className={`
                                     ${styles.msg} 
-                                    ${msg.author === session.user.username ? styles.userMsg : styles.msgFromOther}
+                                    ${msg.author === user?.username ? styles.userMsg : styles.msgFromOther}
                                     ${(i+1 === row1.length) && (j+1 === row2.length) ? styles.earliestMsg : null}
                                     `}
                                 >
-                                    <h5 className={styles.msgAuthor}>{msg.author}</h5>
+                                    <div className={styles.msgAuthor}>
+                                        {
+                                            msg?.authorProfileImg ? <Image width={25} height={25} className={styles.authorImg} src={msg.authorProfileImg} alt='Author Image'/>
+                                            : <h5 className={`${styles.authorImg} ${styles.noImg}`}>{getInitials(msg.author)}</h5>
+                                        }
+                                        <h5>{msg.author}</h5>
+                                    </div>
                                     <h4 onClick={(e) => showLikeNames(e, msg)} className={styles.msgContent}>
                                         {parse(msg.content, options)}
                                         <LikeIcon 
@@ -446,7 +462,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                                             msg.likes.map((name, i) => {
                                                 return <h6 key={i} className={styles.likeName}>
                                                     {name}
-                                                    <Image className={styles.likeImg} src={LikeIconSVG} alt='Like Icon'></Image>
+                                                    <Image className={styles.likeImg} src={LikeIconSVG} alt='Like Icon' />
                                                 </h6>
                                             })
                                         }
