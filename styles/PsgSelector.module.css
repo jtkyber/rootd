@@ -7,8 +7,8 @@
     transform: translateX(-50%);
     width: 15rem;
     height: max-content;
-    background-color: $light_grey;
-    border-radius: 0.5rem;
+    background-color: rgb($light_grey);
+    border-radius: $smallBorderRadius;
     box-shadow: $sectionShadow;
     z-index: 1000;
     margin-bottom: 3rem;
@@ -26,7 +26,7 @@
         
         & .title {
             font-weight: 600;
-            color: $red_brown_dark;
+            color: rgba($red_brown_dark, 1);
             margin-bottom: 0.5rem;
             justify-self: center;
             padding-left: 0.5rem;
@@ -38,7 +38,7 @@
             text-align: right;
             background-color: transparent;
             border: none;
-            color: $red_brown_dark;
+            color: rgba($red_brown_dark, 1);
             font-weight: 600;
             justify-self: end;
             display: flex;
@@ -68,7 +68,7 @@
             left: 0;
             width: 100%;
             border: 1px solid black;
-            background-color: $light_grey;
+            background-color: rgb($light_grey);
             text-align: center;
             display: none;
             flex-flow: column nowrap;
@@ -84,7 +84,7 @@
                 padding: 0.2rem 0.5rem;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.5);
                 font-weight: 400;
-                color: $red_brown;
+                color: rgb($red_brown);
                 cursor: pointer;
 
                 &:hover {
@@ -104,7 +104,7 @@
             background-color: inherit;
             border-radius: 0.3rem;
             outline: none;
-            outline: 1px solid $red_brown;
+            outline: 1px solid rgb($red_brown);
             color: black;
             box-shadow: inset 0 0 0.2rem 0 rgba(0, 0, 0, 0.7);
             width: 100%;
@@ -142,7 +142,7 @@
             height: max-content;
             background-color: transparent;
             border: none;
-            color: $light_grey;
+            color: rgb($light_grey);
 
             @mixin fadeOnHover;
 

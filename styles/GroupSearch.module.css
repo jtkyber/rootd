@@ -17,7 +17,7 @@
         width: 100%;
         height: 100%;
         box-shadow: 0 0 0.5rem 0 black;
-        background-color: $light_grey;
+        background-color: rgb($light_grey);
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(4, max-content) 1fr;
@@ -32,9 +32,9 @@
             height: 2.2rem;
             padding: 0.3rem;
             background-color: inherit;
-            border: 0.1rem solid $red_brown_dark;
-            border-radius: 0.5rem;
-            color: $red_brown_dark;
+            border: 0.1rem solid rgba($red_brown_dark, 1);
+            border-radius: $smallBorderRadius;
+            color: rgba($red_brown_dark, 1);
             outline: none;
             margin-bottom: 2rem;
         }
@@ -47,7 +47,7 @@
             margin-top: 1rem;
             
             & label {
-                color: $red_brown;
+                color: rgb($red_brown);
                 font-weight: 600;
             }
 
@@ -61,10 +61,10 @@
         & .groupCreation {
             align-self: end;
             margin-bottom: 1rem;
-            background-color: $red_brown;
+            background-color: rgb($red_brown);
             border: none;
-            border-radius: 0.5rem;
-            color: $light_grey;
+            border-radius: $smallBorderRadius;
+            color: rgb($light_grey);
             width: max-content;
             height: max-content;
             padding: 0.5rem;
@@ -78,7 +78,7 @@
         width: 100%;
         height: 100%;
         grid-area: sortContainer;
-        background-color: $light_grey;
+        background-color: rgb($light_grey);
         display: grid;
         grid-template-columns: 8rem 1fr 14rem;
         grid-template-areas: "nameSort summarySort sortRightChunk";
@@ -89,7 +89,7 @@
         z-index: 10;
         
         & h6 {
-            color: $red_brown;
+            color: rgb($red_brown);
             cursor: pointer;
         }
 
@@ -138,7 +138,7 @@
         grid-auto-rows: max-content;
         justify-items: center;
         z-index: 1;
-        background-color: $light_grey;
+        background-color: rgb($light_grey);
         gap: 0.4rem;
         padding: 1rem;
 
@@ -148,9 +148,9 @@
             position: relative;
             width: 100%;
             height: 3.5rem;
-            background-color: $light_grey;
+            background-color: rgb($light_grey);
             box-shadow: inset 0 0 0.5rem 0 black;
-            border-radius: 0.5rem;
+            border-radius: $smallBorderRadius;
             display: grid;
             grid-template-columns: 8rem 1fr 12rem;
             grid-template-rows: 1fr;
@@ -159,11 +159,11 @@
             padding: 0 1rem;
             overflow: hidden;
             cursor: pointer;
-            color: $red_brown;
+            color: rgb($red_brown);
 
             &:hover {
-                background-color: $red_brown;
-                color: $light_grey;
+                background-color: rgb($red_brown);
+                color: rgb($light_grey);
             }
             
             & .name {
@@ -184,7 +184,7 @@
 
             & .joined {
                 display: none;
-                color: $moss_green_vibrant;
+                color: rgb($moss_green_vibrant);
                 position: absolute;
                 top: 0.5rem;
                 right: 1rem;
@@ -197,10 +197,10 @@
                 right: 1rem;
                 width: max-content;
                 height: max-content;
-                background-color: $moss_green_vibrant;
+                background-color: rgb($moss_green_vibrant);
                 border: none;
-                border-radius: 0.5rem;
-                color: $red_brown;
+                border-radius: $smallBorderRadius;
+                color: rgb($red_brown);
                 padding: 0.2rem 0.5rem;
                 font-weight: bold;
 

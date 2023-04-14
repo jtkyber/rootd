@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $light_grey;
+    background-color: rgb($light_grey);
 
     & form {
         width: max-content;
@@ -17,8 +17,8 @@
         justify-content: center;
         padding: 2rem 1rem;
         gap: 1rem;
-        border-radius: 1rem;
-        box-shadow: inset 0 0 0.7rem 0rem $red_brown_dark;
+        border-radius: $largeBorderRadius;
+        box-shadow: inset 0 0 0.7rem 0rem rgba($red_brown_dark, 1);
 
         
         & .loading {
@@ -29,7 +29,7 @@
         }
 
         & h1 {
-            color: $red_brown;
+            color: rgb($red_brown);
             font-weight: 400;
         }
 
@@ -43,9 +43,9 @@
             height: 2rem;
             padding: 0.3rem;
             background-color: transparent;
-            border: 0.1rem solid $red_brown_dark;
+            border: 0.1rem solid rgba($red_brown_dark, 1);
             border-radius: 0.2rem;
-            color: $red_brown_dark;
+            color: rgba($red_brown_dark, 1);
             outline: none;
 
             &:focus {
@@ -57,17 +57,17 @@
             }
 
             &::placeholder {
-                color: $red_brown_dark;
+                color: rgba($red_brown_dark, 1);
             }
         }
         
         & button {
             width: max-content;
             height: 2rem;
-            background-color: $red_brown;
+            background-color: rgb($red_brown);
             border: none;
-            border-radius: 0.5rem;
-            color: $light_grey;
+            border-radius: $smallBorderRadius;
+            color: rgb($light_grey);
             padding: 0.5rem;
 
             @mixin fadeOnHover;
@@ -76,19 +76,19 @@
         & .logRegSwitch {
             color: black;
             & a {
-                color: $grey_blue_vibrant;
+                color: rgb($grey_blue_vibrant);
             }
         }
 
         & select {
             background-color: transparent;
             border-radius: 0.2rem;
-            border: 0.1rem solid $red_brown;
-            color: $red_brown_dark;
+            border: 0.1rem solid rgb($red_brown);
+            color: rgba($red_brown_dark, 1);
             width: 100%;
 
             & option {
-                color: $red_brown_dark;
+                color: rgba($red_brown_dark, 1);
             }
         }
 

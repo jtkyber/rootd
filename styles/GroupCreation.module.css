@@ -20,7 +20,7 @@
         flex-flow: row nowrap;
         align-items: center;
         background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 1rem;
+        border-radius: $largeBorderRadius;
         padding: 1rem;
 
         & .progressMap {
@@ -31,13 +31,13 @@
             flex-flow: column nowrap;
             justify-content: center;
             gap: 0.5rem;
-            border-right: 2px solid $red_brown_dark;
+            border-right: 2px solid rgba($red_brown_dark, 1);
 
             & button {
                 background-color: transparent;
                 border: none;
                 text-align: left;
-                color: $red_brown_dark;
+                color: rgba($red_brown_dark, 1);
                 font-weight: 600;
 
                 &:disabled {
@@ -70,7 +70,7 @@
             & .sectionTitle {
 
                 margin-bottom: 1rem;
-                color: $red_brown_dark;
+                color: rgba($red_brown_dark, 1);
             }
 
             & .sectionContent {
@@ -84,7 +84,7 @@
                 gap: 1rem;
 
                 & .instructions {
-                    color: $grey_blue;
+                    color: rgb($grey_blue);
                 }
 
                 & .tagContainer {
@@ -104,10 +104,10 @@
                             position: relative;
                             padding: 0.2rem 0.5rem;
                             cursor: pointer;
-                            border: 1px solid $red_brown_dark;
-                            border-radius: 0.5rem;
+                            border: 1px solid rgba($red_brown_dark, 1);
+                            border-radius: $smallBorderRadius;
                             overflow: hidden;
-                            color: $red_brown_dark;
+                            color: rgba($red_brown_dark, 1);
 
                             &::after {
                                 position: absolute;
@@ -121,7 +121,7 @@
                                 justify-content: center;
                                 align-items: center;
                                 background-color: transparent;
-                                color: $deep_red;
+                                color: rgb($deep_red);
                                 opacity: 0;
                                 font-size: medium;
                                 font-weight: 600;
@@ -143,7 +143,7 @@
                         display: flex;
                         flex-flow: row nowrap;
                         border: 2px solid black;
-                        border-radius: 1rem;
+                        border-radius: $largeBorderRadius;
                         overflow: hidden;
                         box-shadow: $shadow;
 
@@ -154,12 +154,12 @@
                             width: max-content;
                             padding: 0rem 0.8rem;
                             height: calc(100% + 8px);
-                            background-color: $moss_green_vibrant;
+                            background-color: rgb($moss_green_vibrant);
                             border: 2px solid black;
                             border-right: none;
                             border-top-left-radius: 50%;
                             border-bottom-left-radius: 50%;
-                            color: $red_brown_dark;
+                            color: rgba($red_brown_dark, 1);
                             font-size: larger;
                             font-weight: 400;
                             transition: opacity linear .1s;
@@ -187,9 +187,9 @@
                     height: 2.2rem;
                     padding: 0.3rem;
                     background-color:transparent;
-                    border: 1px solid $red_brown_dark;
-                    border-radius: 0.5rem;
-                    color: $red_brown_dark;
+                    border: 1px solid rgba($red_brown_dark, 1);
+                    border-radius: $smallBorderRadius;
+                    color: rgba($red_brown_dark, 1);
                     outline: none;
                     box-shadow: $shadow;
 
@@ -201,13 +201,13 @@
 
                 & .summary {
                     background-color: transparent;
-                    border: 1px solid $red_brown_dark;
+                    border: 1px solid rgba($red_brown_dark, 1);
                     padding: 0.5rem;
-                    border-radius: 0.5rem;
+                    border-radius: $smallBorderRadius;
                     resize: none;
                     width: 80%;
                     height: 90%;
-                    color: $red_brown_dark;
+                    color: rgba($red_brown_dark, 1);
                     box-shadow: $shadow;
 
                     &:focus {
@@ -230,7 +230,7 @@
                     }
 
                     & label {
-                        color: $red_brown_dark;
+                        color: rgba($red_brown_dark, 1);
                         font-weight: 600;
                     }
                 }
@@ -239,8 +239,8 @@
             & .nextBtn {
                 background-color: $red_brown;
                 border: none;
-                border-radius: 0.5rem;
-                color: $light_grey;
+                border-radius: $smallBorderRadius;
+                color: rgb($light_grey);
                 width: 4rem;
                 height: 2rem;
                 justify-self: end;

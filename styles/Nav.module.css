@@ -3,8 +3,8 @@
 .container {
     width: 100vw;
     height: $nav_height;
-    background-color: $red_brown;
-    box-shadow: 0 0 1rem 0 $red_brown_dark;
+    background-color: rgb($red_brown);
+    box-shadow: $sectionShadow;
     display: flex;
     flex-flow: row nowrap;
     position: sticky;
@@ -45,7 +45,7 @@
             @mixin fadeOnHover;
 
             & * {
-                fill: $light_grey;
+                fill: rgb($light_grey);
             }
         }
     }
@@ -69,14 +69,14 @@
         & a {
             @mixin fadeOnHover;
             cursor: pointer;
-            color: $light_grey;
+            color: rgb($light_grey);
         }
 
         & .navigationContainer {
             position: relative;
 
             & .bellIcon {
-                fill: $light_grey;
+                fill: rgb($light_grey);
                 width: 20px;
                 height: auto;
                 cursor: pointer;
@@ -93,7 +93,7 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(calc(-50% + 0.6rem), calc(-50% - 0.7rem));
-                color: $light_grey;
+                color: rgb($light_grey);
             }
 
             & .notificationDropdown {
@@ -104,7 +104,7 @@
                 height: max-content;
                 box-shadow: $sectionShadow;
                 border-bottom-left-radius: 0.5rem;
-                background-color: $light_grey;
+                background-color: rgb($light_grey);
                 display: none;
                 overflow: auto;
 
@@ -120,7 +120,7 @@
                     text-align: center;
                     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
                     padding: 0.7rem;
-                    color: $red_brown;
+                    color: rgb($red_brown);
                     cursor: pointer;
 
                     & * {
@@ -148,7 +148,7 @@
                 @mixin fadeOnHover;
                 
                 & path {
-                    fill: $light_grey;
+                    fill: rgb($light_grey);
                 }
 
                 & * {
@@ -164,7 +164,7 @@
                 height: max-content;
                 box-shadow: $sectionShadow;
                 border-bottom-left-radius: 0.5rem;
-                background-color: $light_grey;
+                background-color: rgb($light_grey);
                 display: none;
 
                 &.active {
@@ -177,7 +177,7 @@
                     text-align: center;
                     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
                     padding: 0.5rem;
-                    color: $red_brown;
+                    color: rgb($red_brown);
                     cursor: pointer;
                     font-weight: 600;
 

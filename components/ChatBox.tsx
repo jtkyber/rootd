@@ -70,6 +70,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
             onSuccess: async (newData) => {
                 addMessage(newData)
                 textAreaRef.current.value = ''
+                chatBoxRef?.current.scrollTo(0, chatBoxRef?.current.scrollHeight)
                 await axios.get(`/api/pusher/updateGrpMemberMsgs?username=${user.username}&channelName=${selectedGroup._id}&msg=${JSON.stringify(newData)}`)
             }
         }
@@ -302,12 +303,12 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         queryClient.setQueryData(['groupMessages', selectedGroup._id], (prev: any) => ({
             ...data,
             pages: prev?.pages.map((page, i) => {
-            if (i === 0) return {
-                ...page,
-                data: [newData.data, ...page.data]
-            } 
-            else return page
-        })
+                if (i === 0) return {
+                    ...page,
+                    data: [newData.data, ...page.data]
+                } 
+                else return page
+            })
         }))
     }
 

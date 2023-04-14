@@ -10,13 +10,13 @@
     & .selectorBtn {
         position: relative;
         box-shadow: 0 0 0.5rem 0 black;
-        background-color: $light_grey;
+        background-color: rgb($light_grey);
         padding: 0.8rem 0;
         width: 100%;
         border: none;
         z-index: 1;
-        border-radius: 0.5rem;
-        color: $red_brown;
+        border-radius: $smallBorderRadius;
+        color: rgb($red_brown);
         font-size: large;
     }
     
@@ -27,12 +27,12 @@
         align-items: center;
         width: 100%;
         max-height: 0;
-        background-color: $light_grey;
+        background-color: rgb($light_grey);
         overflow: auto;
         overflow-x: hidden;
         z-index: 10;
         box-shadow: 0 0 0.5rem 0 black;
-        border-radius: 0.5rem;
+        border-radius: $smallBorderRadius;
         transition: max-height 0.2s ease-out;
         @mixin miniScrollbar;
         
@@ -56,11 +56,11 @@
 
             &:has(input:checked) {
                 width: 100%;
-                background-color: $red_brown;
-                border-top-color: $light_grey;
+                background-color: rgb($red_brown);
+                border-top-color: rgb($light_grey);
                 
                 & label {
-                    color: $light_grey;
+                    color: rgb($light_grey);
                 }
             }
 
@@ -72,7 +72,7 @@
                 width: 100%;
                 text-align: center;
                 cursor: pointer;
-                color: $red_brown;
+                color: rgb($red_brown);
                 padding: 0.5rem 0;
                 margin-left: $miniScrollbarWidth;
 
