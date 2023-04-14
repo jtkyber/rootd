@@ -25,7 +25,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <> 
       <Head>
         <title>Bible Chat</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/book.ico" />
       </Head>
       <SessionProvider session={pageProps.session}>
         <Provider store={store}>
