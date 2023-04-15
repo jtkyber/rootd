@@ -18,7 +18,8 @@ export const initialSelectedGroupState = {
     books: [],
     date: Date.now(),
     lastActive: Date.now(),
-    groupAdmin: null
+    groupAdmin: null,
+    membersWithGroupMuted: []
 }
 
 const initialState: IGroupState = {

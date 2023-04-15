@@ -75,11 +75,12 @@ const Layout = (props) => {
                     newLiker: data.newLiker,
                     userId: user._id,
                     groupId: data.groupId,
-                    groupName: data.groupName
+                    groupName: data.groupName,
+                    userName: data.authorName
                 })
         }
-
-        if (res.data) dispatch(setUser({...user, notifications: res.data}))
+        console.log(res?.data)
+        if (res?.data) dispatch(setUser({...user, notifications: res.data}))
     }
 
     const renderChildren = () => {

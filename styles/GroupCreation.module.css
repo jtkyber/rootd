@@ -237,7 +237,7 @@
             }
 
             & .nextBtn {
-                background-color: $red_brown;
+                background-color: rgb($red_brown);
                 border: none;
                 border-radius: $smallBorderRadius;
                 color: rgb($light_grey);

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
 import User, { INotification, IUser } from '../../models/userModel'
 import mongoose from 'mongoose'
+import Group, { IGroup } from '../../models/groupModel'
 
 type Data = {
   name: string
@@ -14,7 +15,15 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { notificationType, groupId, groupName, msgId, newLiker, userId }: any = req.body
+        const { notificationType, groupId, groupName, msgId, newLiker, userId, userName }: any = req.body
+
+        const groupMutedByUser = async () => {
+            const group: IGroup | null = await Group.findById(groupId)
+            if (group?.membersWithGroupMuted?.includes(userName)) {
+                return true
+            } 
+            return false
+        }
 
         switch (notificationType) {
             case 'new-group-message':
@@ -22,6 +31,8 @@ export default async function handler(
                 break
 
             case 'message-like':
+                if (await groupMutedByUser()) return res.json(false)
+
                 const newNotificationObject: INotification = {
                     _id: new mongoose.Types.ObjectId,
                     content: 'New Message Like',
@@ -97,7 +108,6 @@ export default async function handler(
                     }
                 })
                 .catch(err => { throw new Error(err) })
-
             break
         }
     } catch(err) {

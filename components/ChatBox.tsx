@@ -384,13 +384,14 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         })
     }
 
-    const postMsgLike = async (msg) => {
+    const postMsgLike = async (msg: IMessage) => {
         const res = await axios.put('/api/addMsgLike', {
             groupId: selectedGroup._id,
             groupName: selectedGroup.name,
             msgId: msg._id,
             likerName: user.username,
-            authorID: msg.authorId
+            authorID: msg.authorId,
+            authorName: msg.author
         })
         if (res.data === true) setNewMsgLikes(msg._id, true) 
         else setNewMsgLikes(msg._id, false)
@@ -443,8 +444,8 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                                 >
                                     <div className={styles.msgAuthor}>
                                         {
-                                            msg?.authorProfileImg ? <Image width={25} height={25} className={styles.authorImg} src={msg.authorProfileImg} alt='Author Image'/>
-                                            : <h5 className={`${styles.authorImg} ${styles.noImg}`}>{getInitials(msg.author)}</h5>
+                                            msg?.authorProfileImg ? <Image width={25} height={25} className={`${styles.authorImg} ${onlineMembers.includes(msg.author) ? styles.online : null}`} src={msg.authorProfileImg} alt='Author Image'/>
+                                            : <h5 className={`${styles.authorImg} ${styles.noImg} ${onlineMembers.includes(msg.author) ? styles.online : null}`}>{getInitials(msg.author)}</h5>
                                         }
                                         <h5>{msg.author}</h5>
                                     </div>

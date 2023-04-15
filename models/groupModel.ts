@@ -26,7 +26,8 @@ export interface IGroup {
     books: string[]
     date: Date | number
     lastActive: Date | number
-    groupAdmin?: string | null
+    groupAdmin?: string | null,
+    membersWithGroupMuted: string[]
 }
 
 export const msgSchema = new Schema<IMessage>({
@@ -99,9 +100,13 @@ const groupSchema = new Schema<IGroup>({
     groupAdmin: {
         type: String,
         required: false
+    },
+    membersWithGroupMuted: {
+        type: [String],
+        required: false
     }
 })
 
-const Group = models.Group5 || model('Group5', groupSchema, 'groups')
+const Group = models.Group6 || model('Group6', groupSchema, 'groups')
 
 export default Group

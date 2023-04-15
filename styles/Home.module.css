@@ -136,9 +136,9 @@
                     height: max-content;
                     display: flex;
                     flex-flow: column-reverse nowrap;
-                    gap: 1rem;
                     justify-content: flex-end;
                     align-items: flex-start;
+                    gap: 1rem;
 
                     & .msg {
                         display: flex;
@@ -153,6 +153,7 @@
                         }
                         
                         & .msgAuthor {
+                            position: relative;
                             display: flex;
                             flex-flow: row nowrap;
                             gap: 0.5rem;
@@ -173,6 +174,10 @@
                                     font-size: 0.9rem;
                                     color: rgb($light_grey);
                                 }
+
+                                /* &.online {
+                                    border: 2px solid green;
+                                } */
                             }
 
                             & h5 {
@@ -191,7 +196,6 @@
                             max-width: max-content;
                             font-weight: 400;
                             white-space: pre-wrap;
-                            color: rgb($red_brown);
 
                             & span {
                                 cursor: pointer;
@@ -202,21 +206,36 @@
 
                             & .msgLikes {
                                 position: absolute;
-                                top: -0.2rem;
+                                top: -0.3rem;
                                 left: calc(100% - 0.5rem);
                                 width: max-content;
                                 height: max-content;
-                                display: flex;
-                                flex-flow: row nowrap;
-                                gap: 0.2rem;
+                                display: grid;
+                                grid-template-columns: 1rem 0.6rem;
+                                grid-template-rows: 1.2rem;
+                                align-items: center;
 
                                 & .msgLikeIcon {
                                     position: relative;
-                                    width: 1rem;
-                                    height: 1rem;
-                                    background-color: rgb($light_grey);
+                                    width: 14px;
+                                    height: auto;
                                     cursor: pointer;
                                     overflow: visible;
+
+                                    & path {
+                                        fill: rgb($light_grey);
+                                        stroke: rgb($red_brown);
+                                        stroke-width: 1rem;
+                                    }
+
+                                    &.likedByUser > path {
+                                        fill: rgb($like_color);
+                                        stroke: rgb($like_color);
+                                    }
+
+                                    &.likedByOther > path {
+                                        fill: rgb($red_brown);
+                                    }
 
                                     &.isAuthor {
                                         cursor: default;
@@ -224,8 +243,9 @@
                                 }
 
                                 & .msgLikeNumber {
+                                    justify-self: flex-end;
                                     font-weight: 400;
-                                    line-height: 1rem;
+                                    color: rgb($red_brown_dark);
                                 }
                             }
                             
@@ -269,17 +289,26 @@
     
                         &.userMsg {
                             & .msgContent {
-                                border-color: rgb($moss_green_vibrant);
+                                border-color: rgb($msg_color_user);
+                                background-color: rgb($msg_color_user);
+                                color: rgb($light_grey);
                             }
 
                             & .msgAuthor > h5 {
-                                color: rgb($moss_green_vibrant);
+                                color: rgb($grey_blue);
+                            }
+
+                            & span {
+                                color: hsl(213, 70%, 75%)
                             }
                         }
         
                         &.msgFromOther {
                             & .msgContent {
-                                border-color: rgb($grey_blue);
+                                border-color: rgb($msg_color_user);
+                                background-color: rgb($msg_color_not_user);
+                                color: rgb($red_brown_dark);
+
                             }
 
                             & .msgAuthor > h5 {
@@ -385,11 +414,12 @@
             box-shadow: none;
             display: grid;
             grid-template-columns: 1fr;
-            grid-template-rows: max-content max-content 1fr;
+            grid-template-rows: max-content max-content max-content 1fr;
             justify-items: center;
             padding: 1rem;
+            padding-top: 0.5rem;
             color: rgb($red_brown);
-            gap: 1rem;
+            /* gap: 1rem; */
             z-index: 100;
             transform: translate(100%);
             transition: transform linear 0.2s, box-shadow 0s 0.2s;
@@ -399,11 +429,47 @@
                 box-shadow: $sectionShadow;
             }
 
+            & .muteGroup {
+                justify-self: end;
+                background-color: transparent;
+                border: none;
+                color: rgb($red_brown);
+                padding: 0.3rem;
+                
+                &.muted {
+                    & svg {
+                        & rect {
+                            display: none;
+                        }
+
+                        & path:nth-child(2), & path:nth-child(3) {
+                            display: block;
+                        }
+                    }
+                }
+                
+                & svg {
+                    width: 1rem;
+                    height: auto;
+                    
+                    & path:nth-child(2), & path:nth-child(3) {
+                        display: none;
+                    }
+
+                    & rect {
+                        width: 3rem;
+                        stroke: rgb($light_grey);
+                        stroke-width: 1.5rem;
+                    }
+                }
+            }
+
             & .sectionOne {
                 display: flex;
                 flex-flow: column nowrap;
                 justify-content: center;
                 gap: 0.2rem;
+                margin-bottom: 1rem;
 
                 & .name {
                     font-weight: 600;
@@ -534,3 +600,4 @@
         }
     }
 }
+

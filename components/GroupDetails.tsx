@@ -4,10 +4,19 @@ import axios from 'axios'
 import { IGroup } from '../models/groupModel'
 import { useRouter } from 'next/router'
 import GroupDetailsArrow from './GroupDetailsArrow'
+import { IUserState } from '../redux/userSlice'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { setSelectedGroup } from '../redux/groupSlice'
+import Image from 'next/image'
+import MuteBtn from './MuteBtn'
 
 const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGroup: IGroup, username: string, onlineMembers: string[]}) => {
     const [detailedExpanded, setDetailedExpanded] = useState(false)
     const [memberArray, setMemberArray] = useState<JSX.Element[]>([])
+
+    const user: IUserState = useAppSelector(state => state.user)
+
+    const dispatch = useAppDispatch()
 
     const router = useRouter()
 
@@ -30,9 +39,29 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
         if (res.data) router.reload()
     }
 
+    const toggleGroupNotications = async () => {
+        const res = await axios.put('/api/toggleGroupNotications', { 
+            groupId: selectedGroup._id,
+            username: user.username
+        })
+
+        if (res.data && !selectedGroup.membersWithGroupMuted.includes(username)) {
+            dispatch(setSelectedGroup({ ...selectedGroup, membersWithGroupMuted: [ ...selectedGroup.membersWithGroupMuted, username ] }))
+        } else if (!res.data && selectedGroup.membersWithGroupMuted.includes(username)) {
+            const indexOfName = selectedGroup.membersWithGroupMuted.indexOf(username)
+            if (indexOfName < 0) return
+            const newArray = selectedGroup.membersWithGroupMuted.slice()
+            newArray.splice(indexOfName, 1)
+            dispatch(setSelectedGroup({ ...selectedGroup, membersWithGroupMuted: newArray }))
+        }
+    }
+
     return (
             selectedGroup?._id ?
                 <div className={`${styles.groupDetails} ${detailedExpanded ? styles.show : null}`}>
+                    <button onClick={toggleGroupNotications} className={`${styles.muteGroup} ${selectedGroup.membersWithGroupMuted.includes(username) ? styles.muted : null}`}>
+                        <MuteBtn /> 
+                    </button>
                     <div className={styles.sectionOne}>
                         <h2 className={styles.name}>{selectedGroup.name}</h2>
                         <h5 className={styles.summary}>{selectedGroup.summary}</h5>

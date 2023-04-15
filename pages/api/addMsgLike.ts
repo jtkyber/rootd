@@ -11,7 +11,7 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { groupId, groupName, msgId, likerName, authorID }: any = req.body
+        const { groupId, groupName, msgId, likerName, authorID, authorName }: any = req.body
         
         const notificationBody = {
             notificationType: 'message-like',
@@ -28,7 +28,8 @@ export default async function handler(
                 newLiker: likerName,
                 userId: authorID,
                 groupId: groupId,
-                groupName: groupName
+                groupName: groupName,
+                userName: authorName
             })
         }
 
@@ -52,7 +53,7 @@ export default async function handler(
                         await pusher.trigger(
                             `${authorID}`, 
                             'update-notifications', 
-                            { notificationType: 'message-like', msgId: msgId, newLiker: likerName, groupId: groupId, groupName: groupName }
+                            { notificationType: 'message-like', msgId: msgId, newLiker: likerName, groupId: groupId, groupName: groupName, authorName: authorName }
                         )
                     }
                 }
