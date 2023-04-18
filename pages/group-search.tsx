@@ -16,6 +16,7 @@ import GroupCreation from '../components/GroupCreation'
 import characters from '../characters.json'
 import bookNames from '../bookNames.json'
 import styles from '../styles/GroupSearch.module.css'
+import dropdownStyles from '../styles/DropDown.module.css'
 import LoadingAnimation from '../components/LoadingAnimation'
 import NotAuthorizedScreen from '../components/NotAuthorizedScreen'
 import Confirmation from '../components/Confirmation'
@@ -60,8 +61,6 @@ const groupSearch = () => {
         getNextPageParam: (lastPage, pages) => lastPage?.cursor
     }
   )
-
-  const refetch = () => queryClient.resetQueries({ queryKey: ['groups', [options, currentSort, page]], type: 'active' })
 
   useEffect(() => {
     const now = Date.now()
@@ -125,12 +124,12 @@ const groupSearch = () => {
 
   const handlePageClick = (e) => {
     //-----Close all dropdowns-----
-    const btns = document.querySelectorAll(`.${styles.selectorBtn}`)
-    const options = document.querySelectorAll(`.${styles.options}`)
+    const btns = document.querySelectorAll(`.${dropdownStyles.selectorBtn}`)
+    const options = document.querySelectorAll(`.${dropdownStyles.options}`)
     
     for (let i = 0; i < options.length; i++) {
       if ((e.target !== btns[i]) && (!checkParent(options[i], e.target))) {
-            options[i].classList.remove(styles.show)
+            options[i].classList.remove(dropdownStyles.show)
         }
     }
   }
