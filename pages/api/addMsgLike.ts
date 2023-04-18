@@ -13,14 +13,6 @@ export default async function handler(
 
         const { groupId, groupName, msgId, likerName, authorID, authorName }: any = req.body
         
-        const notificationBody = {
-            notificationType: 'message-like',
-            msgId: msgId,
-            newLiker: likerName,
-            userId: authorID,
-            groupId: groupId,
-            groupName: groupName
-        }
         const postNotification = async () => {
             await axios.post(`${process.env.CURRENT_BASE_URL}/api/postNotification`, {
                 notificationType: 'message-like',

@@ -1,11 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
-import Group from '../../models/groupModel';
+import Group, { IGroup } from '../../models/groupModel';
 import User from '../../models/userModel';
-
-// type Data = {
-//   name: string
-// }
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,15 +10,17 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { userId, userName, groupId }: any = req.body
+        const { userId, userName, groupId, password = null }: any = req.body
 
-        const groupTest = await Group.findById(groupId)
-        if (groupTest.members.includes(userName)) throw new Error('User already in group')
-
+        const groupTest: IGroup | null = await Group.findById(groupId)
+        if (groupTest?.members.includes(userName)) throw new Error('User already in group')
+        if (groupTest?.isPrivate && !password) throw new Error('Please enter the group password')
+        if (groupTest?.isPrivate && (password !== groupTest?.password?.toString())) throw new Error('Wrong Password')
+        if (!groupTest?.members?.length) return
 
         const group = await Group.findByIdAndUpdate(groupId, { 
-            $push: { members: userName },
-            $inc: { memberCount: 1 }
+            $set: { memberCount: groupTest.members.length + 1 },
+            $push: { members: userName }
         }, { new: true })
 
         if (group.members.includes(userName)) {

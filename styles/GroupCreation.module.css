@@ -6,7 +6,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(5px);
-    z-index: 1000;
+    z-index: 100;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -37,11 +37,11 @@
                 background-color: transparent;
                 border: none;
                 text-align: left;
-                color: rgba($red_brown_dark, 1);
-                font-weight: 600;
+                color: rgb($grey_blue_vibrant);
+                font-weight: 400;
 
                 &:disabled {
-                    opacity: 0.6;
+                    color: rgba($red_brown_dark, 0.6);
                     pointer-events: none;
                 }
 
@@ -52,6 +52,7 @@
         & .section {
             width: 100%;
             height: 100%;
+            padding: 0 1rem;
             display: grid;
             grid-template-columns: 1fr;
             grid-template-rows: max-content max-content 1fr max-content;
@@ -84,7 +85,8 @@
                 gap: 1rem;
 
                 & .instructions {
-                    color: rgb($grey_blue);
+                    color: rgb($moss_green);
+                    text-align: center;
                 }
 
                 & .tagContainer {
@@ -206,7 +208,7 @@
                     border-radius: $smallBorderRadius;
                     resize: none;
                     width: 80%;
-                    height: 90%;
+                    height: 6rem;
                     color: rgba($red_brown_dark, 1);
                     box-shadow: $shadow;
 

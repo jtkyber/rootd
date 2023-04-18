@@ -19,9 +19,14 @@ export default async function handler(
             }
         }).catch(err => {throw new Error(err)})
 
+        const group = await Group.findOne({ _id: groupId })
+
         if (user?.modifiedCount > 0) await Group.updateOne({ _id: groupId }, { 
-            $pull: { members: username },
-            $inc: { memberCount: -1 }
+            $set: { memberCount: group?.members?.length - 1 },
+            $pull: { 
+                members: username ,
+                membersWithGroupMuted: username
+            }
         })
         else throw new Error('could not retrieve user')
 

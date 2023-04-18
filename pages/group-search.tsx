@@ -16,8 +16,9 @@ import GroupCreation from '../components/GroupCreation'
 import characters from '../characters.json'
 import bookNames from '../bookNames.json'
 import styles from '../styles/GroupSearch.module.css'
-import LoadingAnimation from '../components/LoadingAnimation';
-import NotAuthorizedScreen from '../components/NotAuthorizedScreen';
+import LoadingAnimation from '../components/LoadingAnimation'
+import NotAuthorizedScreen from '../components/NotAuthorizedScreen'
+import Confirmation from '../components/Confirmation'
 
 interface IOptions {
   keyword: string,
@@ -41,10 +42,9 @@ const groupSearch = () => {
   })
 
   const [page, setPage] = useState()
-
   const [creatingGroup, setCreatingGroup] = useState(false)
-
   const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
+  const [activePrivateGroup, setActivePrivateGroup] = useState<IGroup | null>(null)
 
   const dispatch = useAppDispatch()
 
@@ -157,81 +157,21 @@ const groupSearch = () => {
     return `${msSinceLastActive}ms`
   }
 
-  useEffect(() => {
-    // sortGroups()
-    // refetch()
-  }, [currentSort])
-
-  // const sortGroups = (): void => {
-  //   if(!data?.pages[0]) return
-  //   const dataTemp = data?.pages.map(page => page.data).flat()
-    
-  //   switch(currentSort.name) {
-  //     case 'name':
-  //       if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.name.localeCompare(b.name)) 
-  //       else dataTemp.sort((a, b) => b.name.localeCompare(a.name))
-  //       break
-  //     case 'members':
-  //       if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.members.length - b.members.length) 
-  //       else dataTemp.sort((a, b) => b.members.length - a.members.length)
-  //       break
-  //     case 'lastActive':
-  //       if (currentSort.dir === 'down') {
-  //         dataTemp.sort((a, b) => {
-  //           const dateA = new Date(a.lastActive)
-  //           const dateB = new Date(b.lastActive)
-  //           return dateB.getTime() - dateA.getTime()
-  //         })
-  //       } else dataTemp.sort((a, b) => {
-  //         const dateA = new Date(a.lastActive)
-  //         const dateB = new Date(b.lastActive)
-  //         return dateA.getTime() - dateB.getTime()
-  //       })
-  //       break
-  //     case 'isPrivate':
-  //       if (currentSort.dir === 'down') dataTemp.sort((a, b) => a.isPrivate - b.isPrivate) 
-  //       else dataTemp.sort((a, b) => b.isPrivate - a.isPrivate)
-  //       break
-  //   }
-
-    
-  //   function sliceIntoChunks(arr, chunkSize) {
-  //     const res: any[] = []
-  //     for (let i = 0; i < arr.length; i += chunkSize) {
-  //       const chunk = arr.slice(i, i + chunkSize);
-  //       if (!chunk.length) return false
-  //       res.push(chunk);
-  //     }
-  //     return res
-  //   }
-    
-  //   queryClient.setQueryData(['groups', [options, page]], (prev: any) => {
-  //     const dataChunked = sliceIntoChunks(dataTemp, prev?.pages[0].cursor || prev?.pages[0].data.length)
-  //     return {
-  //       ...data,
-  //       pages: prev?.pages.map((page, i) => {
-  //         return {
-  //           ...page,
-  //           data: dataChunked[i]
-  //         } 
-  //       })
-  //     }
-  //   })
-  // }
-
   const handleSortClick = (e) => dispatch(setCurrentSort(e.target.id))
 
   const handleResultClick = (e) => e.target.classList.toggle(styles.active)
 
-  const handleJoinGroup = async (group) => {
+  const handleJoinGroup = async (group, password = null) => {
     try {
       const res = await axios.post('/api/joinGroup', {
         userId: user._id,
         userName: user.username,
         groupId: group._id,
+        password: password
       })
 
       if (res.data.groups.includes(group._id)) {
+        setActivePrivateGroup(null)
         dispatch(setUser({ ...user, groups: res.data.groups }))
         dispatch(setSelectedGroup(group))
         router.replace('/home')
@@ -279,7 +219,7 @@ const groupSearch = () => {
                         {
                           group?._id && user?.groups.includes(group._id.toString())
                           ? <h5 className={styles.joined}>Joined</h5>
-                          : <button onClick={() => handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
+                          : <button onClick={() => group.isPrivate ? setActivePrivateGroup(group) : handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
                         }
                         <p className={styles.summary}>{group.summary}</p>
                         <div className={styles.resultRightChunk}>
@@ -299,7 +239,9 @@ const groupSearch = () => {
                 }
             </div>
     
-            {creatingGroup && user?._id ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={user._id.toString()} /> : null}
+            { creatingGroup && user?._id ? <GroupCreation setCreatingGroup={setCreatingGroup} userId={user._id.toString()} /> : null }
+            
+            { activePrivateGroup ? <Confirmation exitFunction={() => setActivePrivateGroup(null)} enterFunction={(password) => handleJoinGroup(activePrivateGroup, password)} /> : null }
           </>
           : <NotAuthorizedScreen />
         }

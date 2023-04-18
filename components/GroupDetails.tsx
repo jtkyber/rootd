@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from '../styles/Home.module.css'
 import axios from 'axios'
 import { IGroup } from '../models/groupModel'
@@ -6,19 +6,42 @@ import { useRouter } from 'next/router'
 import GroupDetailsArrow from './GroupDetailsArrow'
 import { IUserState } from '../redux/userSlice'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
-import { setSelectedGroup } from '../redux/groupSlice'
-import Image from 'next/image'
+import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
 import MuteBtn from './MuteBtn'
+import OptionsDots from './OptionsDots'
+import copyTextSvg from '../public/copyText.svg'
+import Image from 'next/image'
 
 const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGroup: IGroup, username: string, onlineMembers: string[]}) => {
     const [detailedExpanded, setDetailedExpanded] = useState(false)
+    const [optionsActive, setOptionsActive] = useState(false)
     const [memberArray, setMemberArray] = useState<JSX.Element[]>([])
 
+    const showPasswordRef: React.MutableRefObject<any> = useRef(null)
+    const passwordRef: React.MutableRefObject<any> = useRef(null)
+    const passwordContainerRef: React.MutableRefObject<any> = useRef(null)
+
     const user: IUserState = useAppSelector(state => state.user)
+    const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
 
     const dispatch = useAppDispatch()
 
     const router = useRouter()
+
+    useEffect(() => {
+        document.addEventListener('click', handlePageClick)
+        return () => {
+            document.removeEventListener('click', handlePageClick)
+        }
+    }, [optionsActive])
+
+    useEffect(() => {
+        if (!passwordContainerRef?.current || !showPasswordRef?.current || !passwordRef?.current) return
+        passwordContainerRef.current.classList.remove(styles.copied)
+        showPasswordRef.current.style.display = 'block'
+        passwordContainerRef.current.style.display = 'none'
+        passwordRef.current.innerText = ''
+    }, [selectedGroup._id])
 
     useEffect(() => {
         const memberArrayTemp: JSX.Element[] = 
@@ -30,6 +53,11 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
 
         setMemberArray(memberArrayTemp)
     }, [selectedGroup, onlineMembers])
+
+    const handlePageClick = (e) => {
+        if (e.target.id === 'optionDots') setOptionsActive(!optionsActive)
+        else if (!e.target?.classList?.contains(styles.groupOptions)) setOptionsActive(false)
+    }
 
     const leaveGroup = async () => {
         const res = await axios.put('/api/leaveGroup', {
@@ -56,12 +84,51 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
         }
     }
 
+    const getGroupPassword = async (e) => {
+        const res = await axios.get(`/api/getGroupPassword?groupId=${selectedGroup._id}`)
+        if (res?.data) {
+            showPasswordRef.current.style.display = 'none'
+            passwordContainerRef.current.style.display = 'flex'
+            passwordRef.current.innerText = res?.data
+        }
+    }
+
+    const selectPassword = () => {
+        navigator.clipboard.writeText(passwordRef.current.innerText);
+        if (passwordContainerRef.current.classList.contains(styles.copied)) return
+        passwordContainerRef.current.classList.add(styles.copied)
+    }
+    
+    const removeGroup = async () => {
+        const res = await axios.post('/api/removeGroup', {
+            groupId: selectedGroup._id,
+            username: username
+        })
+
+        if (res.data) {
+            const groupId = res.data
+            const newUserGroups = userGroups.slice().filter(g => g._id !== groupId)
+            dispatch(setUserGroups(newUserGroups))
+        }
+    }
+
     return (
             selectedGroup?._id ?
                 <div className={`${styles.groupDetails} ${detailedExpanded ? styles.show : null}`}>
-                    <button onClick={toggleGroupNotications} className={`${styles.muteGroup} ${selectedGroup.membersWithGroupMuted.includes(username) ? styles.muted : null}`}>
-                        <MuteBtn /> 
-                    </button>
+                    <div className={styles.topRight}>
+                        <button onClick={toggleGroupNotications} className={`${styles.muteGroup} ${selectedGroup.membersWithGroupMuted.includes(username) ? styles.muted : null}`}>
+                            <MuteBtn /> 
+                        </button>
+                        <div className={styles.groupOptionsContainer}>
+                            <OptionsDots />
+                            <div className={`${styles.groupOptions} ${optionsActive ? styles.show : null}`}>
+                                <button onClick={leaveGroup} className={styles.leaveGroup}>Leave Group</button>
+                                {username === selectedGroup.groupAdmin 
+                                ? <button onClick={removeGroup} className={styles.removeGroup}>Remove Group</button>
+                                : null}
+                            </div>
+                        </div>
+                    </div>
                     <div className={styles.sectionOne}>
                         <h2 className={styles.name}>{selectedGroup.name}</h2>
                         <h5 className={styles.summary}>{selectedGroup.summary}</h5>
@@ -74,11 +141,12 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
                         </div>
                     </div>
 
-                    <div className={styles.bottomSection}>
-                        <button onClick={leaveGroup} className={styles.leaveGroup}>Leave Group</button>
-                        {username === selectedGroup.groupAdmin 
-                        ? <button className={styles.removeGroup}>Remove Group</button>
-                        : null}
+                    <div className={`${styles.bottomSection} ${(selectedGroup.groupAdmin !== username || !selectedGroup.isPrivate) ? styles.hide : null}`}>
+                        <button ref={showPasswordRef} onClick={getGroupPassword} className={styles.showPasswordBtn}>Show Group Password</button>
+                        <div ref={passwordContainerRef} className={`${styles.passwordContainer}`}>
+                            <h5 ref={passwordRef} className={styles.password}></h5>
+                            <Image onClick={selectPassword} src={copyTextSvg} alt='Copy text' />
+                        </div>
                     </div>
 
                     <button onClick={() => setDetailedExpanded(!detailedExpanded)} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>

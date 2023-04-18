@@ -36,7 +36,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
 
     const [sectionIndex, setSectionIndex] = useState(0)
     const [currentTagValue, setCurrentTagValue] = useState('')
-    const [values, setValues] = useState<IValues>({name: "", summary: "", books: [], characters: [], tags: [], private: false})
+    const [values, setValues] = useState<IValues>({ name: "", summary: "", books: [], characters: [], tags: [], private: false })
 
     useEffect(() => {
         for (let i = 0; i < progressMapRef.current.children.length; i++) {
@@ -167,7 +167,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                         : sectionIndex === 2 
                             ? 
                             <>
-                                <h5 className={styles.instructions}>Select at least one book of the Bible</h5>
+                                <h5 className={styles.instructions}>Select the book(s) involved in this group</h5>
                                 <DropDown 
                                     key='books2'
                                     idEnd='books2'
@@ -180,7 +180,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                         : sectionIndex === 3 
                             ? 
                             <>
-                                <h5 className={styles.instructions}>Select at least one Bible character (optional)</h5>
+                                <h5 className={styles.instructions}>Select the characters(s) involved in this group (optional)</h5>
                                 <DropDown 
                                     key='characters2'
                                     idEnd='characters2'
@@ -193,7 +193,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                         : sectionIndex === 4 
                             ? 
                             <>
-                                <h5 className={styles.instructions}>Add at least two tags related to your group</h5>
+                                <h5 className={styles.instructions}>Add at least two tags related to your group (this will make your group easier to find)</h5>
                                 <div className={styles.tagContainer}>
                                     <div className={styles.tags}>
                                         { values.tags.map((tag, i) => (

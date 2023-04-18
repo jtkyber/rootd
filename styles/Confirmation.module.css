@@ -1,0 +1,84 @@
+@import 'variables.css';
+
+.container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 5rem;
+    overflow: hidden;
+    z-index: 100;
+
+    & .confirmationBox {
+        width: max-content;
+        height: max-content;
+        background-color: rgb($light_grey);
+        border-radius: $largeBorderRadius;
+        padding: 2rem;
+        display: grid;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        align-content: center;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: max-content max-content max-content;
+        grid-template-areas:
+        "title title"
+        "passwordInput passwordInput"
+        "cancelBtn joinBtn";
+        gap: 1rem;
+
+        & .title {
+            grid-area: title;
+            color: rgb($red_brown);
+        }
+
+        & .passwordInput {
+            grid-area: passwordInput;
+            width: 100%;
+            height: 2.2rem;
+            padding: 0.3rem;
+            background-color:transparent;
+            border: 1px solid rgba($red_brown_dark, 1);
+            border-radius: $smallBorderRadius;
+            color: rgba($red_brown_dark, 1);
+            outline: none;
+            box-shadow: $shadow;
+
+            &:focus {
+                outline: none;
+                border-width: 2px;
+            }
+        }
+
+        & .cancelBtn {
+            grid-area: cancelBtn;
+            background-color: rgb($red_brown);
+            border: none;
+            border-radius: $smallBorderRadius;
+            color: rgb($light_grey);
+            width: 4rem;
+            height: 2rem;
+            justify-self: start;
+
+            @mixin fadeOnHover;
+        }
+
+        & .joinBtn {
+            grid-area: joinBtn;
+            background-color: rgb($red_brown);
+            border: none;
+            border-radius: $smallBorderRadius;
+            color: rgb($light_grey);
+            width: 4rem;
+            height: 2rem;
+            justify-self: end;
+
+            @mixin fadeOnHover;
+        }
+    }
+}

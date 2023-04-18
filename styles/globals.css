@@ -23,7 +23,7 @@ a {
   text-decoration: none;
 }
 
-button {
+button, input[type="checkbox"] {
   cursor: pointer;
 }
 

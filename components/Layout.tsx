@@ -79,7 +79,6 @@ const Layout = (props) => {
                     userName: data.authorName
                 })
         }
-        console.log(res?.data)
         if (res?.data) dispatch(setUser({...user, notifications: res.data}))
     }
 

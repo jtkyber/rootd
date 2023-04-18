@@ -48,7 +48,7 @@ export default async function handler(
             JSON.parse(books).length ? {'books': {$all: [...JSON.parse(books)]}} : {},
             JSON.parse(includePrivate) === false ? {'isPrivate': {$ne: true}} : {}
           ]
-        }, {messages: 0}).collation({locale: "en"}).sort(sortObject).skip(parseInt(cursor)).limit(parseInt(limit))
+        }, { messages: 0, password: 0 }).collation({locale: "en"}).sort(sortObject).skip(parseInt(cursor)).limit(parseInt(limit))
         res.json({
           data: groups,
           cursor: groups.length >= parseInt(limit) ? parseInt(cursor) + parseInt(limit) : null

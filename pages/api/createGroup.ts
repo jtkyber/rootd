@@ -21,7 +21,7 @@ export default async function handler(
         await connectMongo()
         const { username, name, summary, books, characters, tags, isPrivate }: any = req.body
 
-        const group: IGroup = await Group.create({
+        await Group.create({
             _id: new mongoose.Types.ObjectId,
             name: name,
             isPrivate: isPrivate,
@@ -31,10 +31,12 @@ export default async function handler(
             books: books,
             date: Date.now(),
             lastActive: Date.now(),
-            groupAdmin: username
+            groupAdmin: username,
+            password: new mongoose.Types.ObjectId
+        }).then(async docs => {
+            const group = await Group.findById(docs._id, { password: 0})
+            res.json(group)
         })
-        
-        res.json(group)
     } catch(err) {
         console.log(err)
         res.status(400).end(err)

@@ -27,7 +27,8 @@ export interface IGroup {
     date: Date | number
     lastActive: Date | number
     groupAdmin?: string | null,
-    membersWithGroupMuted: string[]
+    membersWithGroupMuted: string[],
+    password?: ObjectId | null
 }
 
 export const msgSchema = new Schema<IMessage>({
@@ -104,9 +105,14 @@ const groupSchema = new Schema<IGroup>({
     membersWithGroupMuted: {
         type: [String],
         required: false
+    },
+    password: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        unique: true
     }
 })
 
-const Group = models.Group6 || model('Group6', groupSchema, 'groups')
+const Group = models.Group7 || model('Group7', groupSchema, 'groups')
 
 export default Group

@@ -17,7 +17,7 @@ export default async function handler(
         const groupIdArray = JSON.parse(groupIds)
         if (!groupIdArray[0]) throw new Error('No group IDs provided')
 
-        const userGroups = await Group.find({ _id: { $in: groupIdArray }}, { messages: 0 })
+        const userGroups = await Group.find({ _id: { $in: groupIdArray }}, { messages: 0, password: 0 })
 
         res.json(userGroups)
     } catch(err) {

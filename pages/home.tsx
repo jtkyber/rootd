@@ -55,7 +55,7 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
                     <h4 className={styles.groupName}>{group.name}</h4>
                   </div>
                 ))
-              : <Link href='/groupSearch'>Find Group</Link>
+              : <Link href='/group-search'>Find Group</Link>
             }
           </div>
          <ChatBox channels={channels} />

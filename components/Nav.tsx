@@ -44,16 +44,16 @@ const Nav = ({ pusher }: {pusher: Pusher | null}) => {
                         : router.pathname === '/home'
                             ? 
                             <>
-                                <Link href='/groupSearch'>Find Group</Link>
+                                <Link href='/group-search'>Find Group</Link>
                                 <Link href='/home'>DMs</Link>
                                 <NotificationCenter />
                                 <Settings />
                             </>
-                            : router.pathname === '/groupSearch'
+                            : router.pathname === '/group-search'
                                 ?
                                 <>
                                     <Link href='/home'>My Groups</Link>
-                                    <Link href='/groupSearch'>DMs</Link>
+                                    <Link href='/group-search'>DMs</Link>
                                     <NotificationCenter />
                                     <Settings />
                                 </>
