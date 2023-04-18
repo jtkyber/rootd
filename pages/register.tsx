@@ -6,6 +6,8 @@ import { useRouter } from 'next/router'
 import { signIn } from 'next-auth/react'
 import styles from '../styles/LogReg.module.css'
 import LoadingAnimation from '../components/LoadingAnimation'
+import googleImage from '../public/google-logo.png'
+import Image from 'next/image'
 
 const register: NextPage = () => {
     const router = useRouter()
@@ -83,7 +85,11 @@ const register: NextPage = () => {
                     ? <div className={styles.loading}><LoadingAnimation /></div>
                     : <button type="submit">Submit</button>
                 }
-                <button disabled={isLoading} onClick={handleGoogleSignUp} className={styles.buttonCustom}>Sign up with Google</button>
+                <h5 className={styles.orText}>OR</h5>
+                <button disabled={isLoading} onClick={handleGoogleSignUp} className={styles.googleSignInBtn}>
+                    <Image src={googleImage} alt='Google logo' />
+                    Sign up with Google
+                </button>
                 <span className={styles.logRegSwitch}>Already have an account? <Link href='/login' replace>Log In</Link></span>
             </form>
         </div>

@@ -9,6 +9,8 @@ import axios from 'axios'
 import { IUserState, setUser } from '../redux/userSlice'
 import getUser from '../utils/getUser'
 import LoadingAnimation from '../components/LoadingAnimation'
+import googleImage from '../public/google-logo.png'
+import Image from 'next/image'
 
 const register: NextPage = () => {
     const router = useRouter()
@@ -71,7 +73,11 @@ const register: NextPage = () => {
                     ? <div className={styles.loading}><LoadingAnimation /></div>
                     : <button type="submit">Submit</button>
                 }
-                <button type='button' disabled={isLoading} onClick={handleGoogleSignIn} className={styles.buttonCustom}>Sign in with Google</button>
+                <h5 className={styles.orText}>OR</h5>
+                <button type='button' disabled={isLoading} onClick={handleGoogleSignIn} className={styles.googleSignInBtn}>
+                    <Image src={googleImage} alt='Google logo' />
+                    Sign in with Google
+                </button>
                 <span className={styles.logRegSwitch}>Don't have an account? <Link href='/register' replace>Register</Link></span>
             </form>
         </div>

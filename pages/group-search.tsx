@@ -130,7 +130,7 @@ const groupSearch = () => {
     for (let i = 0; i < options.length; i++) {
       if ((e.target !== btns[i]) && (!checkParent(options[i], e.target))) {
             options[i].classList.remove(dropdownStyles.show)
-        }
+      }
     }
   }
 

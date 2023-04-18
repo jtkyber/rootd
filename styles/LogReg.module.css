@@ -71,10 +71,30 @@
             padding: 0.5rem;
 
             @mixin fadeOnHover;
+
+            &.googleSignInBtn {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+                background-color: white;
+                border: 1px solid black;
+                color: black;
+
+                & img {
+                    height: 100%;
+                    width: auto;
+                }
+            }
+        }
+
+        & .orText {
+            color: rgb($red_brown_dark);
+            font-weight: 400;
+            margin: -0.5rem 0;
         }
 
         & .logRegSwitch {
-            color: black;
+            color: rgb($red_brown_dark);
             & a {
                 color: rgb($grey_blue_vibrant);
             }
