@@ -7,6 +7,7 @@ import { signIn } from 'next-auth/react'
 import styles from '../styles/LogReg.module.css'
 import LoadingAnimation from '../components/LoadingAnimation'
 import googleImage from '../public/google-logo.png'
+import bibleVersions from '../bibleVersions.json'
 import Image from 'next/image'
 
 const register: NextPage = () => {
@@ -63,7 +64,7 @@ const register: NextPage = () => {
     return (
         <div className={styles.container}>
             <form onSubmit={handleSubmit}>
-                <h1>Sign Up</h1>
+                <h1 className={styles.title}>Sign Up</h1>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
                 <input ref={usernameRef} minLength={3} maxLength={20} disabled={isLoading} type="text" placeholder='username' required />
                 <input minLength={6} disabled={isLoading} id="password" type="password" placeholder='password' required />
@@ -76,8 +77,11 @@ const register: NextPage = () => {
                     </select>
                     <select disabled={isLoading} id="bVersion" name='bVersion' defaultValue='Prefered Bible Version' required>
                         <option value="Prefered Bible Version" disabled hidden>Prefered Bible Version</option>
-                        <option value="NIV">NIV</option>
-                        <option value="ESV">ESV</option>
+                        {
+                          bibleVersions.map((version, i) => (
+                            <option key={i} value={version}>{version}</option>
+                          ))
+                        }
                     </select>
                 </div>
                 {

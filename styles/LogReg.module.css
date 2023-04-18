@@ -28,7 +28,7 @@
             margin: -1.6rem 0;
         }
 
-        & h1 {
+        & .title {
             color: rgb($red_brown);
             font-weight: 400;
         }

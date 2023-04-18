@@ -35,6 +35,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
     const user: IUserState = useAppSelector(state => state.user)
 
     const [sectionIndex, setSectionIndex] = useState(0)
+    const [errMsg, setErrMsg] = useState('')
     const [currentTagValue, setCurrentTagValue] = useState('')
     const [values, setValues] = useState<IValues>({ name: "", summary: "", books: [], characters: [], tags: [], private: false })
 
@@ -49,6 +50,10 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
 
         return () => document.removeEventListener('keyup', handleKeyUp)
     }, [btnRef.current])
+
+    useEffect(() => {
+        setErrMsg('')
+    }, [sectionIndex])
 
     const handleKeyUp = (e) => {
         if (e.code !== 'Enter') return
@@ -69,16 +74,16 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
     const runChecks = () => {
         switch(sectionIndex) {
             case 0:
-                values.name.length ? goToNextSection(1) : console.log('error')
+                values.name.length ? goToNextSection(1) : setErrMsg('Please include a group name')
                 break
             case 1:
-                values.summary.length ? goToNextSection(2) : console.log('error')
+                values.summary.length >= 15 ? goToNextSection(2) : setErrMsg('Please write a longer summary')
                 break
             case 2:
-                values.books.length ? goToNextSection(3) : console.log('error')
+                values.books.length ? goToNextSection(3) : setErrMsg('Please include at least one book')
                 break
             case 4:
-                values.tags.length > 1 ? goToNextSection(5) : console.log('error')
+                values.tags.length > 1 ? goToNextSection(5) : setErrMsg('Please include at least two tags')
                 break
             case 5:
                 addNewGroup()
@@ -117,7 +122,12 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
 
             if (res.data) joinGroup(res.data)
         } catch(err) {
-            console.log(err)
+            const errObject = err.response?.data
+            if (!errObject?.msg) return
+            setErrMsg(errObject.msg)
+            if (!errObject?.section) return
+            const index = sectionNames.indexOf(errObject.section)
+            setSectionIndex(index)
         }
     }
 
@@ -142,6 +152,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                             className={styles.exitBtn}>X
                     </button>
                     <h1 className={styles.sectionTitle}>{sectionNames[sectionIndex]}</h1>
+                    <h5 className={styles.errorMessage}>{errMsg}</h5>
                     <div className={styles.sectionContent}>
                     {
                         sectionIndex === 0 

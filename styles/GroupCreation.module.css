@@ -55,7 +55,7 @@
             padding: 0 1rem;
             display: grid;
             grid-template-columns: 1fr;
-            grid-template-rows: max-content max-content 1fr max-content;
+            grid-template-rows: max-content max-content max-content 1fr max-content;
             justify-items: center;
 
             & .exitBtn {
@@ -72,6 +72,11 @@
 
                 margin-bottom: 1rem;
                 color: rgba($red_brown_dark, 1);
+            }
+
+            & .errorMessage {
+                color: rgb($deep_red);
+                font-weight: 400;
             }
 
             & .sectionContent {

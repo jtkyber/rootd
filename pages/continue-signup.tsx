@@ -5,6 +5,7 @@ import NotAuthorizedScreen from '../components/NotAuthorizedScreen'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import LoadingAnimation from '../components/LoadingAnimation'
+import bibleVersions from '../bibleVersions.json'
 import styles from '../styles/LogReg.module.css'
 
 const FinishRegister: NextPage = () => {
@@ -58,7 +59,7 @@ const FinishRegister: NextPage = () => {
       {
         session ?
            <form onSubmit={handleSubmit}>
-                <h1>Finish Singing Up</h1>
+                <h2 className={styles.title}>Finish Signing Up</h2>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
                 <input minLength={3} maxLength={20} disabled={isLoading} id="username" type="text" placeholder='username' autoComplete='name' required />
                 <div className={styles.genderAndVersion}>
@@ -69,8 +70,11 @@ const FinishRegister: NextPage = () => {
                     </select>
                     <select disabled={isLoading} id="bVersion" name='bVersion' defaultValue='Prefered Bible Version' required>
                         <option value="Prefered Bible Version" disabled hidden>Prefered Bible Version</option>
-                        <option value="NIV">NIV</option>
-                        <option value="ESV">ESV</option>
+                        {
+                          bibleVersions.map((version, i) => (
+                            <option key={i} value={version}>{version}</option>
+                          ))
+                        }
                     </select>
                 </div>
                 {

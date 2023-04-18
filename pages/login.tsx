@@ -64,7 +64,7 @@ const register: NextPage = () => {
     return (
         <div className={styles.container}>
             <form onSubmit={handleSubmit}>
-                <h1>Login</h1>
+                <h1 className={styles.title}>Login</h1>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
                 <input disabled={isLoading} id="email" type="email" placeholder='email' required />
                 <input minLength={3} disabled={isLoading} id="password" type="password" placeholder='password' required />
