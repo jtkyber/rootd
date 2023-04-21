@@ -18,11 +18,12 @@ import parse from 'html-react-parser'
 import { useOnScreen } from '../utils/hooks'
 import badWords from '../badWords.json'
 import { getFormattedDateFromISO } from '../utils/dates'
-import styles from '../styles/Home.module.css'
 import debounce from '../utils/debounce'
 import { ILastSeenMsg } from '../models/userModel'
 import scrollToMessage from '../utils/scrollToMessage'
 import LoadingAnimation from './LoadingAnimation'
+import styles from '../styles/Home.module.css'
+import stylesChat from '../styles/ChatArea.module.css'
 
 
 let scrollElementId: string
@@ -71,7 +72,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                 addMessage(newData)
                 textAreaRef.current.value = ''
                 chatBoxRef?.current.scrollTo(0, chatBoxRef?.current.scrollHeight)
-                await axios.get(`/api/pusher/updateGrpMemberMsgs?username=${user.username}&channelName=${selectedGroup._id}&msg=${JSON.stringify(newData)}`)
+                await axios.get(`/api/pusher/updateGrpMemberMsgs?username=${user.username}&channelName=presence-${selectedGroup._id}&msg=${JSON.stringify(newData)}`)
             }
         }
     )
@@ -122,7 +123,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
             sendJoinedGroup()
             if (chatBoxRef.current) chatBoxRef.current.removeEventListener('scroll', handleChatScroll)
         }
-    }, [selectedGroup])
+    }, [selectedGroup, channels])
     
     useEffect(() => {
         if (!channels?.[1]) return
@@ -355,7 +356,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     }
 
     async function handleLoadMore() {
-        const earliestMsg = document.querySelector(`.${styles.earliestMsg}`)?.id
+        const earliestMsg = document.querySelector(`.${stylesChat.earliestMsg}`)?.id
         if (earliestMsg) scrollElementId = earliestMsg
         await fetchNextPage()
         document.getElementById(`${scrollElementId}`)?.scrollIntoView()
@@ -413,8 +414,8 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     }
 
     const showLikeNames = (e, msg) => {
-        if (!msg.likes.length || !e.target.classList.contains(styles.msgContent)) return
-        document.getElementById(msg._id + '-likes')?.classList.toggle(styles.show)
+        if (!msg.likes.length || !e.target.classList.contains(stylesChat.msgContent)) return
+        document.getElementById(msg._id + '-likes')?.classList.toggle(stylesChat.show)
     }
 
     const getInitials = (uN: string): string => {
@@ -429,27 +430,27 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     return (
         <div className={styles.selectedGroup}>
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
-            <div ref={chatAreaRef} className={styles.chatArea}>
-                <div ref={chatBoxRef} className={styles.chatBox}>
-                    <div ref={messagesRef} className={styles.messages}>
+            <div ref={chatAreaRef} className={stylesChat.chatArea}>
+                <div ref={chatBoxRef} className={stylesChat.chatBox}>
+                    <div ref={messagesRef} className={stylesChat.messages}>
                         {data?.pages.map((page, i, row1) => (
                         <Fragment key={i}>
                             {page?.data.map((msg: IMessage, j, row2) => {return (
                                 <div key={j} id={msg._id} 
                                     className={`
-                                    ${styles.msg} 
-                                    ${msg.author === user?.username ? styles.userMsg : styles.msgFromOther}
-                                    ${(i+1 === row1.length) && (j+1 === row2.length) ? styles.earliestMsg : null}
+                                    ${stylesChat.msg} 
+                                    ${msg.author === user?.username ? stylesChat.userMsg : stylesChat.msgFromOther}
+                                    ${(i+1 === row1.length) && (j+1 === row2.length) ? stylesChat.earliestMsg : null}
                                     `}
                                 >
-                                    <div className={styles.msgAuthor}>
+                                    <div className={stylesChat.msgAuthor}>
                                         {
-                                            msg?.authorProfileImg ? <Image width={25} height={25} className={`${styles.authorImg} ${onlineMembers.includes(msg.author) ? styles.online : null}`} src={msg.authorProfileImg} alt='Author Image'/>
-                                            : <h5 className={`${styles.authorImg} ${styles.noImg} ${onlineMembers.includes(msg.author) ? styles.online : null}`}>{getInitials(msg.author)}</h5>
+                                            msg?.authorProfileImg ? <Image width={25} height={25} className={`${stylesChat.authorImg} ${onlineMembers.includes(msg.author) ? stylesChat.online : null}`} src={msg.authorProfileImg} alt='Author Image'/>
+                                            : <h5 className={`${stylesChat.authorImg} ${stylesChat.noImg} ${onlineMembers.includes(msg.author) ? stylesChat.online : null}`}>{getInitials(msg.author)}</h5>
                                         }
                                         <h5>{msg.author}</h5>
                                     </div>
-                                    <h4 onClick={(e) => showLikeNames(e, msg)} className={styles.msgContent}>
+                                    <h4 onClick={(e) => showLikeNames(e, msg)} className={stylesChat.msgContent}>
                                         {parse(msg.content, options)}
                                         <LikeIcon 
                                             isAuthor={msg.author === user.username}
@@ -458,13 +459,13 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                                             likedByUser={likedByUser(msg) ? true : false} 
                                         />
                                     </h4>
-                                    <h6 className={styles.msgDate}>{getFormattedDateFromISO(msg.date)}</h6>
-                                    <div id={msg._id + '-likes'} className={styles.msgLikeNames}>
+                                    <h6 className={stylesChat.msgDate}>{getFormattedDateFromISO(msg.date)}</h6>
+                                    <div id={msg._id + '-likes'} className={stylesChat.msgLikeNames}>
                                         {
                                             msg.likes.map((name, i) => {
-                                                return <h6 key={i} className={styles.likeName}>
+                                                return <h6 key={i} className={stylesChat.likeName}>
                                                     {name}
-                                                    <Image className={styles.likeImg} src={LikeIconSVG} alt='Like Icon' />
+                                                    <Image className={stylesChat.likeImg} src={LikeIconSVG} alt='Like Icon' />
                                                 </h6>
                                             })
                                         }
@@ -476,7 +477,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                         ))}
                         {
                             isFetching 
-                            ? <div className={styles.loadingMsgs}><LoadingAnimation /></div>
+                            ? <div className={stylesChat.loadingMsgs}><LoadingAnimation /></div>
                             : null
                         }
                         <div ref={resultsEndRef}></div>
@@ -484,17 +485,17 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                     {addingPsg ? 
                     <>
                         <PsgSelector textArea={textAreaRef.current} setAddingPsg={setAddingPsg} psgSelectorRef={psgSelectorRef} />
-                        <svg className={styles.triangle} ref={svgRef} width={windowWidth} height={windowHeight}>
+                        <svg className={stylesChat.triangle} ref={svgRef} width={windowWidth} height={windowHeight}>
                             <polygon points={`${pointOneX},${pointOneY} ${pointTwoX},${pointTwoY} ${pointThreeX},${pointThreeY}`} fill='rgb(255,0,0)' stroke='rgb(255,0,0)' strokeWidth='2' />
                         </svg>
                     </>
                     : null}
                 </div>
                     
-                <div style={{pointerEvents: addingPsg ? 'none' : 'all'} } className={styles.chatInputArea}>
-                    <button onClick={() => setAddingPsg(true)} className={styles.addPsgBtn}>Insert Passage</button>
-                    <div ref={textAreaRef} contentEditable={true} suppressContentEditableWarning={true} className={styles.input}></div>
-                    <button onClick={handleSendMsgClick} className={styles.sendMsgBtn}>Send</button>
+                <div style={{pointerEvents: addingPsg ? 'none' : 'all'} } className={stylesChat.chatInputArea}>
+                    <button onClick={() => setAddingPsg(true)} className={stylesChat.addPsgBtn}>Insert Passage</button>
+                    <div ref={textAreaRef} contentEditable={true} suppressContentEditableWarning={true} className={stylesChat.input}></div>
+                    <button onClick={handleSendMsgClick} className={stylesChat.sendMsgBtn}>Send</button>
                 </div>
             </div>
             <GroupDetails selectedGroup={selectedGroup} username={user.username} onlineMembers={onlineMembers} />

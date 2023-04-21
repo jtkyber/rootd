@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/ChatArea.module.css'
 
 const LikeIcon = ({ isAuthor, msgLikes, handleMsgLikeClick, likedByUser }: { isAuthor: boolean, msgLikes: number, handleMsgLikeClick: () => void, likedByUser: boolean}) => {
     return (

@@ -6,17 +6,6 @@ export default async function getUser(email) {
         const res = await axios.get(`/api/getUser?email=${email}`)
         const user: IUserState = res.data
         if (user._id) {
-            // return {
-            //     _id: user._id,
-            //     username: user.username,
-            //     bVersion: user.bVersion,
-            //     groups: user.groups,
-            //     notifications: user.notifications,
-            //     dmPeople: user.dmPeople,
-            //     strikes: user.strikes,
-            //     directMsgs: user.directMsgs,
-            //     lastSeenMsgId: user.lastSeenMsgId
-            // }
             return user
         }
         throw new Error('could not get user')

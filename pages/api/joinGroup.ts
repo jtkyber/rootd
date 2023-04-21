@@ -32,7 +32,7 @@ export default async function handler(
                         groupId: groupId
                     }
                 }
-            }, { new: true })
+            }, { new: true, groups: 1 })
             res.json(user)
         } else throw new Error('User not able to be added to group')
 

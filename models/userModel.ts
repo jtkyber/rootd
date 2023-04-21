@@ -2,11 +2,18 @@ import { ObjectId } from "mongodb"
 import mongoose, { Schema, model, models } from "mongoose"
 
 export interface IDm {
-    author: string
+    _id: ObjectId
     content: string
+    authorId: ObjectId
     date: Date | number
     isLiked: boolean
     isRead: boolean
+    author: string
+    authorProfileImg: string
+}
+
+export interface IAllDms {
+    [key: string]: IDm[]
 }
 
 interface INotifGroup {
@@ -35,7 +42,7 @@ export interface IUser {
     bVersion: string
     groups: string[]
     notifications: INotification[]
-    directMsgs: IDm[]
+    directMsgs: IAllDms
     dmPeople: string[]
     strikes: string[] // Reasons for strikes
     currentGroup: string | null
@@ -48,8 +55,9 @@ export interface ILastSeenMsg {
 }
 
 const dmSchema = new Schema<IDm>({
-    author: String,
+    _id: mongoose.Schema.Types.ObjectId,
     content: String,
+    authorId: mongoose.Schema.Types.ObjectId,
     date: Date,
     isLiked: {
         type: Boolean,
@@ -59,6 +67,11 @@ const dmSchema = new Schema<IDm>({
         type: Boolean,
         default: false
     },
+    author: String,
+    authorProfileImg: {
+        type: String,
+        required: false
+    }
 })
 
 const notifGroupSchema = new Schema<INotifGroup>({
@@ -123,7 +136,8 @@ const userSchema = new Schema<IUser>({
         required: false
     },
     directMsgs: {
-        type: [dmSchema],
+        type: Map,
+        of: [dmSchema],
         required: false
     },
     dmPeople: {
@@ -141,6 +155,6 @@ const userSchema = new Schema<IUser>({
     lastSeenMsgs: [lastSeenMsgSchema]
 })
 
-const User = models.User17 || model('User17', userSchema, 'users')
+const User = models.User20 || model('User20', userSchema, 'users')
 
 export default User

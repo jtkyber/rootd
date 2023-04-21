@@ -21,7 +21,7 @@ const Layout = (props) => {
     const router = useRouter()
 
     useEffect(() => {
-        if (!user._id) return
+        if (!user?._id) return
         if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
             const pusher = new Pusher(process.env.PUSHER_KEY, {
                 cluster: process.env.PUSHER_CLUSTER,
@@ -33,7 +33,7 @@ const Layout = (props) => {
     }, [user._id])
 
     useEffect(() => {
-        if (!pusher || !user._id) return
+        if (!pusher || !user?._id) return
         if (selectedGroup && router.pathname === '/home') {
             const channelsTemp = [`${user._id}`, `presence-${selectedGroup._id}`].map(channelName => {
                 return pusher.subscribe(channelName)
@@ -51,10 +51,14 @@ const Layout = (props) => {
             }
             setChannels([])
         }
-    }, [user._id, selectedGroup, router.pathname])
+    }, [user._id, selectedGroup, router.pathname, pusher])
     
     useEffect(() => {
         if (!channels?.[0]) return
+
+        // channels?.[0].bind_global((eventName, data) => {
+        //     console.log(eventName, data)
+        // })
         channels?.[0].bind('update-notifications', data => {
             updateNotifications(data)
         })

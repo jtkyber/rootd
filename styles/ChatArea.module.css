@@ -1,0 +1,303 @@
+@import 'variables.css';
+
+.chatArea {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr max-content;
+    overflow: hidden;
+    
+    & .chatBox {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-flow: column-reverse nowrap;
+        align-items: flex-end;
+        overflow-y: auto;
+        padding: 0 3rem;
+        @mixin customScrollbar;
+
+        & .triangle {
+            position: fixed;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+
+            & polygon {
+                fill: rgba(0, 0, 0, 0.25);
+                stroke: none;
+            }
+        }
+        
+        & .messages {
+            padding: 5rem 1rem 1rem 1rem;
+            width: 100%;
+            height: max-content;
+            display: flex;
+            flex-flow: column-reverse nowrap;
+            justify-content: flex-end;
+            align-items: flex-start;
+            gap: 1rem;
+
+            & .msg {
+                display: flex;
+                flex-flow: column nowrap;
+                gap: 0.2rem;
+                width: 100%;
+                border-bottom: 1px solid rgba($red_brown_dark, 0.15);
+                padding-bottom: 1rem;
+
+                &:first-child {
+                    border: none;
+                }
+                
+                & .msgAuthor {
+                    position: relative;
+                    display: flex;
+                    flex-flow: row nowrap;
+                    gap: 0.5rem;
+                    align-items: center;
+                    margin-left: -1.8rem;
+
+                    & .authorImg {
+                        border-radius: 50%;
+                        height: 1.8rem;
+                        width: 1.8rem;
+
+                        &.noImg {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            background-color: rgb($deep_red_shadow);
+                            font-weight: 600;
+                            font-size: 0.9rem;
+                            color: rgb($light_grey);
+                        }
+                    }
+
+                    & h5 {
+                        font-weight: bold;
+                        color: rgb($red_brown);
+                    }
+                }
+                
+                & .msgContent {
+                    position: relative;
+                    border-radius: $largeBorderRadius;
+                    border-width: 1px;
+                    border-style: solid;
+                    padding: 0.5rem 0.8rem;
+                    width: 100%;
+                    max-width: max-content;
+                    font-weight: 400;
+                    white-space: pre-wrap;
+
+                    & span {
+                        cursor: pointer;
+                        color: rgb($grey_blue_vibrant);
+
+                        @mixin fadeOnHover
+                    }
+
+                    & .msgLikes {
+                        position: absolute;
+                        top: -0.3rem;
+                        left: calc(100% - 0.5rem);
+                        width: max-content;
+                        height: max-content;
+                        display: grid;
+                        grid-template-columns: 1rem 0.6rem;
+                        grid-template-rows: 1.2rem;
+                        align-items: center;
+
+                        & .msgLikeIcon {
+                            position: relative;
+                            width: 14px;
+                            height: auto;
+                            cursor: pointer;
+                            overflow: visible;
+
+                            & path {
+                                fill: rgb($light_grey);
+                                stroke: rgb($red_brown);
+                                stroke-width: 1rem;
+                            }
+
+                            &.likedByUser > path {
+                                fill: rgb($like_color);
+                                stroke: rgb($like_color);
+                            }
+
+                            &.likedByOther > path {
+                                fill: rgb($red_brown);
+                            }
+
+                            &.isAuthor {
+                                cursor: default;
+                            }
+                        }
+
+                        & .msgLikeNumber {
+                            justify-self: flex-end;
+                            font-weight: 400;
+                            color: rgb($red_brown_dark);
+                        }
+                    }
+                    
+                }
+
+                & .msgDate {
+                    font-weight: lighter;
+                    color: rgb($red_brown);
+                }
+
+                & .msgLikeNames {
+                    width: max-content;
+                    height: max-content;
+                    display: none;
+                    justify-content: flex-start;
+                    gap: 0.5rem;
+
+                    & .likeName {
+                        position: relative;
+                        color: rgba(0, 0, 0, 0.8);
+                        font-weight: 600;
+                        border-radius: 0.3rem;
+                        padding: 0.15rem 0.3rem;
+                        box-shadow: 0 0 0.15rem 0 rgba(0, 0, 0, 0.8);
+
+                        & .likeImg {
+                            position: absolute;
+                            width: 0.8rem;
+                            height: auto;
+                            z-index: 1;
+                            top: 0;
+                            right: 0;
+                            transform: translate(50%, -50%);
+                        }
+                    }
+
+                    &.show {
+                        display: flex;
+                    }
+                }
+
+                &.userMsg {
+                    & .msgContent {
+                        border-color: rgb($msg_color_user);
+                        background-color: rgb($msg_color_user);
+                        color: rgb($light_grey);
+                    }
+
+                    & .msgAuthor > h5 {
+                        color: rgb($grey_blue);
+                    }
+
+                    & span {
+                        color: hsl(213, 70%, 75%)
+                    }
+                }
+
+                &.msgFromOther {
+                    & .msgContent {
+                        border-color: rgb($msg_color_user);
+                        background-color: rgb($msg_color_not_user);
+                        color: rgb($red_brown_dark);
+
+                    }
+
+                    & .msgAuthor > h5 {
+                        color: rgb($grey_blue);
+                    }
+                }
+
+                &.earliestMsg {
+                    color: inherit
+                }
+            }
+
+            & button {
+                background-color: rgb($red_brown);
+                border: none;
+                border-radius: $smallBorderRadius;
+                color: rgb($light_grey);
+                width: max-content;
+                height: 1.5rem;
+                padding: 0 0.5rem;
+
+                @mixin fadeOnHover;
+            }
+
+            & .loadingMsgs {
+                width: max-content;
+                height: max-content;
+                transform: scale(0.7);
+                transform-origin: 0 100%;
+            }
+        }
+    }
+    
+
+    & .chatInputArea {
+        position: relative;
+        box-shadow: $sectionShadow;
+        display: grid;
+        grid-template-columns: 1fr max-content 1fr;
+        grid-template-rows: 4rem;
+        align-items: center;
+        justify-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+
+        & .addPsgBtn {
+            width: max-content;
+            height: max-content;
+            background-color: transparent;
+            border: none;
+            border-radius: $smallBorderRadius;
+            color: rgb($grey_blue_vibrant);
+            padding: 0.5rem;
+            justify-self: end;
+
+            @mixin fadeOnHover;
+        }
+
+        & .input {
+            width: 20rem;
+            height: 100%;
+            overflow-y: auto;
+            padding: 0.5rem;
+            background-color: inherit;
+            border: none;
+            border-radius: $smallBorderRadius;
+            outline: 1px solid rgb($red_brown);
+            color: black;
+            @mixin hideScrollbar;
+
+            &:focus {
+                outline-width: 2px;
+            }
+
+            & span {
+                pointer-events: none;
+                color: rgb($grey_blue_vibrant);
+            }
+        }
+
+        & .sendMsgBtn {
+            width: max-content;
+            height: max-content;
+            background-color: rgb($red_brown);
+            border: none;
+            border-radius: $smallBorderRadius;
+            color: rgb($light_grey);
+            padding: 0.5rem;
+            justify-self: start;
+
+            @mixin fadeOnHover;
+        }
+    }
+}

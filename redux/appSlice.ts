@@ -4,10 +4,12 @@ import { ObjectId } from "mongodb"
 
 interface IAppState {
     activeDropdown: string
+    showDMs: boolean
 }
 
 const initialState: IAppState = {
-    activeDropdown: ''
+    activeDropdown: '',
+    showDMs: false
 }
 
 export const appSlice = createSlice({
@@ -16,10 +18,13 @@ export const appSlice = createSlice({
     reducers: {
         setActiveDropdown: (state, action: PayloadAction<string>) => {
             state.activeDropdown = action.payload
+        },
+        setShowDMs: (state, action: PayloadAction<boolean>) => {
+            state.showDMs = action.payload
         }
     }
 })
 
-export const { setActiveDropdown } = appSlice.actions
+export const { setActiveDropdown, setShowDMs } = appSlice.actions
 
 export default appSlice.reducer

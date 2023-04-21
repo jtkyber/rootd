@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import GroupDetailsArrow from './GroupDetailsArrow'
 import { IUserState } from '../redux/userSlice'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
-import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
+import { setSelectedGroup, setSingleGroup, setUserGroups } from '../redux/groupSlice'
 import MuteBtn from './MuteBtn'
 import OptionsDots from './OptionsDots'
 import copyTextSvg from '../public/copyText.svg'
@@ -75,12 +75,28 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
 
         if (res.data && !selectedGroup.membersWithGroupMuted.includes(username)) {
             dispatch(setSelectedGroup({ ...selectedGroup, membersWithGroupMuted: [ ...selectedGroup.membersWithGroupMuted, username ] }))
+            for (let i = 0; i < userGroups.length; i++) {
+                if (userGroups[i]._id === selectedGroup._id) {
+                    const groupCopy = {...userGroups[i]}
+                    groupCopy.membersWithGroupMuted = [...selectedGroup.membersWithGroupMuted, username]
+                    dispatch(setSingleGroup({index: i, group: groupCopy}))
+                    break
+                }
+            }
         } else if (!res.data && selectedGroup.membersWithGroupMuted.includes(username)) {
             const indexOfName = selectedGroup.membersWithGroupMuted.indexOf(username)
             if (indexOfName < 0) return
             const newArray = selectedGroup.membersWithGroupMuted.slice()
             newArray.splice(indexOfName, 1)
             dispatch(setSelectedGroup({ ...selectedGroup, membersWithGroupMuted: newArray }))
+            for (let i = 0; i < userGroups.length; i++) {
+                if (userGroups[i]._id === selectedGroup._id) {
+                    const groupCopy = {...userGroups[i]}
+                    groupCopy.membersWithGroupMuted = [...newArray]
+                    dispatch(setSingleGroup({index: i, group: groupCopy}))
+                    break
+                }
+            }
         }
     }
 
