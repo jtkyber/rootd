@@ -65,6 +65,12 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
     }
 )
 
+const refetch = () => queryClient.resetQueries({ queryKey: ['dms', selectedPerson], type: 'active' })
+
+useEffect(() => {
+  if (data) refetch()
+}, [])
+
   useEffect(() => {
     if (session?.user) {
         (async () => {
@@ -160,7 +166,7 @@ const handleMsgLikeClick = (msg: IDm, e?: React.TouchEvent<HTMLDivElement>): voi
 
 function handleSendMsgClick () {
   const msgData: (Partial<IDm> & any) = {
-    receiver: selectedPerson, 
+    receiver: selectedPerson?.username, 
     content: textAreaRef.current.value,
     authorId: user?._id || undefined,
     date: Date.now(),
