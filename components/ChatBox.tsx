@@ -330,6 +330,10 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     const options = {
         replace: domNode => {
             if (!domNode) return
+
+            // if (domNode?.name === 'div') {
+            //     return <></>
+            // }
       
             if (domNode.type === 'text') {
                 domNode.data = filterBadWords(domNode.data)
@@ -341,11 +345,21 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     }
     
     function handleSendMsgClick () {
+        if (!textAreaRef?.current?.innerHTML) return
+
+        const getTrimmedText = function(prevText) {
+            const textTemp = prevText.replace(/<div>&nbsp;<\/div>/gi, '<div><br><\/div>').replace(/&nbsp;/gi, ' ').replace(/<div><br><\/div>$|^<div><br><\/div>/gi, '').replace(/<p><br><\/p>/gi, '').replace(/<div> | <div>/gi, '<div>').replace(/^ | $|\s{2,}/gi, ' ')
+            if (textTemp.length === prevText.length) return textTemp
+            else return getTrimmedText(textTemp)
+        }
+
+        const text = getTrimmedText(textAreaRef.current.innerHTML)
+        
         const msgData: (Partial<IMessage> & any) = {
             groupId: selectedGroup._id,
             author: user.username,
             authorId: user._id,
-            content: textAreaRef.current.innerHTML,
+            content: text,
             date: new Date,
             psgReference: '',
             authorProfileImg: session?.user?.image ? session.user.image : null

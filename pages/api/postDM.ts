@@ -37,7 +37,7 @@ export default async function handler(
                     [objectPath]: {
                         $each: [
                             {
-                                content: content,
+                                content: content.trim(),
                                 authorId: authorId,
                                 date: Date.now(),
                                 isLiked: false,
