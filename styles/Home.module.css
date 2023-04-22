@@ -10,15 +10,16 @@
     align-items: center;
     background-color: inherit;
     
-    & .userGroups {
+    & .userGroups, & .userDmNames {
         position: relative;
-        width: 9rem;
+        width: 12rem;
         height: 100%;
         padding: 1rem 1rem 1rem 1rem;
         display: grid;
         grid-auto-rows: max-content;
         gap: 1rem;
         overflow-y: auto;
+        overflow-x: hidden;
         background-color: rgb($light_grey);
         box-shadow: $sectionShadow;
         z-index: 100;
@@ -34,17 +35,24 @@
             padding: 0.3rem 0.5rem;
         }
 
-        & .singleGroup {
+        & .singleGroup, & .singleDmName {
             width: 100%;
-            aspect-ratio: 1/1;
+            /* aspect-ratio: 1/1;
+            border-radius: 50%; */
+            height: 4rem;
+            border-radius: 2rem;
             background-color: inherit;
             box-shadow: $sectionShadow;
-            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 1rem;
             cursor: pointer;
+
+            /* &.singleDmName {
+                height: 3rem;
+                border-radius: $largeBorderRadius;
+            } */
 
             & h4 {
                 width: 100%;

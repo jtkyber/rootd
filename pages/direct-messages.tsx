@@ -213,7 +213,7 @@ function handleSendMsgClick () {
     {
         session ?
         <>
-          <div className={styles.userGroups}>
+          <div className={styles.userDmNames}>
               <h4 className={styles.title}>Messages</h4>
               {
               dmPeople?.length ?
@@ -221,7 +221,7 @@ function handleSendMsgClick () {
                   <div 
                   onClick={()=> setSelectedPerson(person)} 
                   key={i} 
-                  className={`${styles.singleGroup} ${person.username === selectedPerson?.username ? styles.selected : null}`}>
+                  className={`${styles.singleDmName} ${person.username === selectedPerson?.username ? styles.selected : null}`}>
                       <h4 className={styles.groupName}>{person.username}</h4>
                   </div>
                   ))
