@@ -17,7 +17,7 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { receiver, content, authorId, date, author, authorProfileImg }: any = req.body
+        const { receiver, content, authorId, author, authorProfileImg }: any = req.body
 
         let count = 0
         let objectPath

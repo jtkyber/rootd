@@ -67,9 +67,16 @@
         }
         
         & a {
-            @mixin fadeOnHover;
             cursor: pointer;
             color: rgb($light_grey);
+            @mixin fadeOnHover;
+            
+            & svg {
+                width: 22px;
+                height: auto;
+                padding-top: 0.1rem;
+                fill: rgba($light_grey, 0.7);
+            }
         }
 
         & .navigationContainer {

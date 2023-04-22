@@ -9,6 +9,7 @@ import { setActiveDropdown } from '../redux/appSlice'
 import Settings from './Settings'
 import Image from 'next/image'
 import Logo from './Logo'
+import DmIcon from './DmIcon'
 
 const Nav = ({ pusher }: {pusher: Pusher | null}) => {
     const router = useRouter()
@@ -45,7 +46,7 @@ const Nav = ({ pusher }: {pusher: Pusher | null}) => {
                             ? 
                             <>
                                 <Link href='/group-search'>Find Group</Link>
-                                <Link href='/direct-messages'>DMs</Link>
+                                <Link href='/direct-messages'><DmIcon /></Link>
                                 <NotificationCenter />
                                 <Settings />
                             </>
@@ -61,7 +62,7 @@ const Nav = ({ pusher }: {pusher: Pusher | null}) => {
                                     ?
                                     <>
                                         <Link href='/home'>My Groups</Link>
-                                        <Link href='/direct-messages'>DMs</Link>
+                                        <Link href='/direct-messages'><DmIcon /></Link>
                                         <NotificationCenter />
                                         <Settings />
                                     </>

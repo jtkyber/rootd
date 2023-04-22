@@ -132,7 +132,7 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
             selectedGroup?._id ?
                 <div className={`${styles.groupDetails} ${detailedExpanded ? styles.show : null}`}>
                     <div className={styles.topRight}>
-                        <button onClick={toggleGroupNotications} className={`${styles.muteGroup} ${selectedGroup.membersWithGroupMuted.includes(username) ? styles.muted : null}`}>
+                        <button tabIndex={-1} onClick={toggleGroupNotications} className={`${styles.muteGroup} ${selectedGroup.membersWithGroupMuted.includes(username) ? styles.muted : null}`}>
                             <MuteBtn /> 
                         </button>
                         <div className={styles.groupOptionsContainer}>
@@ -165,7 +165,7 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
                         </div>
                     </div>
 
-                    <button onClick={() => setDetailedExpanded(!detailedExpanded)} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>
+                    <button tabIndex={-1} onClick={() => setDetailedExpanded(!detailedExpanded)} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>
                         <GroupDetailsArrow />
                     </button>
                 </div>

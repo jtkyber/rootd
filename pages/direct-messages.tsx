@@ -200,7 +200,6 @@ function handleSendMsgClick () {
     receiver: selectedPerson?.username, 
     content: textAreaRef.current.value,
     authorId: user?._id || undefined,
-    date: Date.now(),
     author: user.username,
     authorProfileImg: session?.user?.image ? session.user.image : null
   }
