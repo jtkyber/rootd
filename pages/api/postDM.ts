@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import connectMongo from '../../connectDB'
 import User, { IUser } from '../../models/userModel';
+import mongoose from 'mongoose';
 
 export interface IDm {
     content: string
@@ -21,6 +22,7 @@ export default async function handler(
         let count = 0
         let objectPath
         let username
+        const msgId = new mongoose.Types.ObjectId
         while (count < 2) {
             if (count === 0) {
                 //post to receiver
@@ -37,6 +39,7 @@ export default async function handler(
                     [objectPath]: {
                         $each: [
                             {
+                                _id: msgId,
                                 content: content.trim(),
                                 authorId: authorId,
                                 date: Date.now(),

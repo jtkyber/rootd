@@ -95,14 +95,15 @@ useEffect(() => {
       if (data?.username !== user?.username) addMessage(JSON?.parse?.(data.msg))
     })
     
-    // channels?.[1].bind('set-msg-like', data => {
-    //     if (data.liker === user.username) return
-    //     setNewMsgLikes(data.msgId, data.isAdded, data.liker)
-    // })
+    channels?.[0].bind('set-msg-like', data => {
+      console.log(data)
+        if (data.liker === user.username) return
+        setNewMsgLikes(data.msgId, data.isLiked)
+    })
     
     return () => {
         channels?.[0].unbind('fetch-new-group-msgs')
-        // channels?.[1].unbind('set-msg-like')
+        channels?.[0].unbind('set-msg-like')
     }
 }, [channels, data, user.username])
 
@@ -112,6 +113,25 @@ useEffect(() => {
     setLastNextPageFetchTime(now)
     handleLoadMore()
   }, [isVisible])
+
+  const setNewMsgLikes = (msgId, isLiked) => {
+    queryClient.setQueryData(['dms', selectedPerson], (prev: any) => {
+        return {
+            ...data,
+            pages: prev?.pages.map((page, i) => {
+              return {
+                ...page,
+                data: page.data.map((m, j) => {
+                  return {
+                      ...m,
+                      isLiked: m._id === msgId ? isLiked : m.isLiked
+                  }
+                })
+              } 
+          })
+        }
+    })
+}
 
   async function handleLoadMore() {
     const earliestMsg = document.querySelector(`.${stylesChat.earliestMsg}`)?.id
@@ -154,14 +174,25 @@ useEffect(() => {
     return initials.toUpperCase()
 }
 
-const handleMsgLikeClick = (msg: IDm, e?: React.TouchEvent<HTMLDivElement>): void => {
-  // if (msg.author === user.username) return
-  // const timeSinceLastMsgClick = Date.now() - lastMsgClickedDate
-  // lastMsgClickedDate = Date.now()
+const postMsgLike = async (msg: IDm) => {
+  const res = await axios.put('/api/addDmLike', {
+      liker: user.username,
+      msgId: msg._id,
+      receiver: msg.author,
+      receiverId: selectedPerson?._id
+  })
+  if (res.data === true) setNewMsgLikes(msg._id, true) 
+  else setNewMsgLikes(msg._id, false)
+}
 
-  // if (!e) postMsgLike(msg)
-  // else if ((lastMsgClicked === e.target) && timeSinceLastMsgClick > 0 && timeSinceLastMsgClick < 300) postMsgLike(msg) 
-  // else lastMsgClicked = e.target
+const handleMsgLikeClick = (msg: IDm, e?: React.TouchEvent<HTMLDivElement>): void => {
+  if (msg.author === user.username) return
+  const timeSinceLastMsgClick = Date.now() - lastMsgClickedDate
+  lastMsgClickedDate = Date.now()
+
+  if (!e) postMsgLike(msg)
+  else if ((lastMsgClicked === e.target) && timeSinceLastMsgClick > 0 && timeSinceLastMsgClick < 300) postMsgLike(msg) 
+  else lastMsgClicked = e.target
 }
 
 function handleSendMsgClick () {
