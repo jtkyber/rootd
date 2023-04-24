@@ -394,13 +394,17 @@
                     height: 42px;
                     width: auto;
                     transform-origin: 0 0;
-                    transition: transform 0.2s linear;
+                    transition: transform 0.2s linear, opacity 0.15s linear;
                     overflow: visible;
                     
                     filter: url(#inset-shadow);
 
+                    & path:nth-child(4) {
+                        transition: fill-opacity 0.15s linear;
+                    }
+
                     &:hover path:nth-child(4) {
-                        fill-opacity: 0.7;
+                        fill-opacity: 0.6;
                     }
                     
                     & path {
