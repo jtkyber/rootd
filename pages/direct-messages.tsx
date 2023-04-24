@@ -15,6 +15,7 @@ import styles from '../styles/Home.module.css'
 import stylesChat from '../styles/ChatArea.module.css'
 import { useOnScreen } from '../utils/hooks'
 import { PresenceChannel } from 'pusher-js'
+import { ISelectedDmPerson, setSelectedDmPerson } from '../redux/appSlice'
 
 let scrollElementId: string
 
@@ -34,13 +35,13 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
   const chatBoxRef: React.MutableRefObject<any> = useRef(null)
   const messagesRef: React.MutableRefObject<any> = useRef(null)
   const resultsEndRef: React.MutableRefObject<any> = useRef(null)
-
+  
   const [dmPeople, setDmPeople] = useState<IDmPeople[]>([])
-  const [selectedPerson, setSelectedPerson] = useState<IDmPeople>()
   const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
   const [newMsgsCountObject, setNewMsgsCountObject] = useState<{[key: string]: number}>({})
-
+  
   const user: IUserState = useAppSelector(state => state.user)
+  const selectedDmPerson: ISelectedDmPerson = useAppSelector(state => state.app.selectedDmPerson)
 
   const isVisible = useOnScreen(resultsEndRef)
 
@@ -49,7 +50,7 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
   const queryClient = useQueryClient()
 
   const { data, status, isFetching, fetchNextPage, hasNextPage, error } = useInfiniteQuery(
-    ['dms', selectedPerson], fetchDMs, {
+    ['dms', selectedDmPerson], fetchDMs, {
         getNextPageParam: (lastPage, pages) => lastPage?.cursor
     } 
   )
@@ -65,7 +66,7 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
     }
 )
 
-  const refetch = () => queryClient.resetQueries({ queryKey: ['dms', selectedPerson], type: 'active' })
+  const refetch = () => queryClient.resetQueries({ queryKey: ['dms', selectedDmPerson], type: 'active' })
 
   useEffect(() => {
     if (session?.user) {
@@ -78,7 +79,7 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
           const res = await axios.get(`/api/getDmPeople?userId=${updatedUser._id}`)
           if (res?.data?.length) {
             setDmPeople(res.data)
-            setSelectedPerson(res.data[0])
+            if (!selectedDmPerson?._id?.length) dispatch(setSelectedDmPerson(res.data[0]))
             const unreadObject = await getUnreadMsgsCount(updatedUser._id)
             if (unreadObject) setNewMsgsCountObject(unreadObject)
           }
@@ -104,12 +105,22 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
         if (data.liker === user.username) return
         setNewMsgLikes(data.msgId, data.isLiked)
     })
+
+    channels?.[0].bind('check-for-new-dms', data => {
+      setNewMsgsCountObject(
+        {
+          ...newMsgsCountObject,
+          [data.friendName]: newMsgsCountObject?.[data.friendName] ? newMsgsCountObject[data.friendName] + 1 : 1
+        }
+      )
+    })
     
     return () => {
         channels?.[0].unbind('fetch-new-group-msgs')
         channels?.[0].unbind('set-msg-like')
+        channels?.[0].unbind('check-for-new-dms')
     }
-  }, [channels, data, user.username])
+  }, [channels, data, user.username, newMsgsCountObject])
 
   useEffect(() => {
     const now = Date.now()
@@ -119,20 +130,20 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
   }, [isVisible])
 
   useEffect(() => {
-    if (!selectedPerson?.username) return
+    if (!selectedDmPerson?.username) return
     (async () => {
       const copy = {...newMsgsCountObject}
-      delete copy[selectedPerson.username]
+      delete copy[selectedDmPerson.username]
       setNewMsgsCountObject({...copy})
       await axios.put('/api/setCurrentDmPerson', {
           userId: user._id,
-          person: selectedPerson.username
+          person: selectedDmPerson.username
       })
   })()
-  }, [selectedPerson])
+  }, [selectedDmPerson])
 
   const setNewMsgLikes = (msgId, isLiked) => {
-    queryClient.setQueryData(['dms', selectedPerson], (prev: any) => {
+    queryClient.setQueryData(['dms', selectedDmPerson], (prev: any) => {
         return {
             ...data,
             pages: prev?.pages.map((page, i) => {
@@ -160,7 +171,7 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
   }
 
   function addMessage(newData) {
-    queryClient.setQueryData(['dms', selectedPerson], (prev: any) => ({
+    queryClient.setQueryData(['dms', selectedDmPerson], (prev: any) => ({
         ...data,
         pages: prev?.pages.map((page, i) => {
             if (i === 0) return {
@@ -173,11 +184,11 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
 }
 
   async function fetchDMs({ pageParam = 0 }) {
-    if (!selectedPerson?.username) return null
+    if (!selectedDmPerson?.username) return null
       try {
-        await axios.get(`/api/markDmMsgsAsRead?userName=${user.username}&friendName=${selectedPerson.username}`)
+        await axios.get(`/api/markDmMsgsAsRead?userName=${user.username}&friendName=${selectedDmPerson.username}`)
         
-        const res2 = await axios.get(`/api/getDirectMsgs?userId=${user._id}&selectedPersonName=${selectedPerson.username}&cursor=${pageParam}&limit=10`)
+        const res2 = await axios.get(`/api/getDirectMsgs?userId=${user._id}&selectedPersonName=${selectedDmPerson.username}&cursor=${pageParam}&limit=10`)
         return res2.data
       } catch (err) {
         console.log(err)
@@ -196,9 +207,10 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
 const postMsgLike = async (msg: IDm) => {
   const res = await axios.put('/api/addDmLike', {
       liker: user.username,
+      likerId: user._id,
       msgId: msg._id,
       receiver: msg.author,
-      receiverId: selectedPerson?._id
+      receiverId: selectedDmPerson?._id
   })
   if (res.data === true) setNewMsgLikes(msg._id, true) 
   else setNewMsgLikes(msg._id, false)
@@ -216,10 +228,10 @@ const handleMsgLikeClick = (msg: IDm, e?: React.TouchEvent<HTMLDivElement>): voi
 
 function handleSendMsgClick () {
   const msgData: (Partial<IDm> & any) = {
-    receiver: selectedPerson?.username, 
+    receiver: selectedDmPerson?.username, 
     content: textAreaRef.current.value,
     authorId: user?._id || undefined,
-    friendId: selectedPerson?._id || undefined,
+    friendId: selectedDmPerson?._id || undefined,
     author: user.username,
     authorProfileImg: session?.user?.image ? session.user.image : null
   }
@@ -239,9 +251,9 @@ function handleSendMsgClick () {
               dmPeople?.length ?
               dmPeople.map((person, i) => (
                   <div 
-                  onClick={()=> setSelectedPerson(person)} 
+                  onClick={()=> dispatch(setSelectedDmPerson(person))} 
                   key={i} 
-                  className={`${styles.singleDmName} ${person.username === selectedPerson?.username ? styles.selected : null}`}>
+                  className={`${styles.singleDmName} ${person.username === selectedDmPerson?.username ? styles.selected : null}`}>
                       <h4 className={styles.groupName}>{person.username}</h4>
                       {
                         newMsgsCountObject?.[person.username] > 0
@@ -254,7 +266,7 @@ function handleSendMsgClick () {
               }
           </div>
           <div className={styles.selectedGroup}>
-            <h2 className={styles.selectedGroupName}>{selectedPerson?.username}</h2>
+            <h2 className={styles.selectedGroupName}>{selectedDmPerson?.username}</h2>
             <div ref={chatAreaRef} className={stylesChat.chatArea}>
                 <div ref={chatBoxRef} className={stylesChat.chatBox}>
                     <div ref={messagesRef} className={`${stylesChat.messages} ${stylesChat.dms}`}>

@@ -66,12 +66,14 @@
                 position: absolute;
                 top: 0;
                 right: 0;
-                width: 1rem;
-                aspect-ratio: 1/1;
+                width: 1.2rem;
+                height: 1.2rem;
                 background-color: rgb($deep_red);
                 color: rgb($light_grey);
                 border-radius: 50%;
-                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 font-weight: 800;
                 box-shadow: 0 0 0.15rem 0 black;
             }

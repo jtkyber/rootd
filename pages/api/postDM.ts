@@ -72,7 +72,7 @@ export default async function handler(
             if (typeof user?.directMsgs === 'object') {
                 if (count === 0) {
                     if (friendInChat) await pusher.trigger(friendId, 'fetch-new-group-msgs', { msg: JSON.stringify(message), username: author })
-                    else if (friendOnline) await pusher.trigger(friendId, 'check-for-new-dms', {})
+                    else if (friendOnline) await pusher.trigger(friendId, 'check-for-new-dms', { friendName: author })
                 } else if (count === 1) {
                     const newMessage = JSON.parse(JSON.stringify(user.directMsgs))
                     res.json(newMessage[receiver][0])

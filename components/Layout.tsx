@@ -77,11 +77,11 @@ const Layout = (props) => {
     }, [channels])
     
     const updateNotifications = async (data) => {
-        let res
+        let notif
         switch(data.notificationType) {
             case 'message-like':
                 if ((selectedGroup._id === data.groupId) && (router.pathname === '/home')) return
-                res = await axios.post('/api/postNotification', {
+                const res = await axios.post('/api/postNotification', {
                     notificationType: data.notificationType,
                     msgId: data.msgId,
                     newLiker: data.newLiker,
@@ -90,8 +90,12 @@ const Layout = (props) => {
                     groupName: data.groupName,
                     userName: data.authorName
                 })
+                notif = res.data
+                break
+            case 'dm-like':
+                notif = JSON.parse(data.notification)
         }
-        if (res?.data) dispatch(setUser({...user, notifications: res.data}))
+        if (notif) dispatch(setUser({...user, notifications: notif}))
     }
 
     const renderChildren = () => {

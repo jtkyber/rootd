@@ -26,11 +26,6 @@ const Nav = ({ channels }) => {
         checkForNewDms()
     }, [user._id, router.pathname])
     
-    const checkForNewDms = async () => {
-        const hasNewDms = await axios.get(`/api/checkIfUnreadDms?userId=${user._id}`)
-        setHasNewDms(hasNewDms?.data)
-    }
-
     useEffect(() => {
         document.addEventListener('click', closeNotifications)
         return () => document.removeEventListener('click', closeNotifications)
@@ -39,14 +34,21 @@ const Nav = ({ channels }) => {
     useEffect(() => {
         if (!channels?.[0]) return
         
-        channels?.[0].bind('check-for-new-dms', () => {
-            checkForNewDms()
-        })
+        if (router.pathname !== '/direct-messages') {
+            channels?.[0].bind('check-for-new-dms', data => {
+                checkForNewDms()
+            })
+        } else channels?.[0].unbind('check-for-new-dms')
 
         return () => {
             channels?.[0].unbind('check-for-new-dms')
         }
-    }, [channels])
+    }, [channels, router.pathname])
+    
+    const checkForNewDms = async () => {
+        const hasNewDms = await axios.get(`/api/checkIfUnreadDms?userId=${user._id}`)
+        setHasNewDms(hasNewDms?.data)
+    }
 
     const closeNotifications = (e) => {
         const el = e.target as SVGSVGElement

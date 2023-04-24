@@ -11,19 +11,17 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { liker, msgId, receiver, receiverId }: any = req.body
+        const { liker, likerId, msgId, receiver, receiverId }: any = req.body
         
         const postNotification = async () => {
-            console.log('postNotification')
-            // await axios.post(`${process.env.CURRENT_BASE_URL}/api/postNotification`, {
-            //     notificationType: 'message-like',
-            //     msgId: msgId,
-            //     newLiker: likerName,
-            //     userId: authorID,
-            //     groupId: groupId,
-            //     groupName: groupName,
-            //     userName: authorName
-            // })
+            const res = await axios.post(`${process.env.CURRENT_BASE_URL}/api/postNotification`, {
+                notificationType: 'dm-like',
+                msgId: msgId,
+                newLiker: liker,
+                userId: receiverId
+            })
+            if (res?.data) return res.data
+            else throw new Error('Could not post notification')
         }
 
         const getLikedValue: () => Promise<boolean> = async () => {
@@ -64,13 +62,18 @@ export default async function handler(
                             const body = await pusherRes.json()
                             if (body?.occupied) {
                                 await pusher.trigger(receiverId, 'set-msg-like', { msgId: msgId, isLiked: newIsLikedValue })
+
+                                const data = await User.findById(receiverId, { currentDmPerson: 1 })
+                                if (data.currentDmPerson !== liker) {
+                                    const notif = await postNotification()
+                                    await pusher.trigger(
+                                        receiverId, 
+                                        'update-notifications', 
+                                        { notificationType: 'dm-like', notification: JSON.stringify(notif) }
+                                    )
+                                }
                             } else {
                                 await postNotification()
-                                // await pusher.trigger(
-                                //     `${receiverId}`, 
-                                //     'update-notifications', 
-                                //     { notificationType: 'message-like', msgId: msgId, newLiker: likerName, groupId: groupId, groupName: groupName, authorName: authorName }
-                                // )
                             }
                         }
                         res.json(newIsLikedValue)

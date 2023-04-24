@@ -25,19 +25,50 @@ export default async function handler(
             return false
         }
 
+        const getNotifications = async () => {
+            const user: IUser | null = await User.findById(userId).sort({ 'notifications.date': -1})
+            if (user?.notifications) {
+                return user.notifications
+            }
+            return null
+        }
+
+        let newNotificationObject: INotification
+
         switch (notificationType) {
-            case 'new-group-message':
-                console.log(notificationType)
+            case 'dm-like':
+                newNotificationObject = {
+                    _id: new mongoose.Types.ObjectId,
+                    content: 'New DM Like',
+                    date: Date.now(),
+                    notificationType: notificationType,
+                    likerId: userId,
+                    likers: [newLiker],
+                    msgId: msgId
+                }
+
+                await User.updateOne({ _id: userId }, {
+                    $push: { 
+                        notifications: {
+                            $each: [newNotificationObject],
+                            $position: 0
+                        }
+                    } 
+                }).then(async docs => {
+                    if (docs?.modifiedCount > 0) {
+                        res.json(await getNotifications())
+                    } else throw new Error('Could not post like notification')
+                })
                 break
 
             case 'message-like':
                 if (await groupMutedByUser()) return res.json(false)
 
-                const newNotificationObject: INotification = {
+                newNotificationObject = {
                     _id: new mongoose.Types.ObjectId,
                     content: 'New Message Like',
                     date: Date.now(),
-                    notificationType: 'message-like',
+                    notificationType: notificationType,
                     likers: [newLiker],
                     msgId: msgId,
                     group: {
@@ -46,19 +77,11 @@ export default async function handler(
                     }
                 }
 
-                const getNotifications = async () => {
-                    const user: IUser | null = await User.findById(userId).sort({ 'notifications.date': -1})
-                    if (user?.notifications) {
-                        return user.notifications
-                    }
-                    return null
-                }
-
                 await User.updateOne(
                     { 
                         $and: [
                             { _id: userId }, 
-                            { 'notifications.notificationType': 'message-like' },  
+                            { 'notifications.notificationType': notificationType },  
                             { 'notifications.msgId': msgId }
                         ]
                     }, 
