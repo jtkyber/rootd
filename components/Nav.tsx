@@ -1,26 +1,52 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import NotificationCenter from './NotificationCenter'
 import styles from '../styles/Nav.module.css'
-import Pusher from 'pusher-js/types/src/core/pusher'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { setActiveDropdown } from '../redux/appSlice'
 import Settings from './Settings'
-import Image from 'next/image'
 import Logo from './Logo'
 import DmIcon from './DmIcon'
+import { IUserState } from '../redux/userSlice'
+import axios from 'axios'
+import HomeIcon from './HomeIcon'
 
-const Nav = ({ pusher }: {pusher: Pusher | null}) => {
+const Nav = ({ channels }) => {
     const router = useRouter()
     const dispatch = useAppDispatch()
 
+    const [hasNewDms, setHasNewDms] = useState(false)
+
     const activeDropdown: string = useAppSelector(state => state.app.activeDropdown)
+    const user: IUserState = useAppSelector(state => state.user)
+
+    useEffect(() => {
+        if (!user._id) return
+        checkForNewDms()
+    }, [user._id, router.pathname])
+    
+    const checkForNewDms = async () => {
+        const hasNewDms = await axios.get(`/api/checkIfUnreadDms?userId=${user._id}`)
+        setHasNewDms(hasNewDms?.data)
+    }
 
     useEffect(() => {
         document.addEventListener('click', closeNotifications)
         return () => document.removeEventListener('click', closeNotifications)
     }, [activeDropdown])
+
+    useEffect(() => {
+        if (!channels?.[0]) return
+        
+        channels?.[0].bind('check-for-new-dms', () => {
+            checkForNewDms()
+        })
+
+        return () => {
+            channels?.[0].unbind('check-for-new-dms')
+        }
+    }, [channels])
 
     const closeNotifications = (e) => {
         const el = e.target as SVGSVGElement
@@ -45,24 +71,24 @@ const Nav = ({ pusher }: {pusher: Pusher | null}) => {
                         : router.pathname === '/home'
                             ? 
                             <>
-                                <Link href='/group-search'>Find Group</Link>
-                                <Link href='/direct-messages'><DmIcon /></Link>
+                                <Link href='/group-search'><h4 className={styles.findGroupText}>Find Group</h4></Link>
+                                <Link href='/direct-messages'><DmIcon hasNewDms={hasNewDms} /></Link>
                                 <NotificationCenter />
                                 <Settings />
                             </>
                             : router.pathname === '/direct-messages'
                                 ? 
                                 <>
-                                    <Link href='/group-search'>Find Group</Link>
-                                    <Link href='/home'>My Groups</Link>
+                                    {/* <Link href='/group-search'><h4 className={styles.findGroupText}>Find Group</h4></Link> */}
+                                    <Link href='/home'><HomeIcon /></Link>
                                     <NotificationCenter />
                                     <Settings />
                                 </>
                                 : router.pathname === '/group-search'
                                     ?
                                     <>
-                                        <Link href='/home'>My Groups</Link>
-                                        <Link href='/direct-messages'><DmIcon /></Link>
+                                        <Link href='/home'><HomeIcon /></Link>
+                                        <Link href='/direct-messages'><DmIcon hasNewDms={hasNewDms} /></Link>
                                         <NotificationCenter />
                                         <Settings />
                                     </>

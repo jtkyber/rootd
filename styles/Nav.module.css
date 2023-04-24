@@ -59,7 +59,7 @@
         align-items: center;
         padding-right: 1rem;
 
-        & a, & .navigationContainer, & .settingsContainer {
+        & a, & .notificationContainer, & .settingsContainer {
             height: 100%;
             padding: 0 0.5rem;
             display: flex;
@@ -67,19 +67,52 @@
         }
         
         & a {
+            height: 100%;
             cursor: pointer;
             color: rgb($light_grey);
             @mixin fadeOnHover;
+
+            & .findGroupText {
+                background-color: rgba($light_grey, 0.8);
+                color: rgb($red_brown);
+                padding: 0.3rem 0.5rem;
+                border-radius: $largeBorderRadius;
+                font-weight: 600;
+            }
             
-            & svg {
-                width: 22px;
+            & .dmIcon {
+                width: 20px;
+                height: 20px;
+                position: relative;
+                margin-top: 0.1rem;
+                
+                & svg {
+                    width: 20px;
+                    height: 20px;
+                    fill: rgba($light_grey, 0.7);
+                }
+                
+                &.hasNewDms:after {
+                    position: absolute;
+                    content: "";
+                    top: 0;
+                    right: 0;
+                    width: 0.5rem;
+                    aspect-ratio: 1/1;
+                    background-color: rgb($deep_red);
+                    border-radius: 50%;
+                    transform: translate(50%, -2px);
+                }
+            }
+
+            & .homeIcon {
+                width: 20px;
                 height: auto;
-                padding-top: 0.1rem;
-                fill: rgba($light_grey, 0.7);
+                fill: rgba($light_grey, 0.8);
             }
         }
 
-        & .navigationContainer {
+        & .notificationContainer {
             position: relative;
 
             & .bellIcon {

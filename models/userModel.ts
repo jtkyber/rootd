@@ -47,6 +47,7 @@ export interface IUser {
     strikes: string[] // Reasons for strikes
     currentGroup: string | null
     lastSeenMsgs?: ILastSeenMsg[]
+    currentDmPerson: string | null
 }
 
 export interface ILastSeenMsg {
@@ -152,9 +153,13 @@ const userSchema = new Schema<IUser>({
         type: String || null,
         default: null,
     },
-    lastSeenMsgs: [lastSeenMsgSchema]
+    lastSeenMsgs: [lastSeenMsgSchema],
+    currentDmPerson: {
+        type: String || null,
+        default: null
+    }
 })
 
-const User = models.User20 || model('User20', userSchema, 'users')
+const User = models.User21 || model('User21', userSchema, 'users')
 
 export default User

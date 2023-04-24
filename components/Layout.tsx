@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { IGroup } from '../models/groupModel'
 import Pusher, { PresenceChannel } from 'pusher-js'
 import axios from 'axios'
-import { INotification } from '../models/userModel'
 import { useRouter } from 'next/router'
 
 const Layout = (props) => {
@@ -19,6 +18,18 @@ const Layout = (props) => {
     const dispatch = useAppDispatch()
 
     const router = useRouter()
+
+    useEffect(() => {
+        if (!user?._id) return
+        if (router?.pathname !== 'direct-messages') {
+            (async () => {
+                await axios.put('/api/setCurrentDmPerson', {
+                    userId: user._id,
+                    person: null
+                })
+            })()
+        }
+    }, [router.pathname, user._id])
 
     useEffect(() => {
         if (!user?._id) return
@@ -56,10 +67,7 @@ const Layout = (props) => {
     useEffect(() => {
         if (!channels?.[0]) return
 
-        // channels?.[0].bind_global((eventName, data) => {
-        //     console.log(eventName, data)
-        // })
-        channels?.[0].bind('update-notifications', data => {
+        channels[0].bind('update-notifications', data => {
             updateNotifications(data)
         })
         
@@ -96,7 +104,7 @@ const Layout = (props) => {
 
     return (
         <div className={styles.container}>
-            <Nav pusher={pusher} />
+            <Nav channels={channels} />
             <main>{renderChildren()}</main>
             <Footer />
         </div>

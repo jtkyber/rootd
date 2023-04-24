@@ -258,9 +258,18 @@
             background-color: transparent;
             border: none;
             border-radius: $smallBorderRadius;
-            color: rgb($grey_blue_vibrant);
-            padding: 0.5rem;
+            /* color: rgb($grey_blue_vibrant); */
+            /* padding: 0.3rem 0.2rem 0.2rem 0.3rem; */
             justify-self: end;
+
+            & svg {
+                width: 18px;
+                height: auto;
+
+                & path {
+                    fill: rgba($grey_blue_vibrant, 0.7);
+                }
+            }
 
             @mixin fadeOnHover;
         }

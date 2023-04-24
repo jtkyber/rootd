@@ -79,7 +79,7 @@ const NotificationCenter = () => {
     }
 
     return (
-        <div className={styles.navigationContainer}>
+        <div className={styles.notificationContainer}>
             <NotificationBellIcon />
             
             {

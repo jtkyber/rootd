@@ -58,15 +58,14 @@ export default async function handler(
             }).then(async docs1 => {
                 if (docs1.modifiedCount > 0) {
                     if (count === 1) {
-                        await pusher.trigger(receiverId, 'set-msg-like', { msgId: msgId, isLiked: newIsLikedValue })
-                        
                         const pusherRes = await pusher.get({ path: `/channels/${receiverId}` })
                         
                         if (pusherRes.status === 200) {
                             const body = await pusherRes.json()
-                            if (!body?.occupied) {
-                                await postNotification()
+                            if (body?.occupied) {
+                                await pusher.trigger(receiverId, 'set-msg-like', { msgId: msgId, isLiked: newIsLikedValue })
                             } else {
+                                await postNotification()
                                 // await pusher.trigger(
                                 //     `${receiverId}`, 
                                 //     'update-notifications', 

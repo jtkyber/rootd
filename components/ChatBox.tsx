@@ -24,7 +24,7 @@ import scrollToMessage from '../utils/scrollToMessage'
 import LoadingAnimation from './LoadingAnimation'
 import styles from '../styles/Home.module.css'
 import stylesChat from '../styles/ChatArea.module.css'
-
+import AddPsgIcon from './AddPsgIcon'
 
 let scrollElementId: string
 
@@ -507,7 +507,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                 </div>
                     
                 <div style={{pointerEvents: addingPsg ? 'none' : 'all'} } className={stylesChat.chatInputArea}>
-                    <button onClick={() => setAddingPsg(true)} className={stylesChat.addPsgBtn}>Insert Passage</button>
+                    <button onClick={() => setAddingPsg(true)} className={stylesChat.addPsgBtn}><AddPsgIcon /></button>
                     <div ref={textAreaRef} contentEditable={true} suppressContentEditableWarning={true} className={stylesChat.input}></div>
                     <button onClick={handleSendMsgClick} className={stylesChat.sendMsgBtn}>Send</button>
                 </div>

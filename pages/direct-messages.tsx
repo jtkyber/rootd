@@ -38,6 +38,7 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
   const [dmPeople, setDmPeople] = useState<IDmPeople[]>([])
   const [selectedPerson, setSelectedPerson] = useState<IDmPeople>()
   const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
+  const [newMsgsCountObject, setNewMsgsCountObject] = useState<{[key: string]: number}>({})
 
   const user: IUserState = useAppSelector(state => state.user)
 
@@ -57,46 +58,49 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
     return axios.post('/api/postDM', msgData)
     }, {
         onSuccess: async (newData) => {
-            addMessage(newData)
+            addMessage(newData.data)
             textAreaRef.current.value = ''
             chatBoxRef?.current.scrollTo(0, chatBoxRef?.current.scrollHeight)
-            await axios.get(`/api/pusher/updateGrpMemberMsgs?username=${user.username}&channelName=${selectedPerson?._id}&msg=${JSON.stringify(newData)}`)
         }
     }
 )
 
-const refetch = () => queryClient.resetQueries({ queryKey: ['dms', selectedPerson], type: 'active' })
-
-useEffect(() => {
-  if (data) refetch()
-}, [])
+  const refetch = () => queryClient.resetQueries({ queryKey: ['dms', selectedPerson], type: 'active' })
 
   useEffect(() => {
     if (session?.user) {
-        (async () => {
-          const updatedUser: IUserState = await getUser(session.user.email)
-          if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
-          
-          if (updatedUser) {
-            const res = await axios.get(`/api/getDmPeople?userId=${updatedUser._id}`)
-            if (res?.data?.length) {
-              setDmPeople(res?.data)
-              setSelectedPerson(res.data[0])
-            }
+      (async () => {
+        if (data) refetch()
+        const updatedUser: IUserState = await getUser(session.user.email)
+        if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
+        
+        if (updatedUser) {
+          const res = await axios.get(`/api/getDmPeople?userId=${updatedUser._id}`)
+          if (res?.data?.length) {
+            setDmPeople(res.data)
+            setSelectedPerson(res.data[0])
+            const unreadObject = await getUnreadMsgsCount(updatedUser._id)
+            if (unreadObject) setNewMsgsCountObject(unreadObject)
           }
-        })()
+        }
+      })()
     }
-  }, [user._id])
+  }, [session?.user])
+    
+  const getUnreadMsgsCount = async (userId) => {
+    const res2 = await axios.get(`/api/getDmPeopleUnreadMsgCount?userId=${userId}`)
+    if (Object.keys(res2.data).length > 0) return res2.data
+    else return null
+  }
 
   useEffect(() => {
     if (!channels?.[0]) return
 
     channels?.[0].bind('fetch-new-group-msgs', data => {
-      if (data?.username !== user?.username) addMessage(JSON?.parse?.(data.msg))
+      if (data?.username !== user?.username) addMessage(JSON.parse?.(data.msg))
     })
     
     channels?.[0].bind('set-msg-like', data => {
-      console.log(data)
         if (data.liker === user.username) return
         setNewMsgLikes(data.msgId, data.isLiked)
     })
@@ -105,7 +109,7 @@ useEffect(() => {
         channels?.[0].unbind('fetch-new-group-msgs')
         channels?.[0].unbind('set-msg-like')
     }
-}, [channels, data, user.username])
+  }, [channels, data, user.username])
 
   useEffect(() => {
     const now = Date.now()
@@ -113,6 +117,19 @@ useEffect(() => {
     setLastNextPageFetchTime(now)
     handleLoadMore()
   }, [isVisible])
+
+  useEffect(() => {
+    if (!selectedPerson?.username) return
+    (async () => {
+      const copy = {...newMsgsCountObject}
+      delete copy[selectedPerson.username]
+      setNewMsgsCountObject({...copy})
+      await axios.put('/api/setCurrentDmPerson', {
+          userId: user._id,
+          person: selectedPerson.username
+      })
+  })()
+  }, [selectedPerson])
 
   const setNewMsgLikes = (msgId, isLiked) => {
     queryClient.setQueryData(['dms', selectedPerson], (prev: any) => {
@@ -148,7 +165,7 @@ useEffect(() => {
         pages: prev?.pages.map((page, i) => {
             if (i === 0) return {
                 ...page,
-                data: [newData.data, ...page.data]
+                data: [newData, ...page.data]
             } 
             else return page
         })
@@ -156,10 +173,12 @@ useEffect(() => {
 }
 
   async function fetchDMs({ pageParam = 0 }) {
-    if (!selectedPerson) return null
+    if (!selectedPerson?.username) return null
       try {
-        const res = await axios.get(`/api/getDirectMsgs?userId=${user._id}&selectedPersonName=${selectedPerson.username}&cursor=${pageParam}&limit=10`)
-        return res.data
+        await axios.get(`/api/markDmMsgsAsRead?userName=${user.username}&friendName=${selectedPerson.username}`)
+        
+        const res2 = await axios.get(`/api/getDirectMsgs?userId=${user._id}&selectedPersonName=${selectedPerson.username}&cursor=${pageParam}&limit=10`)
+        return res2.data
       } catch (err) {
         console.log(err)
     }
@@ -200,6 +219,7 @@ function handleSendMsgClick () {
     receiver: selectedPerson?.username, 
     content: textAreaRef.current.value,
     authorId: user?._id || undefined,
+    friendId: selectedPerson?._id || undefined,
     author: user.username,
     authorProfileImg: session?.user?.image ? session.user.image : null
   }
@@ -223,6 +243,11 @@ function handleSendMsgClick () {
                   key={i} 
                   className={`${styles.singleDmName} ${person.username === selectedPerson?.username ? styles.selected : null}`}>
                       <h4 className={styles.groupName}>{person.username}</h4>
+                      {
+                        newMsgsCountObject?.[person.username] > 0
+                        ? <h5 className={styles.newDmsCount}>{newMsgsCountObject[person.username]}</h5>
+                        : null
+                      }
                   </div>
                   ))
               : null
@@ -236,7 +261,7 @@ function handleSendMsgClick () {
                         {data?.pages.map((page, i, row1) => (
                         <Fragment key={i}>
                             {page?.data?.map((msg: IDm, j, row2) => {return (
-                                <div key={j} id={msg._id?.toString()} 
+                                <div key={j} id={msg?._id?.toString()} 
                                     className={`
                                     ${stylesChat.msg} 
                                     ${msg.author === user?.username ? stylesChat.userMsg : stylesChat.msgFromOther}
