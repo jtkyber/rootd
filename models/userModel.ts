@@ -27,6 +27,7 @@ export interface INotification {
     date: Date | number
     notificationType: string
     read?: boolean
+    readDate: Date | number
     group?: INotifGroup
     msgId?: ObjectId
     likers?: string[]
@@ -90,6 +91,7 @@ export const notificationSchema = new Schema<INotification>({
     _id: mongoose.Schema.Types.ObjectId,
     content: String,
     date: Date,
+    readDate: Date,
     notificationType: String,
     group: notifGroupSchema,
     msgId: ObjectId,
@@ -162,6 +164,6 @@ const userSchema = new Schema<IUser>({
     }
 })
 
-const User = models.User22 || model('User22', userSchema, 'users')
+const User = models.User23 || model('User23', userSchema, 'users')
 
 export default User

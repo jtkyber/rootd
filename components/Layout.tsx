@@ -33,6 +33,10 @@ const Layout = (props) => {
 
     useEffect(() => {
         if (!user?._id) return
+
+        // removes notifications that have been read over one day prior to current day
+        (async () => await axios.put(`/api/removeExpiredNotifications`, { userId: user._id }))()
+
         if (!pusher && user.username && process.env.PUSHER_KEY && process.env.PUSHER_CLUSTER) {
             const pusher = new Pusher(process.env.PUSHER_KEY, {
                 cluster: process.env.PUSHER_CLUSTER,

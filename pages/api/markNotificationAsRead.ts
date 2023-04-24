@@ -19,7 +19,7 @@ export default async function handler(
             { 
                 $set: { 
                     "notifications.$[i].read": true,
-                    "notifications.$[i].date": Date.now()
+                    "notifications.$[i].readDate": Date.now()
                 }
             },
             {

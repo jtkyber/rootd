@@ -9,8 +9,7 @@ import { IGroup } from '../models/groupModel'
 import { setSelectedGroup } from '../redux/groupSlice'
 import { useRouter } from 'next/router'
 import scrollToMessage from '../utils/scrollToMessage'
-import { ISelectedDmPerson, setSelectedDmPerson } from '../redux/appSlice'
-import stylesChat from '../styles/ChatArea.module.css'
+import { setSelectedDmPerson } from '../redux/appSlice'
 
 const NotificationCenter = () => {
     const [notificationArray, setNotificationArray] = useState<JSX.Element[]>([])
@@ -18,7 +17,6 @@ const NotificationCenter = () => {
     const user: IUserState = useAppSelector(state => state.user)
     const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
-    const selectedDmPerson: ISelectedDmPerson = useAppSelector(state => state.app.selectedDmPerson)
     const activeDropdown: string = useAppSelector(state => state.app.activeDropdown)
 
     const dispatch = useAppDispatch()
@@ -28,7 +26,6 @@ const NotificationCenter = () => {
     useEffect(() => {
         const notifArrTemp: JSX.Element[] = 
         user?.notifications?.slice()
-        ?.filter(n => !n.read || (n.read && (Date.now() - Date.parse(n.date) < 10000)))
         ?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
         ?.map((notif: INotification, i: number) => {
             return <div onClick={() => onNotificationClick(notif)} key={i} className={`${styles.notification} ${notif.read ? styles.read : null}`}>
@@ -44,11 +41,6 @@ const NotificationCenter = () => {
 
         setNotificationArray(notifArrTemp)
     }, [user?.notifications, router.pathname, userGroups])
-
-
-    // const closeNotifications = (e) => {
-    //     if (!(e.target as SVGSVGElement).classList.contains(styles.bellIcon)) dispatch(setActiveDropdown(''))
-    // }
 
     const markNotificationAsRead = async (notification:  INotification) => {
         if (notification?.read) return
