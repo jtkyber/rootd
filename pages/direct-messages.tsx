@@ -22,7 +22,7 @@ let scrollElementId: string
 let lastMsgClickedDate
 let lastMsgClicked
 
-interface IDmPeople {
+interface IDmPerson {
   username: string,
   _id: string
 }
@@ -36,7 +36,7 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
   const messagesRef: React.MutableRefObject<any> = useRef(null)
   const resultsEndRef: React.MutableRefObject<any> = useRef(null)
   
-  const [dmPeople, setDmPeople] = useState<IDmPeople[]>([])
+  const [dmPeople, setDmPeople] = useState<IDmPerson[]>([])
   const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
   const [newMsgsCountObject, setNewMsgsCountObject] = useState<{[key: string]: number}>({})
   

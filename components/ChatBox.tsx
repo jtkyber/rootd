@@ -25,11 +25,18 @@ import LoadingAnimation from './LoadingAnimation'
 import styles from '../styles/Home.module.css'
 import stylesChat from '../styles/ChatArea.module.css'
 import AddPsgIcon from './AddPsgIcon'
+import UserProfile from './UserProfile'
+import getInitials from '../utils/getInitials'
 
 let scrollElementId: string
 
 let lastMsgClickedDate
 let lastMsgClicked
+
+interface ISelectedMember {
+    id: ObjectId
+    img: string
+}
 
 const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     const textAreaRef: React.MutableRefObject<any> = useRef(null)
@@ -54,6 +61,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     const [windowWidth, setWindowWidth] = useState(0)
     const [windowHeight, setWindowHeight] = useState(0)
     const [onlineMembers, setOnlineMembers] = useState<string[]>([])
+    const [selectedMember, setSelectedMember] = useState<ISelectedMember | null>(null)
 
     const [pointOneX, setPointOneX] = useState(0)
     const [pointOneY, setPointOneY] = useState(0)
@@ -432,15 +440,6 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         document.getElementById(msg._id + '-likes')?.classList.toggle(stylesChat.show)
     }
 
-    const getInitials = (uN: string): string => {
-        let initials: string
-        const usernameArray = uN.split(' ')
-
-        if (usernameArray.length > 1) initials = usernameArray[0][0] + usernameArray[1][0]
-        else initials = uN[0] + uN[1]
-        return initials.toUpperCase()
-    }
-
     return (
         <div className={styles.selectedGroup}>
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
@@ -459,8 +458,8 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                                 >
                                     <div className={stylesChat.msgAuthor}>
                                         {
-                                            msg?.authorProfileImg ? <Image width={25} height={25} className={`${stylesChat.authorImg} ${onlineMembers.includes(msg.author) ? stylesChat.online : null}`} src={msg.authorProfileImg} alt='Author Image'/>
-                                            : <h5 className={`${stylesChat.authorImg} ${stylesChat.noImg} ${onlineMembers.includes(msg.author) ? stylesChat.online : null}`}>{getInitials(msg.author)}</h5>
+                                            msg?.authorProfileImg ? <Image onClick={() => msg.authorId !== user._id ? setSelectedMember({ id: msg.authorId, img: msg.authorProfileImg}): null} width={25} height={25} className={`${stylesChat.authorImg} ${onlineMembers.includes(msg.author) ? stylesChat.online : null}`} src={msg.authorProfileImg} alt='Author Image'/>
+                                            : <h5 onClick={() => msg.authorId !== user._id ? setSelectedMember({ id: msg.authorId, img: msg.authorProfileImg}) : null} className={`${stylesChat.authorImg} ${stylesChat.noImg} ${onlineMembers.includes(msg.author) ? stylesChat.online : null}`}>{getInitials(msg.author)}</h5>
                                         }
                                         <h5>{msg.author}</h5>
                                     </div>
@@ -513,6 +512,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                 </div>
             </div>
             <GroupDetails selectedGroup={selectedGroup} username={user.username} onlineMembers={onlineMembers} />
+            {selectedMember?.id ? <UserProfile selectedMember={selectedMember} /> : null} 
         </div>
     )
 }

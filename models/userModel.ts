@@ -45,7 +45,6 @@ export interface IUser {
     groups: string[]
     notifications: INotification[]
     directMsgs: IAllDms
-    dmPeople: string[]
     strikes: string[] // Reasons for strikes
     currentGroup: string | null
     lastSeenMsgs?: ILastSeenMsg[]
@@ -145,10 +144,6 @@ const userSchema = new Schema<IUser>({
         of: [dmSchema],
         required: false
     },
-    dmPeople: {
-        type: [String],
-        required: false
-    },
     strikes: {
         type: [String],
         required: false
@@ -164,6 +159,6 @@ const userSchema = new Schema<IUser>({
     }
 })
 
-const User = models.User23 || model('User23', userSchema, 'users')
+const User = models.User26 || model('User26', userSchema, 'users')
 
 export default User

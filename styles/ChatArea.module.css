@@ -66,6 +66,7 @@
                         border-radius: 50%;
                         height: 1.8rem;
                         width: 1.8rem;
+                        cursor: pointer;
 
                         &.noImg {
                             display: flex;
@@ -192,8 +193,14 @@
                         color: rgb($light_grey);
                     }
 
-                    & .msgAuthor > h5 {
-                        color: rgb($grey_blue);
+                    & .msgAuthor {
+                        & h5 {
+                            color: rgb($grey_blue);
+                        }
+
+                        & .authorImg {
+                            cursor: default;
+                        }
                     }
 
                     & span {
