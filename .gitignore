@@ -18,7 +18,7 @@
 # misc
 .DS_Store
 *.pem
-badWords.json
+/badWords.json
 
 # debug
 npm-debug.log*
