@@ -33,7 +33,7 @@ let scrollElementId: string
 let lastMsgClickedDate
 let lastMsgClicked
 
-interface ISelectedMember {
+export interface ISelectedMember {
     id: ObjectId
     img: string
 }
@@ -512,7 +512,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                 </div>
             </div>
             <GroupDetails selectedGroup={selectedGroup} username={user.username} onlineMembers={onlineMembers} />
-            {selectedMember?.id ? <UserProfile selectedMember={selectedMember} /> : null} 
+            {selectedMember?.id ? <UserProfile selectedMember={selectedMember} setSelectedMember={setSelectedMember} /> : null} 
         </div>
     )
 }

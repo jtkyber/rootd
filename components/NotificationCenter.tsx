@@ -6,13 +6,14 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { ILastSeenMsg, INotification } from '../models/userModel'
 import axios from 'axios'
 import { IGroup } from '../models/groupModel'
-import { setSelectedGroup } from '../redux/groupSlice'
+import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
 import { useRouter } from 'next/router'
 import scrollToMessage from '../utils/scrollToMessage'
 import { setSelectedDmPerson } from '../redux/appSlice'
 
 const NotificationCenter = () => {
     const [notificationArray, setNotificationArray] = useState<JSX.Element[]>([])
+    const [joiningPrivateGroup, setJoiningPrivateGroup] = useState<boolean>(false)
     
     const user: IUserState = useAppSelector(state => state.user)
     const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
@@ -28,12 +29,24 @@ const NotificationCenter = () => {
         user?.notifications?.slice()
         ?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
         ?.map((notif: INotification, i: number) => {
-            return <div onClick={() => onNotificationClick(notif)} key={i} className={`${styles.notification} ${notif.read ? styles.read : null}`}>
+            return <div onClick={(e) => onNotificationClick(e, notif)} key={i} className={`${styles.notification} ${notif.read ? styles.read : null}`}>
                 {
                     notif?.notificationType === 'message-like' && notif?.likers?.length && notif?.group ?
                         <h5>{notif.likers[0]} {notif.likers.length > 1 ? 'and ' + (notif.likers.length - 1) + ` other${notif.likers.length > 2 ? 's' : ''}` : ''} liked your message in "{notif.group.name}"</h5>
                     : notif?.notificationType === 'dm-like' && notif?.likers?.[0] ?
                         <h5>{notif.likers[0]} liked your direct message</h5>
+                    : notif?.notificationType === 'group-invite' ?
+                    <div className={styles.groupInviteNotif}>
+                        <h5 className={styles.text}>{notif.inviter} invited you to join "{notif.group?.name}"</h5>
+                        {
+                            !notif.read ?
+                            <>
+                                <button id='reject' className={styles.rejectBtn}>Reject</button>
+                                <button id='join' className={styles.joinBtn}>Join</button>
+                            </>
+                            : null
+                        }
+                    </div>
                     : null
                 }
             </div>
@@ -44,13 +57,42 @@ const NotificationCenter = () => {
 
     const markNotificationAsRead = async (notification:  INotification) => {
         if (notification?.read) return
-        await axios.put('/api/markNotificationAsRead', {
+        const res = await axios.put('/api/markNotificationAsRead', {
             userId: user._id,
             notificationId: notification._id
         })
+        if (res?.data) {
+            dispatch(setUser({...user, notifications: user.notifications.map(notif => {
+                if (notif._id === notification._id) return {...notif, read: true}
+                return notif
+            })}))
+        }
     }
 
-    const onNotificationClick = async (notification: INotification) => {
+    const handleJoinGroup = async (groupId) => {
+        try {
+            const res = await axios.post('/api/joinGroup', {
+                userId: user._id,
+                userName: user.username,
+                groupId: groupId,
+                passwordException: true
+            })
+    
+            const newGroup: IGroup = res.data
+            if (!newGroup?._id) return
+
+            dispatch(setUser({ ...user, groups: [newGroup._id.toString(), ...user.groups ] }))
+            dispatch(setUserGroups([ newGroup, ...userGroups ]))
+            dispatch(setSelectedGroup(newGroup))
+            router.replace('/home')
+        } catch(err) {
+          console.log(err)
+        }
+      }
+
+    const onNotificationClick = async (e, notification: INotification) => {
+        if (notification.notificationType === 'group-invite' && e.target?.id !=='reject' && e.target?.id !=='join') return
+
         await markNotificationAsRead(notification)
 
         switch(notification.notificationType) {
@@ -61,11 +103,6 @@ const NotificationCenter = () => {
                     groupId: notification.group?.id
                 })
                 const resData: ILastSeenMsg[] = res.data
-
-                dispatch(setUser({...user, notifications: user.notifications.map(notif => {
-                    if (notif._id === notification._id) return {...notif, read: true}
-                    return notif
-                })}))
                 
                 if (router.pathname !== '/home') router.replace('/home')
                 const selectedGroupTemp = userGroups.find(g => g._id === notification.group?.id)
@@ -74,12 +111,11 @@ const NotificationCenter = () => {
                 scrollToMessage(resData, selectedGroup._id)
                 break
             case 'dm-like':
-                dispatch(setUser({...user, notifications: user.notifications.map(notif => {
-                    if (notif._id === notification._id) return {...notif, read: true}
-                    return notif
-                })}))
                 if (notification?.likers?.[0] && notification?.likerId) dispatch(setSelectedDmPerson({ _id: notification.likerId.toString(), username: notification.likers[0] }))
                 if (router.pathname !== '/direct-messages') router.replace('/direct-messages')
+                break
+            case 'group-invite':
+                if (e.target.id === 'join') handleJoinGroup(notification.group?.id)
                 break
         }
     }
@@ -89,7 +125,7 @@ const NotificationCenter = () => {
             <NotificationBellIcon />
             
             {
-                user?.notifications.filter(notif => !notif.read).length > 0
+                user?.notifications?.filter(notif => !notif.read).length > 0
                 ? <h5 className={styles.unreadCount}>{user?.notifications.filter(notif => !notif.read).length}</h5>
                 : null
             }

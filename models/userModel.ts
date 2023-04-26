@@ -33,6 +33,7 @@ export interface INotification {
     likers?: string[]
     likerId?: ObjectId
     groupName?: string
+    inviter?: string
 }
 
 export interface IUser {
@@ -100,7 +101,8 @@ export const notificationSchema = new Schema<INotification>({
         type: Boolean,
         default: false
     },
-    groupName: String
+    groupName: String,
+    inviter: String
 })
 
 const userSchema = new Schema<IUser>({
@@ -142,7 +144,7 @@ const userSchema = new Schema<IUser>({
     directMsgs: {
         type: Map,
         of: [dmSchema],
-        required: false
+        default: {}
     },
     strikes: {
         type: [String],
@@ -159,6 +161,6 @@ const userSchema = new Schema<IUser>({
     }
 })
 
-const User = models.User26 || model('User26', userSchema, 'users')
+const User = models.User29 || model('User29', userSchema, 'users')
 
 export default User

@@ -10,12 +10,12 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { userId, userName, groupId, password = null }: any = req.body
+        const { userId, userName, groupId, password = null, passwordException = false }: any = req.body
 
         const groupTest: IGroup | null = await Group.findById(groupId)
         if (groupTest?.members.includes(userName)) throw new Error('User already in group')
-        if (groupTest?.isPrivate && !password) throw new Error('Please enter the group password')
-        if (groupTest?.isPrivate && (password !== groupTest?.password?.toString())) throw new Error('Wrong Password')
+        if (groupTest?.isPrivate && !password && !passwordException) throw new Error('Please enter the group password')
+        if (groupTest?.isPrivate && (password !== groupTest?.password?.toString()) && !passwordException) throw new Error('Wrong Password')
         if (!groupTest?.members?.length) return
 
         const group = await Group.findByIdAndUpdate(groupId, { 
@@ -24,7 +24,7 @@ export default async function handler(
         }, { new: true })
 
         if (group.members.includes(userName)) {
-            const user = await User.findByIdAndUpdate(userId, { 
+            await User.findByIdAndUpdate(userId, { 
                 $push: {
                     groups: {$each: [groupId], $position: 0},
                     lastSeenMsgs: {
@@ -32,8 +32,11 @@ export default async function handler(
                         groupId: groupId
                     }
                 }
-            }, { new: true, groups: 1 })
-            res.json(user)
+            }, { new: true, groups: 1 }).then(docs => {
+                if (docs) {
+                    res.json(group)
+                } else throw new Error('User not able to be added to group')
+            })
         } else throw new Error('User not able to be added to group')
 
     } catch(err) {

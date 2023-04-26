@@ -3,6 +3,7 @@ import connectMongo from '../../connectDB'
 import User, { INotification, IUser } from '../../models/userModel'
 import mongoose from 'mongoose'
 import Group, { IGroup } from '../../models/groupModel'
+import { pusher } from '../../lib'
 
 type Data = {
   name: string
@@ -15,7 +16,7 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { notificationType, groupId, groupName, msgId, newLiker, userId, userName }: any = req.body
+        const { notificationType, groupId, groupName, msgId, newLiker, userId, userName, inviter, isPrivate }: any = req.body
 
         const groupMutedByUser = async () => {
             const group: IGroup | null = await Group.findById(groupId)
@@ -133,7 +134,52 @@ export default async function handler(
                     }
                 })
                 .catch(err => { throw new Error(err) })
-            break
+                break
+            case 'group-invite':
+                const content = `Invited to ${groupName}`
+
+                newNotificationObject = {
+                    _id: new mongoose.Types.ObjectId,
+                    content: content,
+                    date: Date.now(),
+                    readDate: Date.now(),
+                    notificationType: notificationType,
+                    group: {
+                        id: groupId,
+                        name: groupName
+                    },
+                    inviter: inviter
+                }
+                
+                User.updateOne(
+                    { 
+                        _id: userId,
+                        groups: { $nin: groupId },
+                        'notifications.content': { $ne: content }
+                    }, 
+                    {
+                        $push: { 
+                            notifications: {
+                                $each: [newNotificationObject],
+                                $position: 0
+                            }
+                        } 
+                    }
+                    ).then(async docs => {
+                        if (docs.modifiedCount > 0) {
+                            const pusherRes = await pusher.get({ path: `/channels/${userId}` })
+                            
+                            if (pusherRes.status === 200) {
+                                const body = await pusherRes.json()
+                                if (body?.occupied) {
+                                    await pusher.trigger(userId, 'update-notifications', { notificationType: notificationType, notification: JSON.stringify(await getNotifications()) })
+                                }
+                            }
+                            res.json(true)
+                        }
+                        else res.status(400).end('User has already been invited to that group')
+                })
+                break
         }
     } catch(err) {
         console.log(err)

@@ -29,12 +29,12 @@ export default async function handler(
         _id: { $in: [ ...sharedGroupIds ] },
       }, { name: 1 })
 
-      const sharedGroupNames = sharedGroups.map(g => g.name)
+      // const sharedGroupNames = sharedGroups.map(g => g.name)
 
       const memberProfileData = {
         username: member.username,
         bVersion: member.bVersion,
-        sharedGroups: sharedGroupNames
+        sharedGroups: sharedGroups
       }
       
       res.json(memberProfileData)

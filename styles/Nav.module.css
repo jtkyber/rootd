@@ -163,15 +163,54 @@
                     color: rgb($red_brown);
                     cursor: pointer;
 
-                    & * {
-                        pointer-events: none;
-                    }
-
                     &.read {
-                        opacity: 0.6
+                        opacity: 0.6;
+                        cursor: default;
                     }
 
-                    @mixin fadeOnHover;
+                    &:not(&:has(.groupInviteNotif)) {
+                        & * {
+                            pointer-events: none;
+                        }
+                        @mixin fadeOnHover;
+                    }
+
+                    &:has(.groupInviteNotif) {
+                        cursor: default;
+                    }
+
+
+                    & .groupInviteNotif {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        grid-template-columns: 1fr 1fr;
+                        grid-template-areas: 
+                        "message message"
+                        "reject join";
+                        gap: 1rem;
+
+                        & .text {
+                            grid-area: message;
+                        }
+
+                        & button {
+                            padding: 0.3rem 0.5rem;
+                            border: none;
+                            border-radius: $smallBorderRadius;
+                            background-color: rgb($red_brown);
+                            color: rgb($light_grey);
+                            @mixin fadeOnHover;
+                            
+                            &.rejectBtn {
+                                grid-area: reject;
+                            }
+    
+                            &.joinBtn {
+                                
+                                grid-area: join;
+                            }
+                        }
+                    }
                 }
             }
         }

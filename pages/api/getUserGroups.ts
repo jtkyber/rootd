@@ -19,7 +19,7 @@ export default async function handler(
 
         const userGroups = await Group.find({ _id: { $in: groupIdArray }}, { messages: 0, password: 0 })
 
-        res.json(userGroups)
+        res.json(userGroups.reverse())
     } catch(err) {
         console.log(err)
         res.status(400).end(err)

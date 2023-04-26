@@ -81,7 +81,7 @@ const Layout = (props) => {
     }, [channels])
     
     const updateNotifications = async (data) => {
-        let notif
+        let notifs
         switch(data.notificationType) {
             case 'message-like':
                 if ((selectedGroup._id === data.groupId) && (router.pathname === '/home')) return
@@ -94,12 +94,16 @@ const Layout = (props) => {
                     groupName: data.groupName,
                     userName: data.authorName
                 })
-                notif = res.data
+                notifs = res.data
                 break
             case 'dm-like':
-                notif = JSON.parse(data.notification)
+                notifs = JSON.parse(data.notification)
+                break
+            case 'group-invite':
+                notifs = JSON.parse(data.notification)
+                break
         }
-        if (notif) dispatch(setUser({...user, notifications: notif}))
+        if (notifs) dispatch(setUser({...user, notifications: notifs}))
     }
 
     const renderChildren = () => {

@@ -168,13 +168,12 @@ const groupSearch = () => {
         groupId: group._id,
         password: password
       })
+      const newGroup = res.data
 
-      if (res.data.groups.includes(group._id)) {
-        setActivePrivateGroup(null)
-        dispatch(setUser({ ...user, groups: res.data.groups }))
-        dispatch(setSelectedGroup(group))
-        router.replace('/home')
-      }
+      setActivePrivateGroup(null)
+      dispatch(setUser({ ...user, groups: [ ...user.groups, newGroup ] }))
+      dispatch(setSelectedGroup(newGroup))
+      router.replace('/home')
     } catch(err) {
       console.log(err)
     }
