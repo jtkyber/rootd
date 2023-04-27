@@ -20,6 +20,7 @@ $miniScrollbarWidth: 0.7rem;
 $largeBorderRadius: 1rem;
 $smallBorderRadius: 0.5rem;
 
+
 @define-mixin customScrollbar $display: block {
   &::-webkit-scrollbar {
     width: 0.9rem;
@@ -65,4 +66,14 @@ $smallBorderRadius: 0.5rem;
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@define-mixin brownButton {
+  width: max-content;
+  height: 2rem;
+  background-color: rgb($red_brown);
+  border: none;
+  border-radius: $smallBorderRadius;
+  color: rgb($light_grey);
+  padding: 0.5rem;
 }

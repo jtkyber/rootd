@@ -165,8 +165,8 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
                         </div>
                     </div>
 
-                    <button tabIndex={-1} onClick={() => setDetailedExpanded(!detailedExpanded)} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>
-                        <GroupDetailsArrow />
+                    <button tabIndex={-1} className={`${styles.expandGroupDetailsBtn} ${detailedExpanded ? styles.show : null}`}>
+                        <GroupDetailsArrow clickFunction={() => setDetailedExpanded(!detailedExpanded)} />
                     </button>
                 </div>
             : null

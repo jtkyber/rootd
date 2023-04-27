@@ -5,7 +5,7 @@ const NotAuthorizedScreen = () => {
         position: 'absolute',
         width: '100%',
         height: '100%',
-        color: 'black',
+        color: '#1b0d09',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'

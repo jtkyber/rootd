@@ -29,12 +29,11 @@
         }
 
         & .title {
-            color: rgb($red_brown);
             font-weight: 400;
         }
 
         & .errorMessage {
-            color: red;
+            color: rgb($deep_red);
             font-weight: 600;
         }
 
@@ -45,7 +44,6 @@
             background-color: transparent;
             border: 0.1rem solid rgba($red_brown_dark, 1);
             border-radius: 0.2rem;
-            color: rgba($red_brown_dark, 1);
             outline: none;
 
             &:focus {
@@ -53,24 +51,12 @@
             }
             
             &:invalid:focus {
-                border-color: red;
-            }
-
-            &::placeholder {
-                color: rgba($red_brown_dark, 1);
+                border-color: rgb($deep_red);
             }
         }
         
         & button {
-            width: max-content;
-            height: 2rem;
-            background-color: rgb($red_brown);
-            border: none;
-            border-radius: $smallBorderRadius;
-            color: rgb($light_grey);
-            padding: 0.5rem;
-
-            @mixin fadeOnHover;
+            @mixin brownButton;
 
             &.googleSignInBtn {
                 display: flex;
@@ -79,6 +65,7 @@
                 background-color: white;
                 border: 1px solid black;
                 color: black;
+                font-weight: 500;
 
                 & img {
                     height: 100%;
@@ -88,13 +75,11 @@
         }
 
         & .orText {
-            color: rgb($red_brown_dark);
             font-weight: 400;
             margin: -0.5rem 0;
         }
 
         & .logRegSwitch {
-            color: rgb($red_brown_dark);
             & a {
                 color: rgb($grey_blue_vibrant);
             }
@@ -104,12 +89,7 @@
             background-color: transparent;
             border-radius: 0.2rem;
             border: 0.1rem solid rgb($red_brown);
-            color: rgba($red_brown_dark, 1);
             width: 100%;
-
-            & option {
-                color: rgba($red_brown_dark, 1);
-            }
         }
 
         & .genderAndVersion {

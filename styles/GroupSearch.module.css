@@ -34,7 +34,6 @@
             background-color: inherit;
             border: 0.1rem solid rgba($red_brown_dark, 1);
             border-radius: $smallBorderRadius;
-            color: rgba($red_brown_dark, 1);
             outline: none;
             margin-bottom: 2rem;
         }
@@ -47,7 +46,6 @@
             margin-top: 1rem;
             
             & label {
-                color: rgb($red_brown);
                 font-weight: 600;
             }
 
@@ -59,17 +57,9 @@
         }
 
         & .groupCreation {
+            @mixin brownButton;
             align-self: end;
             margin-bottom: 1rem;
-            background-color: rgb($red_brown);
-            border: none;
-            border-radius: $smallBorderRadius;
-            color: rgb($light_grey);
-            width: max-content;
-            height: max-content;
-            padding: 0.5rem;
-
-            @mixin fadeOnHover;
         }
     }
 
@@ -89,7 +79,6 @@
         z-index: 10;
         
         & h6 {
-            color: rgb($red_brown);
             cursor: pointer;
         }
 
@@ -163,7 +152,9 @@
 
             &:hover {
                 background-color: rgb($red_brown);
-                color: rgb($light_grey);
+                & .name, & .summary, & :not(.joined):not(.joinBtn) {
+                    color: rgb($light_grey);
+                }
             }
             
             & .name {
@@ -200,11 +191,8 @@
                 background-color: rgb($moss_green_vibrant);
                 border: none;
                 border-radius: $smallBorderRadius;
-                color: rgb($red_brown);
                 padding: 0.2rem 0.5rem;
                 font-weight: bold;
-
-                @mixin fadeOnHover;
             }
             
             &.active {
@@ -215,12 +203,12 @@
                 & .summary {
                     -webkit-line-clamp: unset;
                 }
-                & .name {
-                    /* align-self: start; */
+                /* & .name {
+                    
                 }
                 & .resultRightChunk {
-                    /* align-self: start; */
-                }
+                    
+                } */
                 & .joinBtn, & .joined {
                     display: block;
                 }

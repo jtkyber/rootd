@@ -91,6 +91,17 @@ const UserProfile = ({ selectedMember, setSelectedMember }: { selectedMember: IS
         }
     }
 
+    const userHasGroupsThatMemberDoesNot = (): boolean => {
+        const groupCopy = userGroups.filter(g => {
+            const sharedGroupIdArray = memberDetails.sharedGroups.map(g => g._id.toString())
+            return (
+                g?._id && !sharedGroupIdArray?.includes(g._id.toString()) 
+                && (!g.isPrivate || (g.isPrivate && g.groupAdmin === user.username))
+            ) ? true : false
+        })
+        return groupCopy?.length > 0
+    }
+
     return (
         <div className={styles.container}>
             {
@@ -121,7 +132,7 @@ const UserProfile = ({ selectedMember, setSelectedMember }: { selectedMember: IS
 
                             <div className={styles.bottomSection}>
                                 <button onClick={sendDm} className={styles.sendDmBtn}>Send direct message</button>
-                                <button onClick={() => setInviting(true)} className={styles.inviteToGroup}>Invite to group</button>
+                                <button onClick={() => userHasGroupsThatMemberDoesNot() ? setInviting(true) : null} className={styles.inviteToGroup}>Invite to group</button>
                             </div>
                         </div>
                         : 

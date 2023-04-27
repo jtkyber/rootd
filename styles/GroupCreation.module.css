@@ -31,21 +31,19 @@
             flex-flow: column nowrap;
             justify-content: center;
             gap: 0.5rem;
-            border-right: 2px solid rgba($red_brown_dark, 1);
+            border-right: 2px solid rgba($red_brown_dark, 0.6);
 
             & button {
                 background-color: transparent;
                 border: none;
                 text-align: left;
                 color: rgb($grey_blue_vibrant);
-                font-weight: 400;
+                font-weight: 600;
 
                 &:disabled {
                     color: rgba($red_brown_dark, 0.6);
                     pointer-events: none;
                 }
-
-                @mixin fadeOnHover;
             }
         }
 
@@ -62,21 +60,18 @@
                 justify-self: end;
                 background-color: transparent;
                 border: none;
-                color: black;
                 font-weight: 600;
-
-                @mixin fadeOnHover;
             }
 
             & .sectionTitle {
-
                 margin-bottom: 1rem;
-                color: rgba($red_brown_dark, 1);
+                font-weight: 400;
+                color: rgb($grey_blue_vibrant);
             }
 
             & .errorMessage {
                 color: rgb($deep_red);
-                font-weight: 400;
+                font-weight: 600;
             }
 
             & .sectionContent {
@@ -90,8 +85,9 @@
                 gap: 1rem;
 
                 & .instructions {
-                    color: rgb($moss_green);
                     text-align: center;
+                    font-weight: 600;
+                    font-size: 0.9rem;
                 }
 
                 & .tagContainer {
@@ -114,7 +110,6 @@
                             border: 1px solid rgba($red_brown_dark, 1);
                             border-radius: $smallBorderRadius;
                             overflow: hidden;
-                            color: rgba($red_brown_dark, 1);
 
                             &::after {
                                 position: absolute;
@@ -166,7 +161,6 @@
                             border-right: none;
                             border-top-left-radius: 50%;
                             border-bottom-left-radius: 50%;
-                            color: rgba($red_brown_dark, 1);
                             font-size: larger;
                             font-weight: 400;
                             transition: opacity linear .1s;
@@ -196,7 +190,6 @@
                     background-color:transparent;
                     border: 1px solid rgba($red_brown_dark, 1);
                     border-radius: $smallBorderRadius;
-                    color: rgba($red_brown_dark, 1);
                     outline: none;
                     box-shadow: $shadow;
 
@@ -214,7 +207,6 @@
                     resize: none;
                     width: 80%;
                     height: 6rem;
-                    color: rgba($red_brown_dark, 1);
                     box-shadow: $shadow;
 
                     &:focus {
@@ -237,22 +229,14 @@
                     }
 
                     & label {
-                        color: rgba($red_brown_dark, 1);
                         font-weight: 600;
                     }
                 }
             }
 
             & .nextBtn {
-                background-color: rgb($red_brown);
-                border: none;
-                border-radius: $smallBorderRadius;
-                color: rgb($light_grey);
-                width: 4rem;
-                height: 2rem;
+                @mixin brownButton;
                 justify-self: end;
-
-                @mixin fadeOnHover;
             }
         }
     }

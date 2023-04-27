@@ -27,12 +27,14 @@
 
         & .title {
             width: 100%;
+            height: max-content;
             text-align: center;
             color: rgb($moss_green_vibrant);
             font-weight: 600;
             box-shadow: inset 0 0 0.3rem 0 black;
             border-radius: $smallBorderRadius;
             padding: 0.3rem 0.5rem;
+            font-family: HeadingFont;
         }
 
         & .singleGroup, & .singleDmName {
@@ -59,6 +61,7 @@
                 width: 100%;
                 word-wrap: break-word;
                 font-weight: 600;
+                font-size: large;
                 color: rgba($red_brown_dark, 1);
             }
 
@@ -97,8 +100,6 @@
             padding: 0.5rem;
             justify-self: center;
             margin-top: 1rem;
-
-            @mixin fadeOnHover;
         }
     }
 
@@ -119,7 +120,7 @@
             justify-content: center;
             align-items: center;
             font-weight: 400;
-            color: rgba($red_brown_dark, 1);
+            font-size: xx-large;
             z-index: 10;
         }
         
@@ -138,7 +139,6 @@
             gap: 1rem;
             padding: 1rem;
             padding-top: 0.5rem;
-            color: rgb($red_brown);
             z-index: 100;
             transform: translate(100%);
             transition: transform linear 0.2s, box-shadow 0s 0.2s;
@@ -159,9 +159,7 @@
                 & .muteGroup {
                     background-color: transparent;
                     border: none;
-                    color: rgb($red_brown);
                     padding: 0.3rem;
-                    @mixin fadeOnHover;
                     
                     &.muted {
                         & svg {
@@ -233,18 +231,13 @@
                             display: flex;
                         }
 
-                        & > button {
+                        & button {
                             width: 100%;
                             padding: 0.5rem 0.5rem;
                             border: none;
-                            color: rgb($red_brown_dark);
                             border-bottom: 1px solid silver;
                             background-color: transparent;
-                            transition: color 0.1s linear;
-                            
-                            &:hover {
-                                @mixin fadeOnHover;
-                            }
+                            font-weight: 500;
 
                             &.removeGroup {
                                 color: rgb($deep_red);
@@ -269,13 +262,15 @@
                 margin-bottom: 1rem;
 
                 & .name {
-                    font-weight: 600;
+                    font-weight: 400;
+                    font-size: xx-large;
                     text-align: center;
                     width: 100%;
                 }
     
                 & .summary {
-                    font-weight: 400;
+                    font-size: normal;
+                    font-weight: 600;
                 }
             }
 
@@ -299,7 +294,7 @@
                     width: 100%;
 
                     & .member {
-                        font-weight: 400;
+                        font-weight: 600;
 
                         &.inGroup {
                             color: rgb($moss_green_vibrant);
@@ -324,21 +319,11 @@
                     font-weight: 600;
                     color: rgb($grey_blue);
                     
-                    @mixin fadeOnHover;
-
                     &.showPasswordBtn {
                         color: rgb($grey_blue);
-                        font-weight: 400;
+                        font-weight: 600;
                         font-size: small;
                     }
-
-                    /* &.leaveGroup {
-                        color: rgb($grey_blue);
-                    }
-        
-                    &.removeGroup {
-                        color: rgb($deep_red);
-                    } */
                 }
 
                 & .passwordContainer {
@@ -368,7 +353,6 @@
                     }
 
                     & .password {
-                        color: rgb($red_brown_dark);
                         font-weight: 600;
                     }
                     
@@ -390,6 +374,11 @@
                 background-color: transparent;
                 border: none;
                 margin-top: 0.7rem;
+                cursor: default;
+
+                &:hover {
+                    opacity: 1;
+                }
                 
                 & svg {
                     margin-right: -0.2rem;
@@ -398,30 +387,25 @@
                     transform-origin: 0 0;
                     transition: transform 0.2s linear, opacity 0.15s linear;
                     overflow: visible;
+                    cursor: pointer;
                     
                     filter: url(#inset-shadow);
 
-                    & path:nth-child(4) {
-                        transition: fill-opacity 0.15s linear;
+                    &:hover text {
+                        fill-opacity: 0.6;
                     }
 
-                    &:hover path:nth-child(4) {
-                        fill-opacity: 0.6;
+                    & text {
+                        transition: fill-opacity 0.15s linear;
+                        fill: rgb($red_brown);
+                        font-size: 5rem;
+                        font-weight: 600;
                     }
                     
                     & path {
                         transform-origin: 0 50%;
+                        fill: rgb($light_grey);
                         transition: transform 0.2s linear;
-                        
-                        &:nth-child(2) {
-                            fill: rgb($light_grey);
-                        }
-                        &:nth-child(3) {
-                            fill: rgb($light_grey);
-                        }
-                        &:nth-child(4) {
-                            fill: rgb($grey_blue);
-                        }
                     }
                 }
 
@@ -435,13 +419,14 @@
                         }
                         
                         & path {
-                            fill: rgb($grey_blue);
-                            &:nth-child(2) {
+                            fill: rgb($red_brown);
+                            &:nth-child(1) {
                                 transform: scaleY(0.5) translate(-30px);
                             }
-                            &:nth-child(4) {
-                                fill: transparent;
-                            }
+                        }
+
+                        & text {
+                            fill: transparent;
                         }
                     }
                 }

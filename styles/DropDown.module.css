@@ -16,7 +16,6 @@
         border: none;
         z-index: 1;
         border-radius: $smallBorderRadius;
-        color: rgb($red_brown);
         font-size: large;
     }
     
@@ -72,7 +71,6 @@
                 width: 100%;
                 text-align: center;
                 cursor: pointer;
-                color: rgb($red_brown);
                 padding: 0.5rem 0;
                 margin-left: $miniScrollbarWidth;
 

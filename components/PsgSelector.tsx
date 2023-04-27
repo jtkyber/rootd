@@ -118,7 +118,7 @@ const PsgSelector = ({ textArea, setAddingPsg, psgSelectorRef }) => {
     return (
         <form ref={psgSelectorRef} id='psgSelector' className={styles.container} onSubmit={handleSubmit}>
             <div className={styles.topDiv}>
-                <h5 className={styles.title}>{ starting ? 'Select Starting Verse' : 'Select Ending Verse' }</h5>
+                <h4 className={styles.title}>{ starting ? 'Select Starting Verse' : 'Select Ending Verse' }</h4>
                 <button className={styles.exit} onClick={() => setAddingPsg(false)} type='button'>X</button>
             </div>
             <div className={styles.optionContainer}>

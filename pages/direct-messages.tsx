@@ -16,6 +16,7 @@ import stylesChat from '../styles/ChatArea.module.css'
 import { useOnScreen } from '../utils/hooks'
 import { PresenceChannel } from 'pusher-js'
 import { ISelectedDmPerson, setSelectedDmPerson } from '../redux/appSlice'
+import getInitials from '../utils/getInitials'
 
 let scrollElementId: string
 
@@ -195,15 +196,6 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
     }
   }
 
-  const getInitials = (uN: string): string => {
-    let initials: string
-    const usernameArray = uN.split(' ')
-
-    if (usernameArray.length > 1) initials = usernameArray[0][0] + usernameArray[1][0]
-    else initials = uN[0] + uN[1]
-    return initials.toUpperCase()
-}
-
 const postMsgLike = async (msg: IDm) => {
   const res = await axios.put('/api/addDmLike', {
       liker: user.username,
@@ -276,6 +268,7 @@ function handleSendMsgClick () {
                                 <div key={j} id={msg?._id?.toString()} 
                                     className={`
                                     ${stylesChat.msg} 
+                                    ${stylesChat.dm} 
                                     ${msg.author === user?.username ? stylesChat.userMsg : stylesChat.msgFromOther}
                                     ${(i+1 === row1.length) && (j+1 === row2.length) ? stylesChat.earliestMsg : null}
                                     `}

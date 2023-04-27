@@ -98,12 +98,10 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         setWindowWidth(window.innerWidth)
         setWindowHeight(window.innerHeight)
         document.addEventListener('click', handlePageClick)
-        window.addEventListener('resize', handleWindowResize)
         if (data) refetch()
         
         return () => {
             document.removeEventListener('click', handlePageClick)
-            window.removeEventListener('resize', handleWindowResize)
         }
     }, [])
 
@@ -112,7 +110,12 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         scrollToMessage(user.lastSeenMsgs, selectedGroup._id)
      }, [selectedGroup, status])
     
-    useEffect(() => setSvgPosition(), [addingPsg])
+    useEffect(() => {
+        setSvgPosition()
+        window.addEventListener('resize', handleWindowResize)
+
+        return () => window.removeEventListener('resize', handleWindowResize)
+    }, [addingPsg])
     
     useEffect(() => {
         const now = Date.now()

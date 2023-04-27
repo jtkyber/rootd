@@ -24,7 +24,7 @@
             pointer-events: none;
             top: 0;
             left: 0;
-            z-index: 1000;
+            z-index: 100;
 
             & polygon {
                 fill: rgba(0, 0, 0, 0.25);
@@ -79,9 +79,16 @@
                         }
                     }
 
+                    
                     & h5 {
-                        font-weight: bold;
-                        color: rgb($red_brown);
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                    }
+                }
+                
+                &.dm {
+                    & .authorImg {
+                        cursor: default;
                     }
                 }
                 
@@ -143,16 +150,16 @@
 
                         & .msgLikeNumber {
                             justify-self: flex-end;
-                            font-weight: 400;
-                            color: rgb($red_brown_dark);
+                            font-weight: 500;
+                            font-size: large;
+                            padding-bottom: 0.3rem;
                         }
                     }
                     
                 }
 
                 & .msgDate {
-                    font-weight: lighter;
-                    color: rgb($red_brown);
+                    font-weight: normal;
                 }
 
                 & .msgLikeNames {
@@ -164,7 +171,6 @@
 
                     & .likeName {
                         position: relative;
-                        color: rgba(0, 0, 0, 0.8);
                         font-weight: 600;
                         border-radius: 0.3rem;
                         padding: 0.15rem 0.3rem;
@@ -212,8 +218,6 @@
                     & .msgContent {
                         border-color: rgb($msg_color_user);
                         background-color: rgb($msg_color_not_user);
-                        color: rgb($red_brown_dark);
-
                     }
 
                     & .msgAuthor > h5 {
@@ -224,18 +228,6 @@
                 &.earliestMsg {
                     color: inherit
                 }
-            }
-
-            & button {
-                background-color: rgb($red_brown);
-                border: none;
-                border-radius: $smallBorderRadius;
-                color: rgb($light_grey);
-                width: max-content;
-                height: 1.5rem;
-                padding: 0 0.5rem;
-
-                @mixin fadeOnHover;
             }
 
             & .loadingMsgs {
@@ -264,9 +256,6 @@
             height: max-content;
             background-color: transparent;
             border: none;
-            border-radius: $smallBorderRadius;
-            /* color: rgb($grey_blue_vibrant); */
-            /* padding: 0.3rem 0.2rem 0.2rem 0.3rem; */
             justify-self: end;
 
             & svg {
@@ -277,8 +266,6 @@
                     fill: rgba($grey_blue_vibrant, 0.7);
                 }
             }
-
-            @mixin fadeOnHover;
         }
 
         & .input {
@@ -290,7 +277,6 @@
             border: none;
             border-radius: $smallBorderRadius;
             outline: 1px solid rgb($red_brown);
-            color: black;
             @mixin hideScrollbar;
 
             &:focus {
@@ -304,16 +290,8 @@
         }
 
         & .sendMsgBtn {
-            width: max-content;
-            height: max-content;
-            background-color: rgb($red_brown);
-            border: none;
-            border-radius: $smallBorderRadius;
-            color: rgb($light_grey);
-            padding: 0.5rem;
+            @mixin brownButton;
             justify-self: start;
-
-            @mixin fadeOnHover;
         }
     }
 }

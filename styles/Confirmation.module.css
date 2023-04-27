@@ -56,29 +56,15 @@
         }
 
         & .cancelBtn {
+            @mixin brownButton;
             grid-area: cancelBtn;
-            background-color: rgb($red_brown);
-            border: none;
-            border-radius: $smallBorderRadius;
-            color: rgb($light_grey);
-            width: 4rem;
-            height: 2rem;
             justify-self: start;
-
-            @mixin fadeOnHover;
         }
 
         & .joinBtn {
+            @mixin brownButton;
             grid-area: joinBtn;
-            background-color: rgb($red_brown);
-            border: none;
-            border-radius: $smallBorderRadius;
-            color: rgb($light_grey);
-            width: 4rem;
-            height: 2rem;
             justify-self: end;
-
-            @mixin fadeOnHover;
         }
     }
 }

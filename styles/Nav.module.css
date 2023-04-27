@@ -70,11 +70,9 @@
             height: 100%;
             cursor: pointer;
             color: rgb($light_grey);
-            @mixin fadeOnHover;
 
             & .findGroupText {
                 background-color: rgba($light_grey, 0.8);
-                color: rgb($red_brown);
                 padding: 0.3rem 0.5rem;
                 border-radius: $largeBorderRadius;
                 font-weight: 600;
@@ -130,10 +128,10 @@
 
             & .unreadCount {
                 position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(calc(-50% + 0.6rem), calc(-50% - 0.7rem));
+                top: 0.1rem;
+                right: 0.3rem;
                 color: rgb($light_grey);
+                font-size: 0.9rem;
             }
 
             & .notificationDropdown {
@@ -160,8 +158,12 @@
                     text-align: center;
                     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
                     padding: 0.7rem;
-                    color: rgb($red_brown);
                     cursor: pointer;
+
+                    & h5 {
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                    }
 
                     &.read {
                         opacity: 0.6;
@@ -194,12 +196,9 @@
                         }
 
                         & button {
+                            @mixin brownButton;
+                            width: 100%;
                             padding: 0.3rem 0.5rem;
-                            border: none;
-                            border-radius: $smallBorderRadius;
-                            background-color: rgb($red_brown);
-                            color: rgb($light_grey);
-                            @mixin fadeOnHover;
                             
                             &.rejectBtn {
                                 grid-area: reject;
@@ -256,8 +255,8 @@
                     text-align: center;
                     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
                     padding: 0.5rem;
-                    color: rgb($red_brown);
                     cursor: pointer;
+                    font-size: 0.9rem;
                     font-weight: 600;
 
                     @mixin fadeOnHover;

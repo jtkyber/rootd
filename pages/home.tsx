@@ -44,7 +44,7 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
         session ?
         <>
           <div className={styles.userGroups}>
-            <h4 className={styles.title}>My Groups</h4>
+            <h3 className={styles.title}>My Groups</h3>
             {
               userGroups.length ?
                 userGroups?.map((group, i) => (
