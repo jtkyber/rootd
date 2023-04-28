@@ -152,7 +152,7 @@
 
             &:hover {
                 background-color: rgb($red_brown);
-                & .name, & .summary, & :not(.joined):not(.joinBtn) {
+                & .name, & .description, & :not(.joined):not(.joinBtn) {
                     color: rgb($light_grey);
                 }
             }
@@ -162,7 +162,7 @@
                 pointer-events: none;
             }
             
-            & .summary {
+            & .description {
                 justify-self: start;
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -200,7 +200,7 @@
                 min-height: 6rem;
                 padding: 1rem 1rem;
 
-                & .summary {
+                & .description {
                     -webkit-line-clamp: unset;
                 }
                 /* & .name {

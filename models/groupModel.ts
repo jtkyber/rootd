@@ -20,7 +20,7 @@ export interface IGroup {
     memberCount: number
     messages?: IMessage[]
     isPrivate: boolean
-    summary: string
+    description: string
     tags: string[]
     characters?: string[]
     books: string[]
@@ -74,7 +74,7 @@ const groupSchema = new Schema<IGroup>({
         type: Boolean,
         required: true
     },
-    summary: {
+    description: {
         type: String,
         required: true
     },
@@ -113,6 +113,6 @@ const groupSchema = new Schema<IGroup>({
     }
 })
 
-const Group = models.Group7 || model('Group7', groupSchema, 'groups')
+const Group = models.Group8 || model('Group8', groupSchema, 'groups')
 
 export default Group

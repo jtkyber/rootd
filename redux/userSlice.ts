@@ -11,7 +11,9 @@ export interface IUserState {
     dmPeople: IDm[]
     strikes: any[]
     directMsgs: any[]
-    lastSeenMsgs: ILastSeenMsg[]
+    lastSeenMsgs: ILastSeenMsg[],
+    currentDmPerson: string | null
+    isAdmin: boolean
 }
 
 const initialState: IUserState = {
@@ -23,7 +25,9 @@ const initialState: IUserState = {
     dmPeople: [],
     strikes: [],
     directMsgs: [],
-    lastSeenMsgs: []
+    lastSeenMsgs: [],
+    currentDmPerson: null,
+    isAdmin: false
 }
 
 export const userSlice = createSlice({

@@ -16,7 +16,7 @@ interface IParams {
 
 interface IValues {
     name: string
-    summary: string
+    description: string
     books: string[]
     characters: string[]
     tags: string[]
@@ -30,14 +30,14 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
 
     const router = useRouter()
 
-    const sectionNames = ["Name", "Summary", "Books", "Characters", "Tags", "Private"]
+    const sectionNames = ["Name", "Description", "Books", "Characters", "Tags", "Private"]
 
     const user: IUserState = useAppSelector(state => state.user)
 
     const [sectionIndex, setSectionIndex] = useState(0)
     const [errMsg, setErrMsg] = useState('')
     const [currentTagValue, setCurrentTagValue] = useState('')
-    const [values, setValues] = useState<IValues>({ name: "", summary: "", books: [], characters: [], tags: [], private: false })
+    const [values, setValues] = useState<IValues>({ name: "", description: "", books: [], characters: [], tags: [], private: false })
 
     useEffect(() => {
         for (let i = 0; i < progressMapRef.current.children.length; i++) {
@@ -77,7 +77,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                 values.name.length ? goToNextSection(1) : setErrMsg('Please include a group name')
                 break
             case 1:
-                values.summary.length >= 15 ? goToNextSection(2) : setErrMsg('Please write a longer summary')
+                values.description.length >= 15 ? goToNextSection(2) : setErrMsg('Please write a longer description')
                 break
             case 2:
                 values.books.length ? goToNextSection(3) : setErrMsg('Please include at least one book')
@@ -86,11 +86,29 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                 values.tags.length > 1 ? goToNextSection(5) : setErrMsg('Please include at least two tags')
                 break
             case 5:
-                addNewGroup()
+                if (user?.isAdmin) addNewGroup()
+                else {
+                    sendGroupCreationRequest()
+                }
                 break
             default: 
                 goToNextSection(sectionIndex + 1)
                 break
+        }
+    }
+
+    const sendGroupCreationRequest = async () => {
+        const res = await axios.post('/api/admin/groupCreationRequest', {
+            username: user.username,
+            name: values.name,
+            description: values.description,
+            books: values.books,
+            characters: values.characters,
+            tags: values.tags,
+            isPrivate: values.private
+        })
+        if (res?.data) {
+            console.log('Group creation request has been sent')
         }
     }
 
@@ -113,7 +131,7 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
             const res = await axios.post('/api/createGroup', {
                 username: user.username,
                 name: values.name,
-                summary: values.summary,
+                description: values.description,
                 books: values.books,
                 characters: values.characters,
                 tags: values.tags,
@@ -170,9 +188,9 @@ const GroupCreation = ({setCreatingGroup, userId} : IParams) => {
                             <>
                                 <h5 className={styles.instructions}>Explain what your group is about</h5>
                                 <textarea 
-                                    className={styles.summary}
-                                    onChange={(e) => setValues({...values, summary: e.target.value})} 
-                                    value={values.summary} 
+                                    className={styles.description}
+                                    onChange={(e) => setValues({...values, description: e.target.value})} 
+                                    value={values.description} 
                                 />
                             </>
                         : sectionIndex === 2 

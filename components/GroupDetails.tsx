@@ -147,7 +147,7 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
                     </div>
                     <div className={styles.sectionOne}>
                         <h2 className={styles.name}>{selectedGroup.name}</h2>
-                        <h5 className={styles.summary}>{selectedGroup.summary}</h5>
+                        <h5 className={styles.description}>{selectedGroup.description}</h5>
                     </div>
 
                     <div className={styles.sectionTwo}>

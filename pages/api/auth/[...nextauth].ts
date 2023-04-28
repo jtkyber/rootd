@@ -27,7 +27,7 @@ export default NextAuth({
                     await connectMongo()
                     // await connectMongo().catch(error => { error: 'Connection Failed'})
     
-                    const user = await User.findOne({ email: credentials?.email }, { username: 1, email: 1, password: 1 })
+                    const user = await User.findOne({ email: credentials?.email }, { username: 1, email: 1, password: 1, isAdmin: 1 })
                     if (!user) throw new Error('No user found with email')
     
                     const pwMatch = await bcrypt.compare(credentials?.password, user.password);
@@ -47,7 +47,11 @@ export default NextAuth({
             return token
         },
         session: async ({ session, token }: any) => {
-            session.user = token.user
+            const userCopy = {...token.user}
+            delete userCopy.username
+            delete userCopy.password
+            
+            session.user = userCopy
             return session
         },
     },

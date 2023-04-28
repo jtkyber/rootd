@@ -50,6 +50,7 @@ export interface IUser {
     currentGroup: string | null
     lastSeenMsgs?: ILastSeenMsg[]
     currentDmPerson: string | null
+    isAdmin: boolean
 }
 
 export interface ILastSeenMsg {
@@ -158,9 +159,13 @@ const userSchema = new Schema<IUser>({
     currentDmPerson: {
         type: String || null,
         default: null
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 })
 
-const User = models.User29 || model('User29', userSchema, 'users')
+const User = models.User30 || model('User30', userSchema, 'users')
 
 export default User

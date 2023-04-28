@@ -69,10 +69,6 @@ const groupSearch = () => {
     fetchNextPage()
   }, [isVisible, status])
 
-  useEffect(() => {
-    // if (!isFetching) sortGroups()
-  }, [isFetching])
-
   async function fetchGroups({ pageParam = 0 }) {
     try {
       const res = await axios.get(`/api/findGroups?keyword=${options.keyword}&characters=${JSON.stringify(options.characters)}&books=${JSON.stringify(options.books)}&includePrivate=${options.includePrivate}&sortType=${currentSort.name}&sortDir=${currentSort.dir}&cursor=${pageParam}&limit=10`)
@@ -201,7 +197,7 @@ const groupSearch = () => {
     
             <div className={styles.sortContainer}>
               <h6 id='name' onClick={(e) => handleSortClick(e)} className={styles.nameSort}>Name {currentSort.name === 'name' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
-              <h6 className={styles.summarySort}>Summary</h6>
+              <h6 className={styles.summarySort}>Description</h6>
               <div className={styles.sortRightChunk}>
                 <h6 id='members' onClick={(e) => handleSortClick(e)} className={styles.memberSort}>Members {currentSort.name === 'members' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
                 <h6 id='lastActive' onClick={(e) => handleSortClick(e)} className={styles.lastActiveSort}>Last Active {currentSort.name === 'lastActive' && currentSort.dir === 'up' ? '▲' : '▼'}</h6>
@@ -219,7 +215,7 @@ const groupSearch = () => {
                           ? <h5 className={styles.joined}>Joined</h5>
                           : <button onClick={() => group.isPrivate ? setActivePrivateGroup(group) : handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
                         }
-                        <p className={styles.summary}>{group.summary}</p>
+                        <p className={styles.description}>{group.description}</p>
                         <div className={styles.resultRightChunk}>
                           <h5 className={styles.memberCount}>{group.members.length}</h5>
                           <h5 className={styles.lastActive}>{getTimeDiff(group.lastActive)}</h5>

@@ -12,7 +12,7 @@ export const initialSelectedGroupState = {
     members: [],
     memberCount: 0,
     isPrivate: false,
-    summary: '',
+    description: '',
     tags: [],
     characters: [],
     books: [],

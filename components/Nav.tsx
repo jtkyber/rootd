@@ -11,10 +11,13 @@ import DmIcon from './DmIcon'
 import { IUserState } from '../redux/userSlice'
 import axios from 'axios'
 import HomeIcon from './HomeIcon'
+import { useSession } from 'next-auth/react'
 
 const Nav = ({ channels }) => {
     const router = useRouter()
     const dispatch = useAppDispatch()
+
+    const { data: session }: any = useSession()
 
     const [hasNewDms, setHasNewDms] = useState(false)
 
@@ -71,30 +74,31 @@ const Nav = ({ channels }) => {
                     : router.pathname === '/login' || router.pathname === '/register'
                         ? <Link href='/'>Back</Link>
                         : router.pathname === '/home'
-                            ? 
-                            <>
-                                <Link href='/group-search'><h4 className={styles.findGroupText}>Find Group</h4></Link>
+                            ? <>
+                                <Link href='/group-search'><h5 className={styles.findGroupBtn}>Find Group</h5></Link>
+                                { session?.user?.isAdmin ? <Link href='/admin'><h5 className={styles.adminToolsBtn}>Admin Tools</h5></Link> : null }
                                 <Link href='/direct-messages'><DmIcon hasNewDms={hasNewDms} /></Link>
                                 <NotificationCenter />
                                 <Settings />
                             </>
                             : router.pathname === '/direct-messages'
-                                ? 
-                                <>
-                                    {/* <Link href='/group-search'><h4 className={styles.findGroupText}>Find Group</h4></Link> */}
+                                ? <>
                                     <Link href='/home'><HomeIcon /></Link>
                                     <NotificationCenter />
                                     <Settings />
                                 </>
                                 : router.pathname === '/group-search'
-                                    ?
-                                    <>
+                                    ? <>
                                         <Link href='/home'><HomeIcon /></Link>
                                         <Link href='/direct-messages'><DmIcon hasNewDms={hasNewDms} /></Link>
                                         <NotificationCenter />
                                         <Settings />
                                     </>
-                                    : null
+                                    : router.pathname === '/admin'
+                                        ? <>
+                                            <Link href='/home'>Back</Link>
+                                        </>
+                                        : null
                 }
             </div>
         </div>

@@ -78,12 +78,6 @@ export async function getServerSideProps({req}) {
     }
   }
 
-  // let userGroups: any = []
-  
-  // if (session?.user?.groups) {
-  //   userGroups = await axios.get(`${process.env.CURRENT_BASE_URL}/api/getUserGroups?groupIds=${JSON.stringify(session.user.groups)}`)
-  // }
-
   return {
     props: { 
       session

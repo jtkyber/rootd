@@ -37,7 +37,7 @@ export default async function handler(
                 members: members,
                 memberCount: members.length,
                 isPrivate: isPrivate,
-                summary: rw({ exactly: 20, join: ' ' }),
+                description: rw({ exactly: 20, join: ' ' }),
                 tags: rw(5),
                 characters: newCharacters,
                 books: newBooks,
