@@ -63,12 +63,11 @@
                 }
             }
 
-            & button {
-                width: 1.5rem;
-                aspect-ratio: 1/1;
-                border-radius: 50%;
-                border: none;
-                color: rgb($light_grey);
+            & img {
+                width: 1.2rem;
+                height: auto;
+                cursor: pointer;
+                @mixin fadeOnHover;
             }
         }
 

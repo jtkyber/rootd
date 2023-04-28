@@ -9,6 +9,8 @@ import { IUserState, setUser } from '../redux/userSlice'
 import getUser from '../utils/getUser'
 import { IGroupReport, IGrpCreationReq, IUserReport } from '../models/adminModel'
 import { getFormattedDateFromISO } from '../utils/dates'
+import refreshIcon from '../public/refresh.svg'
+import Image from 'next/image'
 
 interface IAdminResultPartial extends Partial<IGrpCreationReq>, Partial<IUserReport>, Partial<IGroupReport> {}
 
@@ -122,7 +124,7 @@ const admin = () => {
                             <h5 className={`${styles.resultTypeBtn} ${resultType === 'groupCreationRequests' ? styles.active : ''}`} id='groupCreationRequests' onClick={(e) => setResultType((e.target as HTMLButtonElement).id)}>New Groups</h5>
                             <h5 className={`${styles.resultTypeBtn} ${resultType === 'userReports' ? styles.active : ''}`} id='userReports' onClick={(e) => setResultType((e.target as HTMLButtonElement).id)}>User Reports</h5>
                             <h5 className={`${styles.resultTypeBtn} ${resultType === 'groupReports' ? styles.active : ''}`} id='groupReports' onClick={(e) => setResultType((e.target as HTMLButtonElement).id)}>Group Reports</h5>
-                            <button onClick={refetch}>R</button>
+                            <Image onClick={refetch} src={refreshIcon} alt='refresh icon'></Image>
                         </div>
                         <div className={styles.results}>
                             {
