@@ -48,12 +48,46 @@ const admin = () => {
     async function fetchResults({ pageParam = 0 }) {
         if (!user?._id) return
         try {
-            const res = await axios.get(`/api/fetchAdminNotificationResults?userId=${user._id}&resultType=${resultType}&cursor=${pageParam}&limit=10`)
-            console.log(res.data)
+            const res = await axios.get(`/api/admin/fetchAdminNotificationResults?userId=${user._id}&resultType=${resultType}&cursor=${pageParam}&limit=10`)
             return res.data
         } catch (err) {
             console.log(err)
         }
+    }
+
+    const onAcceptClick = async () => {
+        if (!session?.user?.isAdmin) return
+        const res1 = await axios.post('/api/createGroup', {
+            userId: user._id,
+            groupId: selectedResult.groupId,
+            groupAdmin: selectedResult.groupAdmin,
+            groupAdminId: selectedResult.groupAdminId,
+            name: selectedResult.name,
+            description: selectedResult.description,
+            books: selectedResult.books,
+            characters: selectedResult.characters,
+            tags: selectedResult.tags,
+            isPrivate: selectedResult.isPrivate
+        })
+        
+        if (res1?.data?._id) {
+            const res2 = await axios.put('/api/admin/removeAdminNotification', {
+                userId: user._id,
+                notifId: selectedResult._id,
+                resultType: resultType
+            })
+
+            if (res2.data) {
+                await axios.post('/api/postNotification', {
+                    userId: selectedResult.groupAdminId,
+                    notificationType: 'group-approved',
+                    groupId: selectedResult.groupId,
+                    groupName: selectedResult.name
+                })
+                refetch()
+            }
+        }
+
     }
 
     const constructNotification = (notif: IAdminResultPartial): any => {
@@ -95,7 +129,7 @@ const admin = () => {
                 <h4 className={styles.actionsTitle}>Actions</h4>
                 <div className={styles.actionsTools}>
                     <div className={styles.acceptChunk}>
-                        <button>Accept</button>
+                        <button onClick={onAcceptClick}>Accept</button>
                     </div>
                     <div className={styles.rejectChunk}>
                     {
@@ -126,20 +160,22 @@ const admin = () => {
                             <h5 className={`${styles.resultTypeBtn} ${resultType === 'groupReports' ? styles.active : ''}`} id='groupReports' onClick={(e) => setResultType((e.target as HTMLButtonElement).id)}>Group Reports</h5>
                             <Image onClick={refetch} src={refreshIcon} alt='refresh icon'></Image>
                         </div>
-                        <div className={styles.results}>
-                            {
-                                data?.pages?.map((page, i) => (
-                                    <Fragment key={i}>
-                                        {
-                                            page?.data?.map((notif, j) => {
-                                                return <div onClick={() => setSelectedResult(notif)} className={`${styles.result} ${notif._id === selectedResult._id ? styles.active : null}`} key={j}>
-                                                    {constructNotification(notif)}
-                                                </div>
-                                            })
-                                        }
-                                    </Fragment>
-                                ))
-                            }
+                        <div className={styles.resultsContainer}>
+                            <div className={styles.results}>
+                                {
+                                    data?.pages?.map((page, i) => (
+                                        <Fragment key={i}>
+                                            {
+                                                page?.data?.map((notif, j) => {
+                                                    return <div onClick={() => setSelectedResult(notif)} className={`${styles.result} ${notif._id === selectedResult._id ? styles.active : null}`} key={j}>
+                                                        {constructNotification(notif)}
+                                                    </div>
+                                                })
+                                            }
+                                        </Fragment>
+                                    ))
+                                }
+                            </div>
                         </div>
                     </div>
                     <div className={styles.content}>

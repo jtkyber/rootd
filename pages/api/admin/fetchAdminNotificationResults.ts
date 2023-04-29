@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import connectMongo from '../../connectDB'
-import User, { IUser } from '../../models/userModel'
-import Admin from '../../models/adminModel'
+import connectMongo from '../../../connectDB'
+import User, { IUser } from '../../../models/userModel'
+import Admin from '../../../models/adminModel'
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +15,7 @@ export default async function handler(
         const userIsAdmin = isAdmin ? true : false
 
         if (userIsAdmin) {
-            const notifs = await Admin.findOne({ _id: '644aeb0d621ffed2b8dd626c' }, { [`${resultType}`]: 1, _id: 0 }).skip(parseInt(cursor)).limit(parseInt(limit))
+            const notifs = await Admin.findOne({}, { [`${resultType}`]: 1, _id: 0 }).skip(parseInt(cursor)).limit(parseInt(limit))
             res.json({
                 data: notifs.groupCreationRequests,
                 cursor: notifs.groupCreationRequests.length >= parseInt(limit) ? parseInt(cursor) + parseInt(limit) : null

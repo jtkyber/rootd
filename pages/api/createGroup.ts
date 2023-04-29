@@ -25,9 +25,9 @@ export default async function handler(
   ) {
     try {
         await connectMongo()
-        const { username, userId, name, description, books, characters, tags, isPrivate }: any = req.body
+        const { groupId, groupAdmin, userId, name, description, books, characters, tags, isPrivate }: any = req.body
 
-        if (!username) throw new MyError({ msg: 'Not logged in', section: null })
+        if (!groupAdmin) throw new MyError({ msg: 'Not logged in', section: null })
         if (!name.length) throw new MyError({ msg: 'Please include a group name', section: 'Name' })
         if (description.length < 15) throw new MyError({ msg: 'Please write a longer description', section: 'Description' })
         if (!books.length) throw new MyError({ msg: 'Please include at least one book', section: 'Books' })
@@ -35,18 +35,22 @@ export default async function handler(
 
         const isAdmin: IUser | null = await User.findOne({ _id: userId, isAdmin: true })
         const userIsAdmin = isAdmin ? true : false
-
         
         if (!userIsAdmin) {
-            await Admin.updateOne({ _id: '644aeb0d621ffed2b8dd626c' }, {
+            await Admin.updateOne({}, {
                 $push: {
                     groupCreationRequests: {
                         _id: new mongoose.Types.ObjectId,
-                        creatorId: new ObjectId(userId),
+                        groupId: groupId,
                         name: name,
                         description: description,
                         tags: tags,
-                        date: Date.now()
+                        date: Date.now(),
+                        isPrivate: isPrivate,
+                        characters: characters,
+                        books: books,
+                        groupAdmin: groupAdmin,
+                        groupAdminId: userId
                     }
                 }
             }).then(docs => {
@@ -56,7 +60,7 @@ export default async function handler(
             })
         } else {
             await Group.create({
-                _id: new mongoose.Types.ObjectId,
+                _id: groupId,
                 name: name,
                 isPrivate: isPrivate,
                 description: description,
@@ -65,7 +69,7 @@ export default async function handler(
                 books: books,
                 date: Date.now(),
                 lastActive: Date.now(),
-                groupAdmin: username,
+                groupAdmin: groupAdmin,
                 password: new mongoose.Types.ObjectId
             }).then(async docs => {
                 const group = await Group.findById(docs._id, { password: 0})

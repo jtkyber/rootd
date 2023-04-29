@@ -180,6 +180,43 @@ export default async function handler(
                         else res.status(400).end('User has already been invited to that group')
                 })
                 break
+            case 'group-approved':
+                newNotificationObject = {
+                    _id: new mongoose.Types.ObjectId,
+                    content: 'Group approved',
+                    date: Date.now(),
+                    readDate: Date.now(),
+                    notificationType: notificationType,
+                    group: {
+                        id: groupId,
+                        name: groupName
+                    },
+                }
+
+                User.updateOne({ _id: userId },
+                    {
+                        $push: { 
+                            notifications: {
+                                $each: [newNotificationObject],
+                                $position: 0
+                            }
+                        } 
+                    }
+                ).then(async docs => {
+                    if (docs.modifiedCount > 0) {
+                        const pusherRes = await pusher.get({ path: `/channels/${userId}` })
+                        
+                        if (pusherRes.status === 200) {
+                            const body = await pusherRes.json()
+                            if (body?.occupied) {
+                                await pusher.trigger(userId, 'update-notifications', { notificationType: notificationType, notification: JSON.stringify(await getNotifications()) })
+                            }
+                        }
+                        res.json(true)
+                    }
+                    else res.status(400).end('Could not notify user of accepted group')
+                })
+                break
         }
     } catch(err) {
         console.log(err)

@@ -102,6 +102,9 @@ const Layout = (props) => {
             case 'group-invite':
                 notifs = JSON.parse(data.notification)
                 break
+            case 'group-approved':
+                notifs = JSON.parse(data.notification)
+                break
         }
         if (notifs) dispatch(setUser({...user, notifications: notifs}))
     }

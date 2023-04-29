@@ -43,7 +43,8 @@ export const userSlice = createSlice({
             state.dmPeople = action.payload.dmPeople,
             state.strikes = action.payload.strikes,
             state.directMsgs = action.payload.directMsgs,
-            state.lastSeenMsgs = action.payload.lastSeenMsgs
+            state.lastSeenMsgs = action.payload.lastSeenMsgs,
+            state.isAdmin = action.payload.isAdmin
         }
     }
 })

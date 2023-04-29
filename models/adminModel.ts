@@ -2,17 +2,25 @@ import { ObjectId } from "mongodb"
 import mongoose, { Schema, model, models } from "mongoose"
 
 export interface IGrpCreationReq {
-    _id: ObjectId
-    creatorId: ObjectId
-    name: string
-    description: string
-    tags: string[]
-    date: Date
+    _id: ObjectId,
+    groupId: ObjectId,
+    name: string,
+    description: string,
+    tags: string[],
+    date: Date,
+    isPrivate: boolean,
+    characters: string[],
+    books: string[],
+    groupAdmin: string,
+    groupAdminId: ObjectId
 }
 
 const grpCreationReqSchema = new Schema<IGrpCreationReq>({
     _id: mongoose.Schema.Types.ObjectId,
-    creatorId: mongoose.Schema.Types.ObjectId,
+    groupId: {
+        type: mongoose.Schema.Types.ObjectId,
+        unique: true
+    },
     name: {
         type: String,
         required: true
@@ -27,6 +35,26 @@ const grpCreationReqSchema = new Schema<IGrpCreationReq>({
     },
     date: {
         type: Date,
+        required: true
+    },
+    isPrivate: {
+        type: Boolean,
+        required: true
+    },
+    characters: {
+        type: [String],
+        required: true
+    },
+    books: {
+        type: [String],
+        required: true
+    },
+    groupAdmin: {
+        type: String,
+        required: true
+    },
+    groupAdminId: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     }
 })
@@ -153,6 +181,6 @@ const adminSchema = new Schema<IAdmin>({
     }
 })
 
-const Admin = models.Admin3 || model('Admin3', adminSchema, 'admin')
+const Admin = models.Admin11 || model('Admin11', adminSchema, 'admin')
 
 export default Admin

@@ -11,15 +11,15 @@ export default async function handler(
         await connectMongo()
 
         const { userId, userName, groupId, password = null, passwordException = false }: any = req.body
+        console.log(req.body)
 
         const groupTest: IGroup | null = await Group.findById(groupId)
         if (groupTest?.members.includes(userName)) throw new Error('User already in group')
         if (groupTest?.isPrivate && !password && !passwordException) throw new Error('Please enter the group password')
         if (groupTest?.isPrivate && (password !== groupTest?.password?.toString()) && !passwordException) throw new Error('Wrong Password')
-        if (!groupTest?.members?.length) return
 
         const group = await Group.findByIdAndUpdate(groupId, { 
-            $set: { memberCount: groupTest.members.length + 1 },
+            $set: { memberCount: groupTest?.members?.length ? groupTest.members.length + 1 : 1 },
             $push: { members: userName }
         }, { new: true })
 

@@ -9,6 +9,7 @@
     grid-template-areas: 
     "title title"
     "sideBar results";
+    overflow: hidden;
 
     & * {
         font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
@@ -30,10 +31,10 @@
         box-shadow: $sectionShadow;
         z-index: 2;
         background-color: rgb($light_grey);
-        padding: 1rem;
-        display: flex;
-        flex-flow: column nowrap;
-        gap: 1rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: max-content 1fr;
+        overflow: hidden;
 
         & .options {
             width: 100%;
@@ -43,7 +44,7 @@
             flex-flow: row nowrap;
             gap: 0.5rem;
             border-bottom: 1px solid rgb($red_brown_dark);
-            padding-bottom: 1rem;
+            padding: 1rem;
 
             & .resultTypeBtn {
                 width: min-content;
@@ -71,27 +72,34 @@
             }
         }
 
-        & .results {
-            display: flex;
-            flex-flow: column nowrap;
-            gap: 1rem;
+        & .resultsContainer {
+            overflow-y: auto;
+            padding: 1rem;
+            @mixin miniScrollbar;
 
-            & .result {
-                width: 100%;
-                height: max-content;
-                padding: 0.5rem 1rem;
-                box-shadow: 0 0 0.3rem 0 rgb($red_brown_dark);
-                background-color: rgb($light_grey);
-                border: none;
-                border-radius: $smallBorderRadius;
-                cursor: pointer;
-
-                &.active {
-                    box-shadow: inset 0 0 0.3rem 0 rgb($red_brown_dark);
-                }
-
-                & h5 {
-                    text-align: center;
+            & .results {
+                display: flex;
+                flex-flow: column nowrap;
+                gap: 1rem;
+    
+    
+                & .result {
+                    width: 100%;
+                    height: max-content;
+                    padding: 0.5rem 1rem;
+                    box-shadow: 0 0 0.3rem 0 rgb($red_brown_dark);
+                    background-color: rgb($light_grey);
+                    border: none;
+                    border-radius: $smallBorderRadius;
+                    cursor: pointer;
+    
+                    &.active {
+                        box-shadow: inset 0 0 0.3rem 0 rgb($red_brown_dark);
+                    }
+    
+                    & h5 {
+                        text-align: center;
+                    }
                 }
             }
         }

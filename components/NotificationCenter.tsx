@@ -47,21 +47,23 @@ const NotificationCenter = () => {
                             : null
                         }
                     </div>
+                    : notif?.notificationType === 'group-approved' ?
+                        <h5>Your request for the creation of "{notif.group?.name}" has been approved</h5>
                     : null
                 }
             </div>
         })
 
         setNotificationArray(notifArrTemp)
-    }, [user?.notifications, router.pathname, userGroups])
+    }, [user, router.pathname, userGroups])
 
-    const markNotificationAsRead = async (notification:  INotification) => {
+    const markNotificationAsRead = async (notification:  INotification, updateUserNotifs: boolean) => {
         if (notification?.read) return
         const res = await axios.put('/api/markNotificationAsRead', {
             userId: user._id,
             notificationId: notification._id
         })
-        if (res?.data) {
+        if (res?.data && updateUserNotifs) {
             dispatch(setUser({...user, notifications: user.notifications.map(notif => {
                 if (notif._id === notification._id) return {...notif, read: true}
                 return notif
@@ -69,7 +71,7 @@ const NotificationCenter = () => {
         }
     }
 
-    const handleJoinGroup = async (groupId) => {
+    const handleJoinGroup = async (groupId, notifId) => {
         try {
             const res = await axios.post('/api/joinGroup', {
                 userId: user._id,
@@ -81,7 +83,15 @@ const NotificationCenter = () => {
             const newGroup: IGroup = res.data
             if (!newGroup?._id) return
 
-            dispatch(setUser({ ...user, groups: [newGroup._id.toString(), ...user.groups ] }))
+            dispatch(setUser({ 
+                ...user, 
+                groups: [newGroup._id.toString(), ...user.groups ] ,
+                notifications: user.notifications.map(notif => {
+                    if (notif._id === notifId) return {...notif, read: true}
+                    return notif
+                })
+            }))
+
             dispatch(setUserGroups([ newGroup, ...userGroups ]))
             dispatch(setSelectedGroup(newGroup))
             router.replace('/home')
@@ -93,10 +103,9 @@ const NotificationCenter = () => {
     const onNotificationClick = async (e, notification: INotification) => {
         if (notification.notificationType === 'group-invite' && e.target?.id !=='reject' && e.target?.id !=='join') return
 
-        await markNotificationAsRead(notification)
-
         switch(notification.notificationType) {
             case 'message-like':
+                await markNotificationAsRead(notification, true)
                 const res = await axios.put('/api/setLastSeenMsgId', {
                     userId: user._id,
                     msgId: notification.msgId,
@@ -111,11 +120,17 @@ const NotificationCenter = () => {
                 scrollToMessage(resData, selectedGroup._id)
                 break
             case 'dm-like':
+                await markNotificationAsRead(notification, true)
                 if (notification?.likers?.[0] && notification?.likerId) dispatch(setSelectedDmPerson({ _id: notification.likerId.toString(), username: notification.likers[0] }))
                 if (router.pathname !== '/direct-messages') router.replace('/direct-messages')
                 break
             case 'group-invite':
-                if (e.target.id === 'join') handleJoinGroup(notification.group?.id)
+                await markNotificationAsRead(notification, false)
+                if (e.target.id === 'join') handleJoinGroup(notification.group?.id,  notification._id)
+                break
+            case 'group-approved':
+                await markNotificationAsRead(notification, false)
+                handleJoinGroup(notification.group?.id, notification._id)
                 break
         }
     }

@@ -14,7 +14,7 @@
         position: relative;
         width: 12rem;
         height: 100%;
-        padding: 1rem 1rem 1rem 1rem;
+        padding: 1rem 1rem 5rem 1rem;
         display: grid;
         grid-auto-rows: max-content;
         gap: 1rem;
@@ -40,8 +40,6 @@
         & .singleGroup, & .singleDmName {
             position: relative;
             width: 100%;
-            /* aspect-ratio: 1/1;
-            border-radius: 50%; */
             height: 4rem;
             border-radius: 2rem;
             background-color: inherit;
@@ -51,11 +49,6 @@
             align-items: center;
             padding: 1rem;
             cursor: pointer;
-
-            /* &.singleDmName {
-                height: 3rem;
-                border-radius: $largeBorderRadius;
-            } */
 
             & h4 {
                 width: 100%;
@@ -260,7 +253,9 @@
                 justify-content: center;
                 gap: 0.2rem;
                 margin-bottom: 1rem;
-
+                width: 100%;
+                word-break: break-all;
+                
                 & .name {
                     font-weight: 400;
                     font-size: xx-large;
