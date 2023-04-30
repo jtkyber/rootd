@@ -218,7 +218,6 @@ export default async function handler(
                 })
                 break
             case 'group-rejected':
-                console.log(req.body)
                 if (reason.length < 20) throw new Error('Please provide a longer reason')
                 newNotificationObject = {
                     _id: new mongoose.Types.ObjectId,

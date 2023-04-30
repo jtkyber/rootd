@@ -55,7 +55,7 @@ const admin = () => {
 
 
     useEffect(() => {
-        if (data?.pages[data?.pages.length - 1]?.cursor === resultsLimit) {
+        if ((data?.pages[data?.pages.length - 1]?.cursor === resultsLimit) || (data?.pages[data?.pages.length - 1]?.cursor === null))  {
             const firstResult = data.pages[0].data[0]
             if (firstResult) setSelectedResult(firstResult)
         } else if (!data?.pages?.length) setSelectedResult({}) 
