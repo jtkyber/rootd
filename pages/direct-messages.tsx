@@ -22,6 +22,7 @@ let scrollElementId: string
 
 let lastMsgClickedDate
 let lastMsgClicked
+const resultsLimit = 20
 
 interface IDmPerson {
   username: string,
@@ -189,7 +190,7 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
       try {
         await axios.get(`/api/markDmMsgsAsRead?userName=${user.username}&friendName=${selectedDmPerson.username}`)
         
-        const res2 = await axios.get(`/api/getDirectMsgs?userId=${user._id}&selectedPersonName=${selectedDmPerson.username}&cursor=${pageParam}&limit=10`)
+        const res2 = await axios.get(`/api/getDirectMsgs?userId=${user._id}&selectedPersonName=${selectedDmPerson.username}&cursor=${pageParam}&limit=${resultsLimit}`)
         return res2.data
       } catch (err) {
         console.log(err)

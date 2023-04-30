@@ -141,6 +141,7 @@
                 right: 0;
                 width: 15rem;
                 height: max-content;
+                max-height: 25rem;
                 box-shadow: $sectionShadow;
                 border-bottom-left-radius: 0.5rem;
                 background-color: rgb($light_grey);

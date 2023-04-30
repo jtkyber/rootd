@@ -34,6 +34,7 @@ export interface INotification {
     likerId?: ObjectId
     groupName?: string
     inviter?: string
+    reason?: string
 }
 
 export interface IUser {
@@ -103,7 +104,8 @@ export const notificationSchema = new Schema<INotification>({
         default: false
     },
     groupName: String,
-    inviter: String
+    inviter: String,
+    reason: String
 })
 
 const userSchema = new Schema<IUser>({
@@ -166,6 +168,6 @@ const userSchema = new Schema<IUser>({
     }
 })
 
-const User = models.User30 || model('User30', userSchema, 'users')
+const User = models.User31 || model('User31', userSchema, 'users')
 
 export default User

@@ -33,6 +33,8 @@ let scrollElementId: string
 let lastMsgClickedDate
 let lastMsgClicked
 
+const resultsLimit = 50
+
 export interface ISelectedMember {
     id: ObjectId
     img: string
@@ -304,7 +306,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     async function fetchGroupMessages ({ pageParam = 0 }) {
         if (!selectedGroup._id) return null
         try {
-            const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=100`)
+            const res = await axios.get(`/api/getGroupMsgs?groupId=${selectedGroup._id}&cursor=${pageParam}&limit=${resultsLimit}`)
             return res.data
         } catch (err) {
             console.log(err)

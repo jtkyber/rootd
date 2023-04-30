@@ -41,7 +41,7 @@ export default async function handler(
                 $push: {
                     groupCreationRequests: {
                         _id: new mongoose.Types.ObjectId,
-                        groupId: groupId,
+                        groupId: new mongoose.Types.ObjectId,
                         name: name,
                         description: description,
                         tags: tags,

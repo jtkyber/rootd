@@ -13,7 +13,6 @@ import { setSelectedDmPerson } from '../redux/appSlice'
 
 const NotificationCenter = () => {
     const [notificationArray, setNotificationArray] = useState<JSX.Element[]>([])
-    const [joiningPrivateGroup, setJoiningPrivateGroup] = useState<boolean>(false)
     
     const user: IUserState = useAppSelector(state => state.user)
     const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
@@ -49,13 +48,15 @@ const NotificationCenter = () => {
                     </div>
                     : notif?.notificationType === 'group-approved' ?
                         <h5>Your request for the creation of "{notif.group?.name}" has been approved</h5>
+                    : notif?.notificationType === 'group-rejected' ?
+                        <h5>Your request for the creation of "{notif.group?.name}" has been rejected</h5>
                     : null
                 }
             </div>
         })
 
         setNotificationArray(notifArrTemp)
-    }, [user, router.pathname, userGroups])
+    }, [user?.notifications, router.pathname, userGroups])
 
     const markNotificationAsRead = async (notification:  INotification, updateUserNotifs: boolean) => {
         if (notification?.read) return
@@ -63,6 +64,7 @@ const NotificationCenter = () => {
             userId: user._id,
             notificationId: notification._id
         })
+
         if (res?.data && updateUserNotifs) {
             dispatch(setUser({...user, notifications: user.notifications.map(notif => {
                 if (notif._id === notification._id) return {...notif, read: true}
@@ -131,6 +133,9 @@ const NotificationCenter = () => {
             case 'group-approved':
                 await markNotificationAsRead(notification, false)
                 handleJoinGroup(notification.group?.id, notification._id)
+                break
+            case 'group-rejected':
+                await markNotificationAsRead(notification, true)
                 break
         }
     }

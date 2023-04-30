@@ -15,10 +15,12 @@ export default async function handler(
         const userIsAdmin = isAdmin ? true : false
 
         if (userIsAdmin) {
-            const notifs = await Admin.findOne({}, { [`${resultType}`]: 1, _id: 0 }).skip(parseInt(cursor)).limit(parseInt(limit))
+            const res1 = await Admin.findOne({}, { [`${resultType}`]: 1, _id: 0 })
+            const notifs = res1.groupCreationRequests.slice(parseInt(cursor), parseInt(cursor) + parseInt(limit))
+            
             res.json({
-                data: notifs.groupCreationRequests,
-                cursor: notifs.groupCreationRequests.length >= parseInt(limit) ? parseInt(cursor) + parseInt(limit) : null
+                data: notifs,
+                cursor: notifs.length >= parseInt(limit) ? parseInt(cursor) + parseInt(limit) : null
             })
         } else throw new Error('This feature is only accessable to admins')
     } catch(err) {

@@ -28,6 +28,8 @@ interface IOptions {
   includePrivate: boolean
 }
 
+const resultsLimit = 20
+
 const groupSearch = () => {    
   const queryClient = useQueryClient()
 
@@ -71,7 +73,7 @@ const groupSearch = () => {
 
   async function fetchGroups({ pageParam = 0 }) {
     try {
-      const res = await axios.get(`/api/findGroups?keyword=${options.keyword}&characters=${JSON.stringify(options.characters)}&books=${JSON.stringify(options.books)}&includePrivate=${options.includePrivate}&sortType=${currentSort.name}&sortDir=${currentSort.dir}&cursor=${pageParam}&limit=10`)
+      const res = await axios.get(`/api/findGroups?keyword=${options.keyword}&characters=${JSON.stringify(options.characters)}&books=${JSON.stringify(options.books)}&includePrivate=${options.includePrivate}&sortType=${currentSort.name}&sortDir=${currentSort.dir}&cursor=${pageParam}&limit=${resultsLimit}`)
       return res.data
     } catch (err) {
       console.log(err)

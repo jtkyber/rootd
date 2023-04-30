@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { useEffect, useState, Fragment, useRef } from 'react'
 import styles from '../styles/Admin.module.css'
 import { getSession, useSession } from 'next-auth/react'
 import NotAuthorizedScreen from '../components/NotAuthorizedScreen'
@@ -11,8 +11,10 @@ import { IGroupReport, IGrpCreationReq, IUserReport } from '../models/adminModel
 import { getFormattedDateFromISO } from '../utils/dates'
 import refreshIcon from '../public/refresh.svg'
 import Image from 'next/image'
+import { useOnScreen } from '../utils/hooks'
 
 interface IAdminResultPartial extends Partial<IGrpCreationReq>, Partial<IUserReport>, Partial<IGroupReport> {}
+const resultsLimit = 20
 
 const admin = () => {
     const { data: session }: any = useSession()
@@ -21,6 +23,12 @@ const admin = () => {
     const queryClient = useQueryClient()
 
     const [resultType, setResultType] = useState('')
+    const [lastNextPageFetchTime, setLastNextPageFetchTime] = useState(0)
+    
+    const rejectReasonRef: React.MutableRefObject<any> = useRef(null)
+    const resultsEndRef: React.MutableRefObject<any> = useRef(null)
+    
+    const isVisible = useOnScreen(resultsEndRef)
 
     const [selectedResult, setSelectedResult] = useState<IAdminResultPartial>({})
 
@@ -45,13 +53,54 @@ const admin = () => {
 
     useEffect(() => { if (user?._id) setResultType('groupCreationRequests') }, [user._id])
 
+
+    useEffect(() => {
+        if (data?.pages[data?.pages.length - 1]?.cursor === resultsLimit) {
+            const firstResult = data.pages[0].data[0]
+            if (firstResult) setSelectedResult(firstResult)
+        } else if (!data?.pages?.length) setSelectedResult({}) 
+    }, [data])
+
+    useEffect(() => {
+        const now = Date.now()
+        if (!isVisible || isFetching || (now - lastNextPageFetchTime) < 250 || !hasNextPage) return
+        setLastNextPageFetchTime(now)
+        fetchNextPage()
+      }, [isVisible])
+
     async function fetchResults({ pageParam = 0 }) {
         if (!user?._id) return
         try {
-            const res = await axios.get(`/api/admin/fetchAdminNotificationResults?userId=${user._id}&resultType=${resultType}&cursor=${pageParam}&limit=10`)
+            const res = await axios.get(`/api/admin/fetchAdminNotificationResults?userId=${user._id}&resultType=${resultType}&cursor=${pageParam}&limit=${resultsLimit}`)
             return res.data
         } catch (err) {
             console.log(err)
+        }
+    }
+
+    const removeAdminNotification = async (): Promise<boolean> => {
+        const res = await axios.put('/api/admin/removeAdminNotification', {
+            userId: user._id,
+            notifId: selectedResult._id,
+            resultType: resultType
+        })
+        if (res?.data) return true
+        return false
+    }
+
+
+    const onRejectClick = async () => {
+        if (rejectReasonRef?.current?.value?.length < 20) return
+
+        if (await removeAdminNotification()) {
+            await axios.post('/api/postNotification', {
+                userId: selectedResult.groupAdminId,
+                notificationType: 'group-rejected',
+                groupId: selectedResult.groupId,
+                groupName: selectedResult.name,
+                reason: rejectReasonRef.current.value
+            })
+            refetch()
         }
     }
 
@@ -71,13 +120,7 @@ const admin = () => {
         })
         
         if (res1?.data?._id) {
-            const res2 = await axios.put('/api/admin/removeAdminNotification', {
-                userId: user._id,
-                notifId: selectedResult._id,
-                resultType: resultType
-            })
-
-            if (res2.data) {
+            if (await removeAdminNotification()) {
                 await axios.post('/api/postNotification', {
                     userId: selectedResult.groupAdminId,
                     notificationType: 'group-approved',
@@ -136,8 +179,8 @@ const admin = () => {
                         resultType == 'groupCreationRequests' ? 
                         <>
                             <h5 className={styles.rejectReason}>Provide a reason for rejecting this group</h5>
-                            <textarea id="rejectReason" rows={5}></textarea>
-                            <button className={styles.rejectBtn}>Reject</button>
+                            <textarea ref={rejectReasonRef} id="rejectReason" rows={5}></textarea>
+                            <button onClick={onRejectClick} className={styles.rejectBtn}>Reject</button>
                         </>
                         : null
                     }
@@ -175,6 +218,7 @@ const admin = () => {
                                         </Fragment>
                                     ))
                                 }
+                                <div ref={resultsEndRef}></div>
                             </div>
                         </div>
                     </div>

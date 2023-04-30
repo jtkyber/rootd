@@ -16,7 +16,7 @@ export default async function handler(
     try {
         await connectMongo()
 
-        const { notificationType, groupId, groupName, msgId, newLiker, userId, userName, inviter, isPrivate }: any = req.body
+        const { notificationType, groupId, groupName, msgId, newLiker, userId, userName, inviter, reason }: any = req.body
 
         const groupMutedByUser = async () => {
             const group: IGroup | null = await Group.findById(groupId)
@@ -215,6 +215,46 @@ export default async function handler(
                         res.json(true)
                     }
                     else res.status(400).end('Could not notify user of accepted group')
+                })
+                break
+            case 'group-rejected':
+                console.log(req.body)
+                if (reason.length < 20) throw new Error('Please provide a longer reason')
+                newNotificationObject = {
+                    _id: new mongoose.Types.ObjectId,
+                    content: 'Group rejected',
+                    date: Date.now(),
+                    readDate: Date.now(),
+                    notificationType: notificationType,
+                    group: {
+                        id: groupId,
+                        name: groupName
+                    },
+                    reason: reason
+                }
+
+                User.updateOne({ _id: userId },
+                    {
+                        $push: { 
+                            notifications: {
+                                $each: [newNotificationObject],
+                                $position: 0
+                            }
+                        } 
+                    }
+                ).then(async docs => {
+                    if (docs.modifiedCount > 0) {
+                        const pusherRes = await pusher.get({ path: `/channels/${userId}` })
+                        
+                        if (pusherRes.status === 200) {
+                            const body = await pusherRes.json()
+                            if (body?.occupied) {
+                                await pusher.trigger(userId, 'update-notifications', { notificationType: notificationType, notification: JSON.stringify(await getNotifications()) })
+                            }
+                        }
+                        res.json(true)
+                    }
+                    else res.status(400).end('Could not notify user of rejected group')
                 })
                 break
         }

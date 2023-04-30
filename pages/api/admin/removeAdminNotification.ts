@@ -20,7 +20,7 @@ export default async function handler(
                     $pull: { [resultType]: { _id: notifId } }
                 }
             ).then(docs => {
-                res.json(docs.modifiedCount)
+                res.json(docs.modifiedCount > 0 ? true : false)
             })
         } else throw new Error('This feature is only accessable to admins')
     } catch(err) {
