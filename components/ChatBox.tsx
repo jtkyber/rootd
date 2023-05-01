@@ -326,7 +326,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
         }))
     }
 
-    const filterBadWords = (text) => {
+    const filterBadWords = (text: string) => {
         for (let word of badWords) {
             if (text.toLowerCase().includes(word)) {
                 const indexOfBadWordLastChar = text.lastIndexOf(word) + word.length - 1

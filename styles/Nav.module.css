@@ -37,6 +37,20 @@
         align-items: center;
         padding-left: 3rem;
 
+        & .appTitle {
+            color: rgb($light_grey);
+            font-size: x-large;
+
+            font-family: HeadingFont;
+
+            & span {
+                font-size: xx-large;
+            }
+
+            @mixin fadeOnHover;
+
+        }
+/* 
         & .logo {
             height: 80%;
             width: auto;
@@ -46,8 +60,8 @@
 
             & * {
                 fill: rgb($light_grey);
-            }
-        }
+            } */
+        /* } */
     }
 
     & .right {
