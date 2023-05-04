@@ -511,7 +511,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                 </div>
                     
                 <div style={{pointerEvents: addingPsg ? 'none' : 'all'} } className={stylesChat.chatInputArea}>
-                    <button onClick={() => setAddingPsg(true)} className={stylesChat.addPsgBtn}><AddPsgIcon /></button>
+                    <button onClick={() => setAddingPsg(true)} className={`${stylesChat.addPsgBtn} hasTooltip`} data-tooltip-msg='Insert Passage' data-tooltip-position='above'><AddPsgIcon /></button> 
                     <div ref={textAreaRef} contentEditable={true} suppressContentEditableWarning={true} className={stylesChat.input}></div>
                     <button onClick={handleSendMsgClick} className={stylesChat.sendMsgBtn}>Send</button>
                 </div>

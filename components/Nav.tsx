@@ -54,10 +54,12 @@ const Nav = ({ channels }) => {
     }
 
     const closeNotifications = (e) => {
-        const el = e.target as SVGSVGElement
-        if (el.classList.contains(styles.bellIcon)){
+        const el = e.target
+        const bell = document.querySelector(`.${styles.bellIcon}`)
+        const settings = document.querySelector(`.${styles.settingsIcon}`)
+        if (bell?.contains(el)){
             dispatch(setActiveDropdown(activeDropdown === 'notifications' ? '' : 'notifications'))
-        } else if (el.classList.contains(styles.settingsIcon)) {
+        } else if (settings?.contains(el)) {
             dispatch(setActiveDropdown(activeDropdown === 'settings' ? '' : 'settings'))
         } else dispatch(setActiveDropdown(''))
     }
@@ -66,7 +68,8 @@ const Nav = ({ channels }) => {
         <div className={styles.container}>
             <div className={styles.left}>
                 {/* <Logo /> */}
-                <h3 className={styles.appTitle}><span>B</span>ible <span>C</span>hat</h3>
+                {/* <h3 className={styles.appTitle}><span>B</span>ible <span>C</span>hat</h3> */}
+                <Link className={styles.appTitle} href='/home'><span>B</span>ible <span>C</span>hat</Link>
             </div>
             <div className={styles.right}>
                 {
@@ -78,26 +81,26 @@ const Nav = ({ channels }) => {
                             ? <>
                                 <Link href='/group-search'><h5 className={styles.findGroupBtn}>Find Group</h5></Link>
                                 { session?.user?.isAdmin ? <Link href='/admin'><h5 className={styles.adminToolsBtn}>Admin Tools</h5></Link> : null }
-                                <Link href='/direct-messages'><DmIcon hasNewDms={hasNewDms} /></Link>
+                                <Link href='/direct-messages' className='hasTooltip' data-tooltip-msg='Direct Messages' data-tooltip-position='below'><DmIcon hasNewDms={hasNewDms} /></Link>
                                 <NotificationCenter />
                                 <Settings />
                             </>
                             : router.pathname === '/direct-messages'
                                 ? <>
-                                    <Link href='/home'><HomeIcon /></Link>
+                                    <Link href='/home' className='hasTooltip' data-tooltip-msg='My Groups' data-tooltip-position='below'><HomeIcon /></Link>
                                     <NotificationCenter />
                                     <Settings />
                                 </>
                                 : router.pathname === '/group-search'
                                     ? <>
-                                        <Link href='/home'><HomeIcon /></Link>
-                                        <Link href='/direct-messages'><DmIcon hasNewDms={hasNewDms} /></Link>
+                                        <Link href='/home' className='hasTooltip' data-tooltip-msg='My Groups' data-tooltip-position='below'><HomeIcon /></Link>
+                                        <Link href='/direct-messages' className='hasTooltip' data-tooltip-msg='Direct Messages' data-tooltip-position='below'><DmIcon hasNewDms={hasNewDms} /></Link>
                                         <NotificationCenter />
                                         <Settings />
                                     </>
                                     : router.pathname === '/admin'
                                         ? <>
-                                            <Link href='/home'>Back</Link>
+                                            <Link href='/home' className='hasTooltip' data-tooltip-msg='My Groups' data-tooltip-position='below'>Back</Link>
                                         </>
                                         : null
                 }

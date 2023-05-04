@@ -46,6 +46,10 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
         for (let i = 0; i < progressMapRef.current.children.length; i++) {
             if (i > 0) progressMapRef.current.children[i].disabled = true
         }
+
+        document.addEventListener('keydown', handleKeyDown)
+
+        return () => document.removeEventListener('keydown', handleKeyDown)
     }, [])
 
     useEffect(() => {
@@ -62,6 +66,8 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
         if (e.code !== 'Enter') return
         btnRef?.current.click()
     }
+
+    const handleKeyDown = (e) => { if (e.code === 'Tab') e.preventDefault() }
 
     const goToNextSection = (index) => {
         setSectionIndex(index)
@@ -269,7 +275,8 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
                         <button 
                             ref={btnRef}
                             onClick={() => sectionIndex <= 5 ? runChecks() : null} 
-                            className={styles.nextBtn}>{sectionIndex < 5 ? 'Next' : 'Finish'}
+                            className={styles.nextBtn}>
+                                {sectionIndex < 5 ? 'Next' : 'Finish'}
                         </button>
                     </div>
                 </>

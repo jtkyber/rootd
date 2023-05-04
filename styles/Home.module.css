@@ -153,6 +153,18 @@
                     background-color: transparent;
                     border: none;
                     padding: 0.3rem;
+                    opacity: 1;
+
+                    & svg {
+                        transition: opacity linear 0.15s;
+                        pointer-events: none;
+                    }
+
+                    &:hover {
+                        & svg {
+                            opacity: 0.6;
+                        }
+                    }
                     
                     &.muted {
                         & svg {

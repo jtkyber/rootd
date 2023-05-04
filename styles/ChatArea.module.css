@@ -253,17 +253,27 @@
         padding: 0.5rem 0;
 
         & .addPsgBtn {
+            position: relative;
             width: max-content;
             height: max-content;
             background-color: transparent;
             border: none;
             justify-self: end;
 
+            &:hover {
+                opacity: 1;
+                & path {
+                    opacity: 0.6;
+                }
+            }
+
             & svg {
-                width: 26px;
+                width: 24px;
                 height: auto;
+                overflow: visible;
 
                 & path {
+                    transition: $fadeOnHoverTransition;
                     fill: rgba($grey_blue_vibrant, 0.7);
                 }
             }

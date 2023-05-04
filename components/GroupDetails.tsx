@@ -132,7 +132,7 @@ const GroupDetails = ({ selectedGroup, username, onlineMembers }: { selectedGrou
             selectedGroup?._id ?
                 <div className={`${styles.groupDetails} ${detailedExpanded ? styles.show : null}`}>
                     <div className={styles.topRight}>
-                        <button tabIndex={-1} onClick={toggleGroupNotications} className={`${styles.muteGroup} ${selectedGroup.membersWithGroupMuted.includes(username) ? styles.muted : null}`}>
+                        <button data-tooltip-msg='Mute Group' data-tooltip-position='below' tabIndex={-1} onClick={toggleGroupNotications} className={`${styles.muteGroup} hasTooltip ${selectedGroup.membersWithGroupMuted.includes(username) ? styles.muted : null}`}>
                             <MuteBtn /> 
                         </button>
                         <div className={styles.groupOptionsContainer}>

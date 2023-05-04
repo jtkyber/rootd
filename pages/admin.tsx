@@ -199,8 +199,8 @@ const admin = () => {
                     <div className={styles.sideBar}>
                         <div className={styles.options}>
                             <h5 className={`${styles.resultTypeBtn} ${resultType === 'groupCreationRequests' ? styles.active : ''}`} id='groupCreationRequests' onClick={(e) => setResultType((e.target as HTMLButtonElement).id)}>New Groups</h5>
-                            <h5 className={`${styles.resultTypeBtn} ${resultType === 'userReports' ? styles.active : ''}`} id='userReports' onClick={(e) => setResultType((e.target as HTMLButtonElement).id)}>User Reports</h5>
-                            <h5 className={`${styles.resultTypeBtn} ${resultType === 'groupReports' ? styles.active : ''}`} id='groupReports' onClick={(e) => setResultType((e.target as HTMLButtonElement).id)}>Group Reports</h5>
+                            <h5 className={`${styles.resultTypeBtn} ${resultType === 'userReports' ? styles.active : ''}`} id='userReports' onClick={(e) => console.log('Not yet implemented')}>User Reports</h5>
+                            <h5 className={`${styles.resultTypeBtn} ${resultType === 'groupReports' ? styles.active : ''}`} id='groupReports' onClick={(e) => console.log('Not yet implemented')}>Group Reports</h5>
                             <Image onClick={refetch} src={refreshIcon} alt='refresh icon'></Image>
                         </div>
                         <div className={styles.resultsContainer}>

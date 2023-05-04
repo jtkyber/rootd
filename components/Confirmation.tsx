@@ -1,8 +1,16 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styles from '../styles/Confirmation.module.css'
 
 const Confirmation = ({ exitFunction, enterFunction }) => {
-  const inputRef: React.MutableRefObject<any> = useRef(null)
+    const inputRef: React.MutableRefObject<any> = useRef(null)
+    
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown)
+
+        return () => document.removeEventListener('keydown', handleKeyDown)
+    },[])
+
+    const handleKeyDown = (e) => { if (e.code === 'Tab') e.preventDefault() }
 
     return (
         <div className={styles.container}>

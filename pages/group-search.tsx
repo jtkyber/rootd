@@ -4,7 +4,7 @@ import debounce from '../utils/debounce'
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { getSession, useSession } from 'next-auth/react'
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { ICurSort, setCurrentSort } from '../redux/searchSlice'
 import { IUserState, setUser } from '../redux/userSlice'
 import { setSelectedGroup, setUserGroups } from '../redux/groupSlice'
@@ -31,8 +31,6 @@ interface IOptions {
 const resultsLimit = 20
 
 const groupSearch = () => {    
-  const queryClient = useQueryClient()
-
   const router = useRouter()
 
   const { data: session }: any = useSession()

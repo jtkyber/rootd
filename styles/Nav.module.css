@@ -40,7 +40,7 @@
         & .appTitle {
             color: rgb($light_grey);
             font-size: x-large;
-
+            cursor: pointer;
             font-family: HeadingFont;
 
             & span {
@@ -75,15 +75,34 @@
 
         & a, & .notificationContainer, & .settingsContainer {
             height: 100%;
-            padding: 0 0.5rem;
             display: flex;
             align-items: center;
+        }
+
+        & a, & .bellIcon, & .settingsIcon {
+            padding: 0 0.5rem;
+
+            & * {
+                pointer-events: none;
+            }
+
+            & svg {
+                transition: opacity linear 0.15s;
+            }
+
+            &:hover svg {
+                opacity: 0.6;
+            }
         }
         
         & a {
             height: 100%;
             cursor: pointer;
             color: rgb($light_grey);
+            
+            &:has(.findGroupBtn), &:has(.adminToolsBtn) {
+                @mixin fadeOnHover;
+            }
 
             & .findGroupBtn, & .adminToolsBtn {
                 border: none;
@@ -92,13 +111,14 @@
                 border-radius: $largeBorderRadius;
                 font-weight: 600;
             }
-            
+
             & .dmIcon {
                 width: 20px;
                 height: 20px;
                 position: relative;
                 margin-top: 0.1rem;
                 
+
                 & svg {
                     width: 20px;
                     height: 20px;
@@ -127,18 +147,20 @@
 
         & .notificationContainer {
             position: relative;
-
+            
             & .bellIcon {
-                fill: rgb($light_grey);
-                width: 20px;
-                height: auto;
+                height: 100%;
+                width: 100%;
                 cursor: pointer;
+                display: flex;
+                align-items: center;
 
-                @mixin fadeOnHover;
-
-                & * {
-                    pointer-events: none;
+                & svg {
+                    fill: rgb($light_grey);
+                    width: 20px;
+                    height: auto;
                 }
+
             }
 
             & .unreadCount {
@@ -234,19 +256,19 @@
             position: relative;
 
             & .settingsIcon {
-                opacity: 0.8;
-                width: 20px;
-                height: auto;
+                display: flex;
+                height: 100%;
+                width: 100%;
+                align-items: center;
                 cursor: pointer;
-                
-                @mixin fadeOnHover;
-                
-                & path {
-                    fill: rgb($light_grey);
-                }
 
-                & * {
-                    pointer-events: none;
+                & svg {
+                    width: 20px;
+                    height: auto;
+                    
+                    & path {
+                        fill: rgba($light_grey, 0.8);
+                    }
                 }
             }
 
