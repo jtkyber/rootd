@@ -4,7 +4,7 @@
     width: 100%;
     height: 100%;
     overflow-y: scroll;
-    @mixin customScrollbar;
+    /* @mixin customScrollbar; */
 
     & .section {
         width: 100%;
@@ -12,20 +12,20 @@
         justify-content: center;
 
         &.section1 {
-            /* background-color: rgb($light_grey); */
-            background-image: url('/mtns.jpg');
+            height: max-content;
+            background-image: url('/neil-mark-thomas-dGyshquBzOc-unsplash.jpg');
             background-position: center;
             background-size: cover;
             
             & .content {
                 width: 100%;
                 max-width: 80rem;
-                height: 30rem;
+                height: 100%;
                 display: flex;
                 flex-flow: row nowrap;
                 justify-content: center;
                 align-items: center;
-                padding: 2rem;
+                padding: 6rem 2rem;
     
                 & .text {
                     width: 50%;
@@ -38,13 +38,27 @@
                         font-weight: 900;
                         white-space: pre-line;
                         color: rgb($light_grey);
+                        text-shadow: 0.1rem 0.1rem 0.4rem black;
                     }
             
                     & .shortDescription {
-                        
                         font-size: x-large;
                         font-weight: 600;
                         color: rgb($light_grey);
+                        text-shadow: 0.1rem 0.1rem 0.2rem black;
+                    }
+
+                    & .register {
+                        margin-top: 4rem;
+
+                        & a {
+                            @mixin brownButton;
+                            background-color: rgb($grey_blue_vibrant);
+                            font-weight: 600;
+                            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+                            Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+                            @mixin fadeOnHover;
+                        }
                     }
                 }
         
@@ -52,6 +66,34 @@
                     text-align: center;
                     width: 50%;
                     padding: 1rem;
+
+                    & .imgContainer {
+                        position: relative;
+                        width: 100%;
+                        max-width: 572px;
+                        aspect-ratio: 16/10;
+                        border-radius: $largeBorderRadius;
+                        overflow: hidden;
+                        /* border: 2px solid rgb($red_brown); */
+                        box-shadow: 0.2rem 0.2rem 0.6rem 0 rgba($red_brown_dark, 0.8);
+
+                        &::after {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: inherit;
+                            /* box-shadow: inset $sectionShadow; */
+                        }
+                        
+                        & img {
+                            object-fit: cover;
+                            /* width: 100%;
+                            height: auto; */
+                        }
+                    }
                 }
             }
             
@@ -60,21 +102,21 @@
         &.section2 {
             background-color: rgb($grey_blue);
             width: 100%;
-            height: 30rem;
+            height: 40rem;
             
         }
         
         &.section3 {
             background-color: rgb($light_grey);
             width: 100%;
-            height: 30rem;
+            height: 40rem;
             
         }
         
         &.section4 {
             background-color: rgb($grey_blue);
             width: 100%;
-            height: 30rem;
+            height: 40rem;
             
         }
     }

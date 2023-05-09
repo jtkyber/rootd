@@ -71,7 +71,7 @@ $fadeOnHoverTransition: opacity linear 0.15s;
 
 @define-mixin brownButton {
   width: max-content;
-  height: 2rem;
+  height: max-content;
   background-color: rgb($red_brown);
   border: none;
   border-radius: $smallBorderRadius;

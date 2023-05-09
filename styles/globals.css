@@ -30,7 +30,7 @@ body {
 
 @font-face {
     font-family: Title;
-    src: url('/RobotoSerif-VariableFont_GRAD,opsz,wdth,wght.ttf');
+    src: url('/CursiveSerif-Bold.ttf');
 }
 
 h1, h2 {
@@ -38,7 +38,7 @@ h1, h2 {
     color: rgb($red_brown_dark);
 }
 
-h3, h4, h5, input, div, button, text, tspan, textarea, label, p, ::placeholder, option, select {
+h3, h4, h5, button, text, tspan, label, p {
     font-family: MainFont;
     color: rgb($red_brown_dark);
 }
@@ -52,6 +52,16 @@ h6 {
 button {
     @mixin fadeOnHover;
     /* @mixin scaleOnHover; */
+}
+
+::placeholder {
+    color: grey;
+}
+
+input, textarea, ::placeholder, select, option {
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    color: rgb($red_brown_dark);
 }
 
 select, textarea {

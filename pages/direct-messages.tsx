@@ -307,7 +307,7 @@ function handleSendMsgClick () {
                     
                 <div className={stylesChat.chatInputArea}>
                     <div></div>
-                    <input type='text' ref={textAreaRef} className={stylesChat.input} />
+                    <textarea ref={textAreaRef} className={stylesChat.input} />
                     <button onClick={handleSendMsgClick} className={stylesChat.sendMsgBtn}>Send</button>
                 </div>
             </div>
@@ -326,7 +326,7 @@ export async function getServerSideProps({req}) {
   
     if (!session) return {
       redirect: {
-        destination: '/login',
+        destination: '/signin',
         permanent: false
       }
     }

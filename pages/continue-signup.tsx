@@ -23,7 +23,7 @@ const FinishRegister: NextPage = () => {
         const form = e.target as HTMLFormElement
 
         const username: HTMLInputElement | null = form.querySelector('#username')
-        const password= 'Signed Up With Google'
+        const password = 'Signed Up With Google'
         const email = session?.user?.email
         const gender: HTMLInputElement | null = form.querySelector('#gender')
         const bVersion: HTMLInputElement | null = form.querySelector('#bVersion')
@@ -46,7 +46,7 @@ const FinishRegister: NextPage = () => {
 
         const newUser = res.data
         if (newUser?._id?.length) {
-            router.replace('/login')
+            router.replace('/signin')
         } else throw new Error('Could not Register')
     } catch (err) {
         setIsLoading(false)
@@ -96,7 +96,7 @@ export async function getServerSideProps({req}) {
 
   if (!session) return {
     redirect: {
-      destination: '/login',
+      destination: '/signin',
       permanent: false
     }
   }

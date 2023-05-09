@@ -74,8 +74,8 @@ const Nav = ({ channels }) => {
             <div className={styles.right}>
                 {
                     router.pathname === '/'
-                    ? <Link href='/login'>Log In</Link>
-                    : router.pathname === '/login' || router.pathname === '/register'
+                    ? <Link href='/signin'>Log In</Link>
+                    : router.pathname === '/signin' || router.pathname === '/signup'
                         ? <Link href='/'>Back</Link>
                         : router.pathname === '/home'
                             ? <>

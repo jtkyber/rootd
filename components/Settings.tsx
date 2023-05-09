@@ -13,7 +13,7 @@ const Settings = () => {
 
             <div className={`${styles.settingsDropdown} ${activeDropdown === 'settings' ? styles.active : null}`}>
                 <h5 className={styles.setting} onClick={() => console.log('Manage Account')}>Manage Account</h5>
-                <h5 className={styles.setting} onClick={() => signOut({ callbackUrl: '/login' })}>Log Out</h5>
+                <h5 className={styles.setting} onClick={() => signOut({ callbackUrl: '/' })}>Log Out</h5>
             </div>
         </div>
     )
