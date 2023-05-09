@@ -74,7 +74,7 @@
                             align-items: center;
                             background-color: rgb($deep_red_shadow);
                             font-weight: 600;
-                            font-size: 0.9rem;
+                            font-size: 0.8rem;
                             color: rgb($light_grey);
                         }
                     }
@@ -98,14 +98,15 @@
                     border-width: 1px;
                     border-style: solid;
                     padding: 0.5rem 0.8rem;
-                    width: 100%;
-                    max-width: max-content;
+                    width: max-content;
+                    max-width: 40rem;
                     font-weight: 400;
                     white-space: pre-wrap;
 
                     & span {
                         cursor: pointer;
                         color: rgb($grey_blue_vibrant);
+                        font-weight: 600;
 
                         @mixin fadeOnHover
                     }
@@ -198,6 +199,10 @@
                         border-color: rgb($msg_color_user);
                         background-color: rgb($msg_color_user);
                         color: rgb($light_grey);
+
+                        & div {
+                            color: rgb($light_grey);
+                        }
                     }
 
                     & .msgAuthor {
@@ -211,7 +216,7 @@
                     }
 
                     & span {
-                        color: hsl(213, 70%, 75%)
+                        color: hsl(213, 70%, 75%);
                     }
                 }
 

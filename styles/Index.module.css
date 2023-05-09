@@ -3,31 +3,79 @@
 .container {
     width: 100%;
     height: 100%;
+    overflow-y: scroll;
+    @mixin customScrollbar;
 
-    & .chunk1 {
-        background-color: antiquewhite;
+    & .section {
         width: 100%;
-        height: 30rem;
-    }
+        display: flex;
+        justify-content: center;
 
-    & .chunk2 {
-        background-color: brown;
-        width: 100%;
-        height: 30rem;
-        
-    }
+        &.section1 {
+            /* background-color: rgb($light_grey); */
+            background-image: url('/mtns.jpg');
+            background-position: center;
+            background-size: cover;
+            
+            & .content {
+                width: 100%;
+                max-width: 80rem;
+                height: 30rem;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
     
-    & .chunk3 {
-        background-color: orangered;
-        width: 100%;
-        height: 30rem;
+                & .text {
+                    width: 50%;
+                    text-align: left;
+                    padding: 1rem;
+                    
+                    & .slogan {
+                        font-family: Title;
+                        font-size: 2.5rem;
+                        font-weight: 900;
+                        white-space: pre-line;
+                        color: rgb($light_grey);
+                    }
+            
+                    & .shortDescription {
+                        
+                        font-size: x-large;
+                        font-weight: 600;
+                        color: rgb($light_grey);
+                    }
+                }
         
-    }
+                & .visual {
+                    text-align: center;
+                    width: 50%;
+                    padding: 1rem;
+                }
+            }
+            
+        }
     
-    & .chunk4 {
-        background-color: teal;
-        width: 100%;
-        height: 30rem;
+        &.section2 {
+            background-color: rgb($grey_blue);
+            width: 100%;
+            height: 30rem;
+            
+        }
         
+        &.section3 {
+            background-color: rgb($light_grey);
+            width: 100%;
+            height: 30rem;
+            
+        }
+        
+        &.section4 {
+            background-color: rgb($grey_blue);
+            width: 100%;
+            height: 30rem;
+            
+        }
     }
 }

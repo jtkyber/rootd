@@ -13,11 +13,19 @@ const Layout = (props) => {
     const user: IUserState = useAppSelector(state => state.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
     const [pusher, setPusher] = useState<Pusher | null>(null)
+    const [isMobileDevice, setIsMobileDevice] = useState<boolean>(false)
     const [channels, setChannels]: any = useState<PresenceChannel[] | []>([])
     
     const dispatch = useAppDispatch()
 
     const router = useRouter()
+    
+    useEffect(() => {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            setIsMobileDevice(true)
+        }
+        setIsMobileDevice(false)
+    }, [])
 
     useEffect(() => {
         if (!user?._id) return
@@ -122,9 +130,15 @@ const Layout = (props) => {
 
     return (
         <div className={styles.container}>
-            <Nav channels={channels} />
-            <main>{renderChildren()}</main>
-            <Footer />
+            {
+                !isMobileDevice || (isMobileDevice && router.pathname === '/') ?
+                <>
+                    <Nav channels={channels} />
+                    <main>{renderChildren()}</main>
+                    <Footer />
+                </>
+                : <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '1rem' }}><h3>Not yet optimized for mobile devices</h3></div>
+            }
         </div>
     )
 }

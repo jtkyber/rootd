@@ -28,6 +28,11 @@ body {
     src: url('/Ysabeau-VariableFont_wght.ttf');
 }
 
+@font-face {
+    font-family: Title;
+    src: url('/RobotoSerif-VariableFont_GRAD,opsz,wdth,wght.ttf');
+}
+
 h1, h2 {
     font-family: HeadingFont;
     color: rgb($red_brown_dark);
