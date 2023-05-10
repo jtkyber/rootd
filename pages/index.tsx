@@ -1,14 +1,30 @@
+import React, { useEffect, useRef } from 'react'
 import { NextPage } from 'next'
 import styles from '../styles/Index.module.css'
 import Image from 'next/image'
 import Link from 'next/link'
+import HomePageSample from '../components/HomePageSample'
+import bgImage from '../public/neil-mark-thomas-dGyshquBzOc-unsplash.jpg'
 
 const Index: NextPage = () => {
+  const ref: React.MutableRefObject<any> = useRef()
+
+  useEffect(() => {
+    document.addEventListener('resize', handleResize)
+
+    return () => document.removeEventListener('resize', handleResize)
+  }, [ref.current])
+
+  const handleResize = () => {
+    console.log(ref.current)
+  }
+
   return (
     <div className={styles.container}>
       <section className={`${styles.section} ${styles.section1}`}>
-        <div className={styles.content}>
-          <div className={styles.text}>
+        <Image priority fill src={bgImage} alt='Background image'/>
+        <div ref={ref} className={`${styles.content}`}>
+          <div className={`${styles.text} text`}>
             <h1 className={styles.slogan}>{`Connect,\n through meaningful\n conversations`}</h1>
             <p className={styles.shortDescription}>The best platform to discuss biblical topics and grow in your Faith.</p>
             <div className={styles.register}>
@@ -16,9 +32,7 @@ const Index: NextPage = () => {
             </div>
           </div>
           <div className={styles.visual}>
-            <div className={styles.imgContainer}>
-              <Image quality={100} fill src='/home_page.png' alt='Chat Example' />
-            </div>
+              <HomePageSample />
           </div>
         </div>
       </section>

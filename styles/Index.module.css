@@ -12,23 +12,33 @@
         justify-content: center;
 
         &.section1 {
-            height: max-content;
+            position: relative;
+
+            & img {
+                object-fit: cover;
+            }
+            /* height: max-content;
             background-image: url('/neil-mark-thomas-dGyshquBzOc-unsplash.jpg');
             background-position: center;
-            background-size: cover;
+            background-size: cover; */
             
             & .content {
                 width: 100%;
                 max-width: 80rem;
                 height: 100%;
                 display: flex;
-                flex-flow: row nowrap;
+                flex-flow: row wrap;
                 justify-content: center;
                 align-items: center;
+                /* grid-template-columns: 1fr max-content;
+                justify-items: center;
+                align-items: center; */
                 padding: 6rem 2rem;
+                z-index: 1;
     
                 & .text {
-                    width: 50%;
+                    width: min-content;
+                    flex-grow: 1;
                     text-align: left;
                     padding: 1rem;
                     
@@ -64,8 +74,9 @@
         
                 & .visual {
                     text-align: center;
-                    width: 50%;
+                    width: max-content;
                     padding: 1rem;
+                    z-index: 1;
 
                     & .imgContainer {
                         position: relative;

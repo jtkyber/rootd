@@ -100,7 +100,7 @@
             cursor: pointer;
             color: rgb($light_grey);
             
-            &:has(.findGroupBtn), &:has(.adminToolsBtn) {
+            &:has(.findGroupBtn), &:has(.adminToolsBtn), &.loginBtn, &.backBtn {
                 @mixin fadeOnHover;
             }
 

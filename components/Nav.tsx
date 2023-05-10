@@ -74,9 +74,9 @@ const Nav = ({ channels }) => {
             <div className={styles.right}>
                 {
                     router.pathname === '/'
-                    ? <Link href='/signin'>Log In</Link>
+                    ? <Link className={styles.loginBtn} href='/signin'>Log In</Link>
                     : router.pathname === '/signin' || router.pathname === '/signup'
-                        ? <Link href='/'>Back</Link>
+                        ? <Link className={styles.backBtn} href='/'>Back</Link>
                         : router.pathname === '/home'
                             ? <>
                                 <Link href='/group-search'><h5 className={styles.findGroupBtn}>Find Group</h5></Link>
@@ -100,7 +100,7 @@ const Nav = ({ channels }) => {
                                     </>
                                     : router.pathname === '/admin'
                                         ? <>
-                                            <Link href='/home' className='hasTooltip' data-tooltip-msg='My Groups' data-tooltip-position='below'>Back</Link>
+                                            <Link href='/home' className={`${styles.backBtn} hasTooltip`} data-tooltip-msg='My Groups' data-tooltip-position='below'>Back</Link>
                                         </>
                                         : null
                 }
