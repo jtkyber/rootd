@@ -7,7 +7,7 @@
     border-radius: $largeBorderRadius;
     box-shadow: 0.2rem 0.2rem 0.7rem 0rem rgba($red_brown_dark, 0.7);
     overflow: hidden;
-    pointer-events: none;
+    /* pointer-events: none; */
     display: grid;
     grid-template-columns: 5.8rem 1fr 7.3rem;
     grid-template-rows: 2rem 1fr 2.5rem;
