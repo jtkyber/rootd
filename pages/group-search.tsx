@@ -213,7 +213,7 @@ const groupSearch = () => {
                         {
                           group?._id && user?.groups.includes(group._id.toString())
                           ? <h5 className={styles.joined}>Joined</h5>
-                          : <button onClick={() => group.isPrivate ? setActivePrivateGroup(group) : handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
+                          : <button onClick={() => (group.isPrivate && user?.username !== group.groupAdmin) ? setActivePrivateGroup(group) : handleJoinGroup(group)} className={styles.joinBtn}>Join</button>
                         }
                         <p className={styles.description}>{group.description}</p>
                         <div className={styles.resultRightChunk}>

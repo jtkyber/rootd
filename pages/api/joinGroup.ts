@@ -14,9 +14,11 @@ export default async function handler(
         console.log(req.body)
 
         const groupTest: IGroup | null = await Group.findById(groupId)
+        const isAdmin = groupTest?.groupAdmin === userName
+
         if (groupTest?.members.includes(userName)) throw new Error('User already in group')
-        if (groupTest?.isPrivate && !password && !passwordException) throw new Error('Please enter the group password')
-        if (groupTest?.isPrivate && (password !== groupTest?.password?.toString()) && !passwordException) throw new Error('Wrong Password')
+        if (!isAdmin && groupTest?.isPrivate && !password && !passwordException) throw new Error('Please enter the group password')
+        if (!isAdmin && groupTest?.isPrivate && (password !== groupTest?.password?.toString()) && !passwordException) throw new Error('Wrong Password')
 
         const group = await Group.findByIdAndUpdate(groupId, { 
             $set: { memberCount: groupTest?.members?.length ? groupTest.members.length + 1 : 1 },

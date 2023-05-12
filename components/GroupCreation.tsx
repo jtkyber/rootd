@@ -227,7 +227,7 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
                             : sectionIndex === 4 
                                 ? 
                                 <>
-                                    <h5 className={styles.instructions}>Add at least two tags related to your group (this will make your group easier to find)</h5>
+                                    <h5 className={styles.instructions}>Add 2-5 tags related to your group (this will make your group easier to find)</h5>
                                     <div className={styles.tagContainer}>
                                         <div className={styles.tags}>
                                             { values.tags.map((tag, i) => (
