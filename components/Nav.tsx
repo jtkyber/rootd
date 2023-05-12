@@ -67,8 +67,6 @@ const Nav = ({ channels }) => {
     return (
         <div className={styles.container}>
             <div className={styles.left}>
-                {/* <Logo /> */}
-                {/* <h3 className={styles.appTitle}><span>B</span>ible <span>C</span>hat</h3> */}
                 <Link className={styles.appTitle} href={router.pathname === '/' ? '/' : '/home'}><span>B</span>ible <span>C</span>hat</Link>
             </div>
             <div className={styles.right}>
@@ -100,7 +98,8 @@ const Nav = ({ channels }) => {
                                     </>
                                     : router.pathname === '/admin'
                                         ? <>
-                                            <Link href='/home' className={`${styles.backBtn} hasTooltip`} data-tooltip-msg='My Groups' data-tooltip-position='below'>Back</Link>
+                                            {/* <Link href='/home' className={`${styles.backBtn} hasTooltip`} data-tooltip-msg='My Groups' data-tooltip-position='below'>Back</Link> */}
+                                            <Link href='/home' className='hasTooltip' data-tooltip-msg='My Groups' data-tooltip-position='below'><HomeIcon /></Link>
                                         </>
                                         : null
                 }
