@@ -101,6 +101,10 @@ const Nav = ({ channels }) => {
                                             {/* <Link href='/home' className={`${styles.backBtn} hasTooltip`} data-tooltip-msg='My Groups' data-tooltip-position='below'>Back</Link> */}
                                             <Link href='/home' className='hasTooltip' data-tooltip-msg='My Groups' data-tooltip-position='below'><HomeIcon /></Link>
                                         </>
+                                        : router.pathname === '/account'
+                                        ? <>
+                                            <Link href='/home' className='hasTooltip' data-tooltip-msg='My Groups' data-tooltip-position='below'><HomeIcon /></Link>
+                                        </>
                                         : null
                 }
             </div>

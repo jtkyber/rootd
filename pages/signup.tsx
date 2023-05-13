@@ -66,9 +66,9 @@ const register: NextPage = () => {
             <form onSubmit={handleSubmit}>
                 <h1 className={styles.title}>Sign Up</h1>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
-                <input ref={usernameRef} minLength={3} maxLength={20} disabled={isLoading} type="text" placeholder='username' required />
-                <input minLength={6} disabled={isLoading} id="password" type="password" placeholder='password' required />
-                <input disabled={isLoading} id="email" type="email" placeholder='email' required />
+                <input ref={usernameRef} minLength={3} maxLength={20} disabled={isLoading} type="text" placeholder='Name' required />
+                <input minLength={6} disabled={isLoading} id="password" type="password" placeholder='Password' required />
+                <input disabled={isLoading} id="email" type="email" placeholder='Email' required />
                 <div className={styles.genderAndVersion}>
                     <select disabled={isLoading} id="gender" name='gender' defaultValue='Gender' required>
                         <option value="Gender" disabled hidden>Gender</option>

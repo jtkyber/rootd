@@ -215,6 +215,79 @@ button, input[type="checkbox"] {
     }
 }
 
+.sliderBtn {
+    position: relative;
+    width: 2.5rem;
+    height: max-content;
+    border: 2px solid rgb($red_brown);
+    border-radius: $largeBorderRadius;
+    overflow: hidden;
+    background-color: rgb($light_grey);
+    $ballSize: 0.8rem;
+    cursor: pointer;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 2px solid rgb($light_grey);
+        border-radius: $largeBorderRadius;
+        box-sizing: border-box;
+    }
+    
+    &.active {
+        border-color: rgb($grey_blue_vibrant);
+        background-color: rgb($grey_blue_vibrant);
+
+        &::after {
+            border-color: rgb($grey_blue_vibrant);
+        }
+
+        & .slider {
+            transform: translate(calc(-$ballSize / 2));
+            
+            & .sliderRect {
+                background-color: rgb($grey_blue_vibrant);
+                
+                &::before {
+                    background-color: rgb($light_grey);
+                }
+            }
+        }
+    }
+    
+    & .slider {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        transform: translate(calc(-100% + ($ballSize / 2)));
+        pointer-events: none;
+
+        & .sliderRect {
+            position: relative;
+            width: 100%;
+            height: $ballSize;
+            background-color: rgb($red_brown);
+
+            &::before {
+                content: '';
+                position: absolute;
+                right: calc(-$ballSize / 2);
+                top: 0;
+                height: calc($ballSize - 4px);
+                transform: translate(-2px, 2px);
+                aspect-ratio: 1/1;
+                background-color: rgb($red_brown);
+                border-radius: 50%;
+            }
+        }
+    }
+}
 
 
 @keyframes lds-roller {

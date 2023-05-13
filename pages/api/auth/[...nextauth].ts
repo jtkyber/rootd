@@ -2,7 +2,7 @@ import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import connectMongo from '../../../connectDB'
-import User from '../../../models/userModel'
+import User, { IUser } from '../../../models/userModel'
 import bcrypt from 'bcrypt'
 
 interface ICredentials {

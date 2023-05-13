@@ -61,7 +61,7 @@ const FinishRegister: NextPage = () => {
            <form onSubmit={handleSubmit}>
                 <h2 className={styles.title}>Finish Signing Up</h2>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
-                <input minLength={3} maxLength={20} disabled={isLoading} id="username" type="text" placeholder='username' autoComplete='name' required />
+                <input minLength={3} maxLength={20} disabled={isLoading} id="username" type="text" placeholder='Username' autoComplete='name' required />
                 <div className={styles.genderAndVersion}>
                     <select disabled={isLoading} id="gender" name='gender' defaultValue='Gender' required>
                         <option value="Gender" disabled hidden>Gender</option>
@@ -69,7 +69,7 @@ const FinishRegister: NextPage = () => {
                         <option value="female">Female</option>
                     </select>
                     <select disabled={isLoading} id="bVersion" name='bVersion' defaultValue='Prefered Bible Version' required>
-                        <option value="Prefered Bible Version" disabled hidden>Prefered Bible Version</option>
+                        <option value="Prefered Bible Version" disabled hidden>Bible Version</option>
                         {
                           bibleVersions.map((version, i) => (
                             <option key={i} value={version}>{version}</option>

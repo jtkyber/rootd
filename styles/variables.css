@@ -20,6 +20,8 @@ $miniScrollbarWidth: 0.7rem;
 $largeBorderRadius: 1rem;
 $smallBorderRadius: 0.5rem;
 $fadeOnHoverTransition: opacity linear 0.15s;
+$cleanFont: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 
 
 @define-mixin customScrollbar $display: block {
