@@ -67,7 +67,8 @@ const Nav = ({ channels }) => {
     return (
         <div className={styles.container}>
             <div className={styles.left}>
-                <Link className={styles.appTitle} href={router.pathname === '/' ? '/' : '/home'}><span>B</span>ible <span>C</span>hat</Link>
+                {/* <Link className={styles.appTitle} href={router.pathname === '/' ? '/' : '/home'}><span>B</span>ible <span>C</span>hat</Link> */}
+                <Link className={styles.appTitle} href={router.pathname === '/' ? '/' : '/home'}>root.d</Link>
             </div>
             <div className={styles.right}>
                 {

@@ -60,7 +60,7 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
 
     useEffect(() => {
         setErrMsg('')
-    }, [sectionIndex])
+    }, [values])
 
     const handleKeyUp = (e) => {
         if (e.code !== 'Enter') return
@@ -83,7 +83,9 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
     const runChecks = () => {
         switch(sectionIndex) {
             case 0:
-                values.name.length ? goToNextSection(1) : setErrMsg('Please include a group name')
+                values?.name?.trim()?.length ? 
+                    values.name.length < 50 ? goToNextSection(1) : setErrMsg('Name must be under 50 characters')
+                : setErrMsg('Please include a group name') 
                 break
             case 1:
                 values.description.length >= 15 ? goToNextSection(2) : setErrMsg('Please write a longer description')
@@ -143,11 +145,11 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
             }
         } catch(err) {
             const errObject = err.response?.data
-            if (!errObject?.msg) return
-            setErrMsg(errObject.msg)
             if (!errObject?.section) return
             const index = sectionNames.indexOf(errObject.section)
             setSectionIndex(index)
+            if (!errObject?.msg) return
+            setErrMsg(errObject.msg)
         }
     }
 
@@ -186,6 +188,7 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
                                         onChange={(e) => setValues({...values, name: e.target.value})} 
                                         type='text'
                                         value={values.name} 
+                                        maxLength={50}
                                     />
                                 </>
                             : sectionIndex === 1 

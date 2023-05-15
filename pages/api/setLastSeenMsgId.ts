@@ -14,6 +14,7 @@ export default async function handler(
         await connectMongo()
 
         const { userId, msgId, groupId }: any = req.body
+        console.log(req.body)
         const user = await User.findOneAndUpdate(
             { "_id": userId },
             { 

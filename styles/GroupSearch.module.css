@@ -137,12 +137,12 @@
         & .result {
             position: relative;
             width: 100%;
-            height: 3.5rem;
+            height: 3.8rem;
             background-color: inherit;
             box-shadow: inset 0 0 0.5rem 0 black;
             border-radius: $smallBorderRadius;
             display: grid;
-            grid-template-columns: 8rem 1fr 12rem;
+            grid-template-columns: 16rem 1fr 12rem;
             grid-template-rows: 1fr;
             align-items: center;
             gap: 1rem;

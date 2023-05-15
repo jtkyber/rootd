@@ -28,8 +28,8 @@ export default async function handler(
         const { groupId, groupAdmin, userId, name, description, books, characters, tags, isPrivate }: any = req.body
 
         if (!groupAdmin) throw new MyError({ msg: 'Not logged in', section: null })
-        if (!name.length) throw new MyError({ msg: 'Please include a group name', section: 'Name' })
-        if (description.length < 15) throw new MyError({ msg: 'Please write a longer description', section: 'Description' })
+        if (!name?.trim()?.length) throw new MyError({ msg: 'Please include a group name', section: 'Name' })
+        if (description?.trim()?.length < 15) throw new MyError({ msg: 'Please write a longer description', section: 'Description' })
         if (!books.length) throw new MyError({ msg: 'Please include at least one book', section: 'Books' })
         if (tags.length < 2) throw new MyError({ msg: 'Please include at least two tags', section: 'Tags' })
 
@@ -42,8 +42,8 @@ export default async function handler(
                     groupCreationRequests: {
                         _id: new mongoose.Types.ObjectId,
                         groupId: new mongoose.Types.ObjectId,
-                        name: name,
-                        description: description,
+                        name: name.trim(),
+                        description: description.trim(),
                         tags: tags,
                         date: Date.now(),
                         isPrivate: isPrivate,
@@ -61,10 +61,10 @@ export default async function handler(
         } else {
             await Group.create({
                 _id: groupId,
-                name: name,
+                name: name.trim(),
                 isPrivate: isPrivate,
-                description: description,
-                tags: [...tags.map(tag => tag.toLowerCase()), name.toLowerCase(), description.toLowerCase(), ...books.map(book => book.toLowerCase()), ...characters.map(character => character.toLowerCase())],
+                description: description.trim(),
+                tags: [...tags.map(tag => tag.toLowerCase()), name.trim().toLowerCase(), description.trim().toLowerCase(), ...books.map(book => book.toLowerCase()), ...characters.map(character => character.toLowerCase())],
                 characters: characters,
                 books: books,
                 date: Date.now(),

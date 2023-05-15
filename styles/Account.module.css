@@ -73,7 +73,7 @@
 
                 & .bVersionEdit {
                     background-color: transparent;
-                    color: rgb($light_grey);
+                    color: rgb($red_brown_dark);
                 }
             }
         }
@@ -121,5 +121,15 @@
         & .accountContainer > div {
             border-color: rgba($light_grey, 0.3);
         }
+
+        & .profileSettings {
+            & .bibleVersion {
+                & .bVersionEdit {
+                    background-color: transparent;
+                    color: rgb($light_grey);
+                }
+            }
+        }
+
     }
 }
