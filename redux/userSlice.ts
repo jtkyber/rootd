@@ -14,6 +14,7 @@ export interface IUserState {
     lastSeenMsgs: ILastSeenMsg[],
     currentDmPerson: string | null
     isAdmin: boolean
+    darkMode: boolean
 }
 
 const initialState: IUserState = {
@@ -27,7 +28,8 @@ const initialState: IUserState = {
     directMsgs: [],
     lastSeenMsgs: [],
     currentDmPerson: null,
-    isAdmin: false
+    isAdmin: false,
+    darkMode: false
 }
 
 export const userSlice = createSlice({
@@ -44,7 +46,8 @@ export const userSlice = createSlice({
             state.strikes = action.payload.strikes,
             state.directMsgs = action.payload.directMsgs,
             state.lastSeenMsgs = action.payload.lastSeenMsgs,
-            state.isAdmin = action.payload.isAdmin
+            state.isAdmin = action.payload.isAdmin,
+            state.darkMode = action.payload.darkMode
         }
     }
 })

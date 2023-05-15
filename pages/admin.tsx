@@ -12,6 +12,7 @@ import { getFormattedDateFromISO } from '../utils/dates'
 import refreshIcon from '../public/refresh.svg'
 import Image from 'next/image'
 import { useOnScreen } from '../utils/hooks'
+import { useRouter } from 'next/router'
 
 interface IAdminResultPartial extends Partial<IGrpCreationReq>, Partial<IUserReport>, Partial<IGroupReport> {}
 const resultsLimit = 20
@@ -34,6 +35,8 @@ const admin = () => {
 
     const user: IUserState = useAppSelector(state => state.user)
 
+    const router = useRouter()
+
     const { data, status, isFetching, fetchNextPage, hasNextPage, error } = useInfiniteQuery(
         ['adminNotifications', [resultType]], fetchResults, {
             getNextPageParam: (lastPage, pages) => lastPage?.cursor
@@ -46,7 +49,10 @@ const admin = () => {
         if (session?.user) {
           (async () => {
             const updatedUser: IUserState = await getUser(session.user.email)
-            if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
+            if (!user?._id) {
+                if (updatedUser?._id) dispatch(setUser(updatedUser))
+                else router.replace('/signin')
+            }
           })()
         }
     }, [])

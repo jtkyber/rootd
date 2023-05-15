@@ -8,7 +8,7 @@
     grid-template-columns: max-content 1fr;
     grid-template-rows: calc(100vh - $nav_height - $footer_height);
     align-items: center;
-    background-color: inherit;
+    background-color: rgb($light_grey);
     
     & .userGroups, & .userDmNames {
         position: relative;
@@ -20,7 +20,7 @@
         gap: 1rem;
         overflow-y: auto;
         overflow-x: hidden;
-        background-color: rgb($light_grey);
+        background-color: inherit;
         box-shadow: $sectionShadow;
         z-index: 100;
         @mixin miniScrollbar;
@@ -103,6 +103,7 @@
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: 4rem 1fr;
+        background-color: inherit;
 
         & .selectedGroupName {
             position: relative;
@@ -115,6 +116,7 @@
             font-weight: 400;
             font-size: xx-large;
             z-index: 10;
+            background-color: inherit;
         }
         
         & .groupDetails {
@@ -123,7 +125,7 @@
             right: 0;
             width: 15rem;
             height: 100%;
-            background-color: rgb($light_grey);
+            background-color: inherit;
             box-shadow: none;
             display: grid;
             grid-template-columns: 1fr;
@@ -416,6 +418,10 @@
                         transform-origin: 0 50%;
                         fill: rgb($light_grey);
                         transition: transform 0.2s linear;
+
+                        &:nth-child(2) {
+                            transform: scale(1.1);
+                        }
                     }
                 }
 
@@ -441,6 +447,76 @@
                     }
                 }
 
+            }
+        }
+    }
+
+    &.darkMode {
+        background-color: rgb($grey_blue_dark);
+
+        & .userGroups, & .userDmNames {
+            /* border-right: 1px solid rgba($light_grey, 0.3); */
+
+            & .title {
+                border: 1px solid rgba($light_grey, 0.2);
+            }
+            & .singleGroup, & .singleDmName { 
+                border: 1px solid rgba($light_grey, 0.2);
+                
+                & .groupName {
+                    color: rgb($light_grey);
+                }
+            }
+        }
+
+        & .selectedGroupName {
+            color: rgb($light_grey);
+            /* border-bottom: 1px solid rgba($light_grey, 0.3); */
+        }
+
+        & .groupDetails {
+            /* border-left: 1px solid rgba($light_grey, 0.3); */
+            & h2, & h3, & h5 {
+                color: rgb($light_grey);
+            }
+
+            & h3 {
+                font-weight: 400;
+            }
+
+            & .topRight {
+                & svg path {
+                    fill: rgb($light_grey);
+                }
+            }
+
+            & .sectionTwo {
+                & .members {
+                    & .member {
+                        border-color: rgba($light_grey, 0.3);
+                    }
+                }
+            }
+
+
+            & .expandGroupDetailsBtn {
+                & svg {
+                    & path {
+                        fill: rgb($grey_blue);
+                    }
+
+                    & text {
+                        fill: rgba($light_grey, 0.8);
+                    }
+                }
+
+                &.show {
+                    & svg {
+                        & path {
+                            fill: rgb($grey_blue);
+                        }
+                    }
+                }
             }
         }
     }

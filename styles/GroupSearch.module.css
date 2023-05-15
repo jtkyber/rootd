@@ -10,6 +10,7 @@
     grid-template-areas: 
     "searchParams sortContainer"
     "searchParams searchResults";
+    background-color: rgb($light_grey);
 
     & .searchParams {
         position: relative;
@@ -17,7 +18,7 @@
         width: 100%;
         height: 100%;
         box-shadow: 0 0 0.5rem 0 black;
-        background-color: rgb($light_grey);
+        background-color: inherit;
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(4, max-content) 1fr;
@@ -68,7 +69,7 @@
         width: 100%;
         height: 100%;
         grid-area: sortContainer;
-        background-color: rgb($light_grey);
+        background-color: inherit;
         display: grid;
         grid-template-columns: 8rem 1fr 14rem;
         grid-template-areas: "nameSort summarySort sortRightChunk";
@@ -127,7 +128,7 @@
         grid-auto-rows: max-content;
         justify-items: center;
         z-index: 1;
-        background-color: rgb($light_grey);
+        background-color: inherit;
         gap: 0.4rem;
         padding: 1rem;
 
@@ -137,7 +138,7 @@
             position: relative;
             width: 100%;
             height: 3.5rem;
-            background-color: rgb($light_grey);
+            background-color: inherit;
             box-shadow: inset 0 0 0.5rem 0 black;
             border-radius: $smallBorderRadius;
             display: grid;
@@ -229,6 +230,45 @@
             width: max-content;
             height: max-content;
             transform: scale(0.8);
+        }
+    }
+
+    &.darkMode {
+        background-color: rgb($grey_blue_dark);
+
+        & .searchParams {
+            & .keywordSearchInput {
+                color: rgb($light_grey);
+                border-color: rgb($light_grey);
+
+                &::placeholder {
+                    color: rgba($light_grey, 0.3);
+                }
+            }
+
+            & .hidePrivateSection {
+                & label {
+                    color: rgb($light_grey);
+                }
+            }
+        }
+
+        & .sortContainer {
+            & h6 {
+                color: rgb($light_grey);
+            }
+        }
+
+        & .searchResults {
+            & .result {
+                & h3, & h5, & p {
+                    color: rgb($light_grey);
+                }
+
+                & .joined {
+                    color: rgb($moss_green_vibrant);
+                }
+            }
         }
     }
 }

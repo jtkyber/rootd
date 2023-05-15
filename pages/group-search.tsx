@@ -82,7 +82,10 @@ const groupSearch = () => {
     if (session?.user) {
       (async () => {
         const updatedUser: IUserState = await getUser(session.user.email)
-        if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
+        if (!user?._id) {
+          if (updatedUser?._id) dispatch(setUser(updatedUser))
+          else router.replace('/signin')
+        }
         
         if (updatedUser?.groups?.length) {
           const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
@@ -176,7 +179,7 @@ const groupSearch = () => {
   }
 
   return (
-      <div className={styles.container}>
+      <div className={`${styles.container} ${user?.darkMode === true ? styles.darkMode : ''}`}>
         {
           session ?
           <>

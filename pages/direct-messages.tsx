@@ -17,6 +17,7 @@ import { useOnScreen } from '../utils/hooks'
 import { PresenceChannel } from 'pusher-js'
 import { ISelectedDmPerson, setSelectedDmPerson } from '../redux/appSlice'
 import getInitials from '../utils/getInitials'
+import { useRouter } from 'next/router'
 
 let scrollElementId: string
 
@@ -49,6 +50,8 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
 
   const dispatch = useAppDispatch()
 
+  const router = useRouter()
+
   const queryClient = useQueryClient()
 
   const { data, status, isFetching, fetchNextPage, hasNextPage, error } = useInfiniteQuery(
@@ -73,11 +76,14 @@ const directMessages = ({ channels }: {channels: PresenceChannel[] | []}) => {
   useEffect(() => {
     if (session?.user) {
       (async () => {
-        if (data) refetch()
+        if (user?._id && data) refetch()
         const updatedUser: IUserState = await getUser(session.user.email)
-        if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
+        if (!user?._id) {
+          if (updatedUser?._id) dispatch(setUser(updatedUser))
+          else router.replace('/signin')
+        }
         
-        if (updatedUser) {
+        if (updatedUser._id) {
           const res = await axios.get(`/api/getDmPeople?userId=${updatedUser._id}`)
           if (res?.data?.length) {
             setDmPeople(res.data)
@@ -234,7 +240,7 @@ function handleSendMsgClick () {
 }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${user?.darkMode === true ? styles.darkMode : ''}`}>
     {
         session ?
         <>
@@ -260,7 +266,7 @@ function handleSendMsgClick () {
           </div>
           <div className={styles.selectedGroup}>
             <h2 className={styles.selectedGroupName}>{selectedDmPerson?.username}</h2>
-            <div ref={chatAreaRef} className={stylesChat.chatArea}>
+            <div ref={chatAreaRef} className={`${stylesChat.chatArea} ${user?.darkMode === true ? stylesChat.darkMode : ''}`}>
                 <div ref={chatBoxRef} className={stylesChat.chatBox}>
                     <div ref={messagesRef} className={`${stylesChat.messages} ${stylesChat.dms}`}>
                         {data?.pages.map((page, i, row1) => (

@@ -1,8 +1,8 @@
 import { NextPage } from 'next'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import styles from '../styles/LogReg.module.css'
 import { useAppDispatch } from '../redux/hooks'
 import { IUserState, setUser } from '../redux/userSlice'
@@ -54,7 +54,7 @@ const register: NextPage = () => {
     const handleGoogleSignIn = async (e) => {
         e.preventDefault()
         try {
-            await signIn('google', { callbackUrl: `/home` })
+            await signIn('google', { callbackUrl: `/continue-signup` })
         } catch (err) {
             console.log(err)
         }

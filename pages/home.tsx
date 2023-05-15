@@ -12,9 +12,12 @@ import styles from '../styles/Home.module.css'
 import Link from 'next/link'
 import { PresenceChannel } from 'pusher-js'
 import NotAuthorizedScreen from '../components/NotAuthorizedScreen'
+import { useRouter } from 'next/router'
 
 const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
   const dispatch = useAppDispatch()
+
+  const router = useRouter()
 
   const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
   const userGroups: IGroup[] = useAppSelector(state => state.group.userGroups)
@@ -26,7 +29,10 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
     if (session?.user) {
       (async () => {
         const updatedUser: IUserState = await getUser(session.user.email)
-        if (!user?._id && updatedUser?._id) dispatch(setUser(updatedUser))
+        if (!user?._id) {
+          if (updatedUser?._id) dispatch(setUser(updatedUser))
+          else router.replace('/signin')
+        }
         
         if (updatedUser?.groups?.length) {
           const userGroups = await axios.get(`/api/getUserGroups?groupIds=${JSON.stringify(updatedUser.groups)}`)
@@ -39,7 +45,7 @@ const Home: NextPage = ({ channels }: {channels: PresenceChannel[] | []}) => {
   useEffect(() => { if (userGroups[0] && !selectedGroup._id) dispatch(setSelectedGroup(userGroups[0])) }, [userGroups])
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container}  ${user?.darkMode === true ? styles.darkMode : ''}`}>
       {
         session ?
         <>

@@ -446,9 +446,9 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
     }
 
     return (
-        <div className={styles.selectedGroup}>
+        <div className={`${styles.selectedGroup}`}>
             <h2 className={styles.selectedGroupName}>{selectedGroup?.name}</h2>
-            <div ref={chatAreaRef} className={stylesChat.chatArea}>
+            <div ref={chatAreaRef} className={`${stylesChat.chatArea} ${user?.darkMode === true ? stylesChat.darkMode : ''}`}>
                 <div ref={chatBoxRef} className={stylesChat.chatBox}>
                     <div ref={messagesRef} className={stylesChat.messages}>
                         {data?.pages.map((page, i, row1) => (
@@ -466,7 +466,7 @@ const ChatBox = ({ channels }: {channels: PresenceChannel[] | []}) => {
                                             msg?.authorProfileImg ? <Image onClick={() => msg.authorId !== user._id ? setSelectedMember({ id: msg.authorId, img: msg.authorProfileImg}): null} width={25} height={25} className={`${stylesChat.authorImg} ${onlineMembers.includes(msg.author) ? stylesChat.online : null}`} src={msg.authorProfileImg} alt='Author Image'/>
                                             : <h5 onClick={() => msg.authorId !== user._id ? setSelectedMember({ id: msg.authorId, img: msg.authorProfileImg}) : null} className={`${stylesChat.authorImg} ${stylesChat.noImg} ${onlineMembers.includes(msg.author) ? stylesChat.online : null}`}>{getInitials(msg.author)}</h5>
                                         }
-                                        <h5>{msg.author}</h5>
+                                        <h5 className={stylesChat.authorName}>{msg.author}</h5>
                                     </div>
                                     <h4 onClick={(e) => showLikeNames(e, msg)} className={stylesChat.msgContent}>
                                         {parse(msg.content, options)}

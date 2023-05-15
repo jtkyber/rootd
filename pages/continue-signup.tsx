@@ -7,6 +7,8 @@ import axios from 'axios'
 import LoadingAnimation from '../components/LoadingAnimation'
 import bibleVersions from '../bibleVersions.json'
 import styles from '../styles/LogReg.module.css'
+import { IUserState } from '../redux/userSlice'
+import getUser from '../utils/getUser'
 
 const FinishRegister: NextPage = () => {
   const { data: session }: any = useSession()
@@ -14,6 +16,16 @@ const FinishRegister: NextPage = () => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [errMessage, setErrMessage] = useState('')
+  const [noUserMatch, setNoUserMatch] = useState(false)
+
+  useEffect(() => {
+    if (!session?.user) return
+    (async() => {
+      const user: IUserState = await getUser(session.user.email) 
+      if (user?._id) router.replace('/home')
+      else setNoUserMatch(true)
+    })()
+  }, [])
 
   const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
@@ -58,6 +70,7 @@ const FinishRegister: NextPage = () => {
     <div className={styles.container}>
       {
         session ?
+          noUserMatch ?
            <form onSubmit={handleSubmit}>
                 <h2 className={styles.title}>Finish Signing Up</h2>
                 <h5 className={styles.errorMessage}>{errMessage}</h5>
@@ -83,6 +96,7 @@ const FinishRegister: NextPage = () => {
                     : <button type="submit">Submit</button>
                 }
             </form>
+          : null
         : <NotAuthorizedScreen />
       }
     </div>

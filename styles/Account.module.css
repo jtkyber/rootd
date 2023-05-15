@@ -5,6 +5,7 @@
     height: 100%;
     display: flex;
     justify-content: center;
+    background-color: rgb($light_grey);
     
     & .accountContainer {
         width: 45rem;
@@ -50,9 +51,9 @@
 
             & .basicInfoSection {
                 width: 100%;
-                display: grid;
-                grid-template-columns: 6rem 1fr max-content;
+                display: flex;
                 align-items: center;
+                justify-content: space-between;
             }
         }
 
@@ -69,6 +70,11 @@
                 display: grid;
                 grid-template-columns: 12rem 1fr max-content;
                 align-items: center;
+
+                & .bVersionEdit {
+                    background-color: transparent;
+                    color: rgb($light_grey);
+                }
             }
         }
 
@@ -80,7 +86,7 @@
             padding: $accountSectionPadding;
             border-bottom: 1px solid rgba($red_brown_dark, 0.3);
 
-            & .darkMode {
+            & .darkModeOption {
                 width: 100%;
                 display: flex;
                 flex-flow: row nowrap;
@@ -104,4 +110,16 @@
         }
     }
 
+
+    &.darkMode {
+        background-color: rgb($grey_blue_dark);
+
+        & h5 {
+            color: rgb($light_grey);
+        }
+
+        & .accountContainer > div {
+            border-color: rgba($light_grey, 0.3);
+        }
+    }
 }
