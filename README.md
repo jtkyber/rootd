@@ -110,3 +110,12 @@ User's will immediately see new notifications
 * Option to change preffered Bible translation
 * Dark mode toggle
 * Delete Account button (coming soon)
+### Admin tools
+* Group creation requests (older requests shown first)
+  * Shows details about the requested group and options to approve or reject the request
+  * On approval
+    * Group will be created
+    * User who requested group will be added to the group
+    * Notification will be sent to user about group's approval
+  * On rejection (admin must type a reason)
+    * Notification will be sent to user with the reason the group was rejected 
