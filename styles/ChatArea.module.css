@@ -105,9 +105,10 @@
                     border-style: solid;
                     padding: 0.5rem 0.8rem;
                     width: max-content;
-                    max-width: 40rem;
+                    max-width: min(40rem, 100%);
                     font-weight: 400;
                     white-space: pre-wrap;
+                    word-wrap: break-word;
 
                     & * {
                         pointer-events: none;

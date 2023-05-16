@@ -23,14 +23,12 @@ const Layout = (props) => {
     const router = useRouter()
 
     const isDevicePortrait = () => {
-        if (window.innerWidth < window.innerHeight) dispatch(setIsMobile(true))
+        if (window.innerWidth < 820) dispatch(setIsMobile(true))
         else dispatch(setIsMobile(false))
     }
     
     useEffect(() => {
-        if ((window.screen.width < window.screen.height) || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            dispatch(setIsMobile(true))
-        } else dispatch(setIsMobile(false))
+        isDevicePortrait()
 
         window.addEventListener('resize', isDevicePortrait)
 
