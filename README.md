@@ -18,10 +18,14 @@ Will show all groups that match all of the search options
 * Sorting 
   * Sorting options
     *   Name
-    *   # of members
+    *   Number of members
     *   Time since last active
     *   Private
-  *   Clicking a sort option will refetch the results with the selected search options and the updated sort option
+  * Clicking a sort option will refetch the results with the selected search options and the updated sort option
+* Joining a public group
+  * User will be added to group immediately
+* Joining a private group
+  * User will be prompted to enter a password, possessed by the creator of that group 
 ### Creating a group
 * After submitting a group, it will be sent to the 'admin' database for admins to review and approve or reject
 * Error checking included
