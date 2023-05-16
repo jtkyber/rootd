@@ -14,6 +14,14 @@ Will show all groups that match all of the search options
 * Book and character search
  * User may select multiple books and multiple characters
 * Show or hide private groups
+* Infinite scrolling
+* Sorting 
+  * Sorting options
+    *   Name
+    *   # of members
+    *   Time since last active
+    *   Private
+  *   Clicking a sort option will refetch the results with the selected search options and the updated sort option
 ### Creating a group
 * After submitting a group, it will be sent to the 'admin' database for admins to review and approve or reject
 * Error checking included
