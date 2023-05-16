@@ -76,3 +76,19 @@ Will show all groups that match all of the search options
 * Infinite scrolling
 * Results are cached
 * Other user will immediately see new messages and message likes
+### Notifications
+User's will immediately see new notifications
+* Message like
+  * Clicking on this message will bring the user to the group that contains the liked message, and then scroll up to the message
+  * If the same message is liked more than once, the corresponding notification will be updated to reflect that, instead of a new notification being sent
+* Direct message like
+  * Clicking on this message will bring the user to the direct message thread that contains the liked message, and then scroll up to the message
+* Group invite
+  * User either accept or reject the invite. If accepted, user will be added to the group
+  * If a user joins a group through an invite, a password is not required
+* Group approved
+  * User will receive this message when an admin approves the user's group creation request 
+  * Clicking the notification will bring the user to the newly created group
+* Group rejected
+  * User will receive this message when an admin rejects the user's group creation request 
+  * Will show a reason for the rejection
