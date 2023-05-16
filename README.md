@@ -60,6 +60,16 @@ Will show all groups that match all of the search options
   * Includes a button to insert a clickable passage at current cursor position (brings up passage selection popup)
 * Group members will immediately see new messages and message likes
 * Clicking on a member's profile photo will bring up that user's profile info and some options
+### Group member profile popup
+Contains the following:
+* Member profile photo and name
+* Member's prefered bible translation
+* A list of groups shared by both you and the member
+* A button to send a direct message
+  * Will start a direct message thread with the member
+* A button to invite the member to a group
+  * Only groups that the user is in and the other member is not will be given as options
+  * Will send the member a group invite notification
 ### Group details
 * Group options
   * Mute group (will not receive notifications from group)
