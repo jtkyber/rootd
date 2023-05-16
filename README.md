@@ -15,6 +15,7 @@ Will show all groups that match all of the search options
  * User may select multiple books and multiple characters
 * Show or hide private groups
 * Infinite scrolling
+* Results are cached
 * Sorting 
   * Sorting options
     *   Name
@@ -49,3 +50,14 @@ Will show all groups that match all of the search options
   * Like button
   * Number of likes
   * List of people who liked message (revealed when message content is clicked)
+* Infinite scrolling
+* Results are cached
+* Bad words in message are replaced with censered version
+* Clickable Bible passages are blue
+  * Will open new tab at biblegateway.com, showing the full bible passage
+  * Will use the user's preffered bible translation
+* Input
+  * Includes a button to insert a clickable passage at current cursor position (brings up passage selection popup)
+* Group members will immediately see new messages and message likes
+* Clicking on a member's profile photo will bring up that user's profile info and some options
+### Group details
