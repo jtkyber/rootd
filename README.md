@@ -26,7 +26,7 @@ Will show all groups that match all of the search options
   * User will be added to group immediately
 * Joining a private group
   * User will be prompted to enter a password, possessed by the creator of that group 
-### Creating a group
+### Create a group
 * After submitting a group, it will be sent to the 'admin' database for admins to review and approve or reject
 * Error checking included
 * Sections
@@ -36,3 +36,8 @@ Will show all groups that match all of the search options
   * Characters (optional)
   * Tags (at least 2 required)
   * Make private (optional)
+### Home page layout
+* List of the user's groups (left)
+* Messages from the selected group (right)
+* Input area (bottom)
+* Group details (right / collapsible)
