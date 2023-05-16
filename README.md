@@ -41,3 +41,11 @@ Will show all groups that match all of the search options
 * Messages from the selected group (right)
 * Input area (bottom)
 * Group details (right / collapsible)
+### Group chat
+* A message includes
+  * The author and their profile photo (if logged in with Google)
+  * The message content
+  * The message date (only time is shown if same day)
+  * Like button
+  * Number of likes
+  * List of people who liked message (revealed when message content is clicked)
