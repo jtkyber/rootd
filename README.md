@@ -61,7 +61,6 @@ Will show all groups that match all of the search options
 * Group members will immediately see new messages and message likes
 * Clicking on a member's profile photo will bring up that user's profile info and some options
 ### Group member profile popup
-Contains the following:
 * Member profile photo and name
 * Member's prefered bible translation
 * A list of groups shared by both you and the member
@@ -82,6 +81,7 @@ Contains the following:
 * Show and copy group password (if user is creator of group)
 ### Direct messages
 * List of dm people on left / messages from selected person on right
+* Number of new messages shown on each dm person button
 * A direct message contains all of the things that a group message contains, except for the number of likes and a list of the people who liked it
 * Infinite scrolling
 * Results are cached
@@ -102,3 +102,11 @@ User's will immediately see new notifications
 * Group rejected
   * User will receive this message when an admin rejects the user's group creation request 
   * Will show a reason for the rejection
+### Account page
+* Profile photo
+* Name
+* Email
+* Option to edit password (if not logged in with Google) (coming soon)
+* Option to change preffered Bible translation
+* Dark mode toggle
+* Delete Account button (coming soon)
