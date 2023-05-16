@@ -8,23 +8,33 @@ import { IGroup } from '../models/groupModel'
 import Pusher, { PresenceChannel } from 'pusher-js'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { setIsMobile } from '../redux/appSlice'
 
 const Layout = (props) => {
     const user: IUserState = useAppSelector(state => state.user)
     const selectedGroup: IGroup = useAppSelector(state => state.group.selectedGroup)
+    const isMobile: boolean = useAppSelector(state => state.app.isMobile)
+
     const [pusher, setPusher] = useState<Pusher | null>(null)
-    const [isMobileDevice, setIsMobileDevice] = useState<boolean>(false)
     const [channels, setChannels]: any = useState<PresenceChannel[] | []>([])
     
     const dispatch = useAppDispatch()
 
     const router = useRouter()
+
+    const isDevicePortrait = () => {
+        if (window.innerWidth < window.innerHeight) dispatch(setIsMobile(true))
+        else dispatch(setIsMobile(false))
+    }
     
     useEffect(() => {
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            setIsMobileDevice(true)
-        }
-        setIsMobileDevice(false)
+        if ((window.screen.width < window.screen.height) || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            dispatch(setIsMobile(true))
+        } else dispatch(setIsMobile(false))
+
+        window.addEventListener('resize', isDevicePortrait)
+
+        return () => window.addEventListener('resize', isDevicePortrait)
     }, [])
 
     useEffect(() => {
@@ -131,7 +141,7 @@ const Layout = (props) => {
     return (
         <div className={styles.container}>
             {
-                !isMobileDevice || (isMobileDevice && router.pathname === '/') ?
+                !isMobile || (isMobile && router.pathname === '/') ?
                 <>
                     <Nav channels={channels} />
                     <main>{renderChildren()}</main>

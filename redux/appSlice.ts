@@ -11,6 +11,7 @@ interface IAppState {
     activeDropdown: string
     showDMs: boolean
     selectedDmPerson: ISelectedDmPerson
+    isMobile: boolean
 }
 
 
@@ -20,7 +21,8 @@ const initialState: IAppState = {
     selectedDmPerson: {
         _id: '',
         username: ''
-    }
+    },
+    isMobile: false
 }
 
 export const appSlice = createSlice({
@@ -35,10 +37,13 @@ export const appSlice = createSlice({
         },
         setSelectedDmPerson: (state, action: PayloadAction<ISelectedDmPerson>) => {
             state.selectedDmPerson = action.payload
+        },
+        setIsMobile: (state, action: PayloadAction<boolean>) => {
+            state.isMobile = action.payload
         }
     }
 })
 
-export const { setActiveDropdown, setShowDMs, setSelectedDmPerson } = appSlice.actions
+export const { setActiveDropdown, setShowDMs, setSelectedDmPerson, setIsMobile } = appSlice.actions
 
 export default appSlice.reducer

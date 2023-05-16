@@ -11,7 +11,6 @@ export default async function handler(
         await connectMongo()
 
         const { userId, userName, groupId, password = null, passwordException = false }: any = req.body
-        console.log(req.body)
 
         const groupTest: IGroup | null = await Group.findById(groupId)
         const isAdmin = groupTest?.groupAdmin === userName

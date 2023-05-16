@@ -139,7 +139,6 @@ const GroupCreation = ({ setCreatingGroup, userId } : IParams) => {
             if (res?.data?._id) {
                 joinGroup(res.data)
             } else if (res?.data) {
-                console.log()
                 setGroupRequestSent(true)
                 setTimeout(() => setCreatingGroup(false), 3000) 
             }
