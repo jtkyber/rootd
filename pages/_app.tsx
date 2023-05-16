@@ -24,7 +24,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <> 
       <Head>
-        <title>Root.d - Biblical Discussion App</title>
+        <title>Root'd - Biblical Discussion App</title>
         <link rel="icon" href="/book.ico" />
       </Head>
       <SessionProvider session={pageProps.session}>

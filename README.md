@@ -1,4 +1,4 @@
-# root.d
+# root'd
 A platform for discussing biblical topics
 ## Features
 ### Search for a group

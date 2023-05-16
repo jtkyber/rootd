@@ -12,3 +12,6 @@ const Index: NextPage = () => {
 }
 
 export default Index
+
+
+// 112 ts/css files
