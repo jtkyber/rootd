@@ -61,3 +61,12 @@ Will show all groups that match all of the search options
 * Group members will immediately see new messages and message likes
 * Clicking on a member's profile photo will bring up that user's profile info and some options
 ### Group details
+* Group options
+  * Mute group (will not receive notifications from group)
+  * Leave group
+  * Remove group (if user is creator of group)
+* Group name
+* Group description
+* Group members
+  * Members who are currently online are colored green
+* Show and copy group password (if user is creator of group)
