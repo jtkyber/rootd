@@ -119,3 +119,8 @@ User's will immediately see new notifications
     * Notification will be sent to user about group's approval
   * On rejection (admin must type a reason)
     * Notification will be sent to user with the reason the group was rejected 
+* Reported users (coming soon)
+* Reported groups (coming soon)
+### Login / register options
+* Credentials
+* Google
