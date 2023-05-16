@@ -70,3 +70,9 @@ Will show all groups that match all of the search options
 * Group members
   * Members who are currently online are colored green
 * Show and copy group password (if user is creator of group)
+### Direct messages
+* List of dm people on left / messages from selected person on right
+* A direct message contains all of the things that a group message contains, except for the number of likes and a list of the people who liked it
+* Infinite scrolling
+* Results are cached
+* Other user will immediately see new messages and message likes
