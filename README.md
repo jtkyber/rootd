@@ -124,3 +124,12 @@ User's will immediately see new notifications
 ### Login / register options
 * Credentials
 * Google
+### Tech stack
+* Typescript
+* Next.js
+* PostCSS
+* MongoDB & Mongoose
+* Redux Toolkit
+* Pusher.js
+* TanStack Query
+* Next-Auth
