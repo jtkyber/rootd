@@ -52,7 +52,7 @@ Will show all groups that match all of the search options
   * List of people who liked message (revealed when message content is clicked)
 * Infinite scrolling
 * Results are cached
-* Bad words in message are replaced with censered version
+* Bad words in message are replaced with censored version
 * Clickable Bible passages are blue
   * Will open new tab at biblegateway.com, showing the full bible passage
   * Will use the user's preffered bible translation
