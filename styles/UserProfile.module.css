@@ -1,158 +1,155 @@
 @import 'variables.css';
 
 .container {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 5rem;
-    overflow: hidden;
-    z-index: 101;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(5px);
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding-top: 5rem;
+	overflow: hidden;
+	z-index: 101;
 
-    & .modal {
-        height: 80%;
-        min-height: 20rem;
-        max-height: 30rem;
-        max-width: 70%;
-        aspect-ratio: 7/10;
-        background-color: rgb($light_grey);
-        border-radius: $largeBorderRadius;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: max-content max-content max-content 1fr;
-        justify-items: center;
-        padding: 1rem;
-        gap: 1rem;
-        overflow: hidden;
+	& .modal {
+		height: 80%;
+		min-height: 20rem;
+		max-height: 30rem;
+		max-width: 70%;
+		aspect-ratio: 7/10;
+		background-color: rgb($light_grey);
+		border-radius: $largeBorderRadius;
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: max-content max-content max-content 1fr;
+		justify-items: center;
+		padding: 1rem;
+		gap: 1rem;
+		overflow: hidden;
 
-        & .msgAuthor {
-            width: 100%;
-            height: max-content;
-            display: flex;
-            flex-flow: row nowrap;
-            gap: 0.5rem;
-            align-items: center;
-            border-bottom: 1px solid black;
-            padding-bottom: 1rem;
-            justify-content: center;
+		& .msgAuthor {
+			width: 100%;
+			height: max-content;
+			display: flex;
+			flex-flow: row nowrap;
+			gap: 0.5rem;
+			align-items: center;
+			border-bottom: 1px solid black;
+			padding-bottom: 1rem;
+			justify-content: center;
 
-            & .authorImg {
-                border-radius: 50%;
-                height: 2.2rem;
-                width: 2.2rem;
+			& .authorImg {
+				border-radius: 50%;
+				height: 2.2rem;
+				width: 2.2rem;
 
-                &.noImg {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    background-color: rgb($deep_red_shadow);
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    color: rgb($light_grey);
-                }
-            }
+				&.noImg {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					background-color: rgb($deep_red_shadow);
+					font-weight: 600;
+					font-size: 0.9rem;
+					color: rgb($light_grey);
+				}
+			}
 
-            & h2 {
-                font-weight: normal;
-            }
-        }
+			& h2 {
+				font-weight: normal;
+			}
+		}
 
-        & .preferedBibleVersion {
-            font-weight: 600;
-        }
+		& .preferedBibleVersion {
+			font-weight: 600;
+		}
 
-        & .sharedGroupContainer {
-            display: flex;
-            flex-flow: column nowrap;
-            align-items: center;
+		& .sharedGroupContainer {
+			display: flex;
+			flex-flow: column nowrap;
+			align-items: center;
 
-            & .sharedGroupsTitle {
-                margin-bottom: 1rem;
-                font-weight: 600;
-                text-align: center;
-            }
+			& .sharedGroupsTitle {
+				margin-bottom: 1rem;
+				font-weight: 600;
+				text-align: center;
+			}
 
-            & .sharedGroups {
-                display: flex;
-                flex-flow: row wrap;
-                justify-content: center;
-                gap: 1rem;
-                
-                & .singleGroupName {
-                    border: 1px solid rgb($red_brown);
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    padding: 0.2rem 0.5rem;
-                    border-radius: $smallBorderRadius;
-                }
-            }
+			& .sharedGroups {
+				display: flex;
+				flex-flow: row wrap;
+				justify-content: center;
+				gap: 1rem;
 
-        }
+				& .singleGroupName {
+					border: 1px solid rgb($red_brown);
+					font-weight: 600;
+					font-size: 0.9rem;
+					padding: 0.2rem 0.5rem;
+					border-radius: $smallBorderRadius;
+				}
+			}
+		}
 
-        & .bottomSection {
-            align-self: end;
-            display: flex;
-            flex-flow: row wrap;
-            justify-content: center;
-            gap: 0.5rem;
+		& .bottomSection {
+			align-self: end;
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: center;
+			gap: 0.5rem;
 
-            & button {
-                @mixin brownButton;
+			& button {
+				@mixin brownButton;
 
-                /* & .sendDmBtn {
+				/* & .sendDmBtn {
     
                 }
                 
                 & .inviteToGroup {
     
                 } */
-            }
+			}
+		}
+	}
 
-        }
-    }
+	& .invitingToGroup {
+		width: 22rem;
+		height: max-content;
+		background-color: rgb($light_grey);
+		border-radius: $largeBorderRadius;
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: max-content max-content max-content 1fr;
+		justify-items: center;
+		padding: 1rem;
+		overflow: hidden;
 
-    & .invitingToGroup {
-        width: 22rem;
-        height: max-content;
-        background-color: rgb($light_grey);
-        border-radius: $largeBorderRadius;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: max-content max-content max-content 1fr;
-        justify-items: center;
-        padding: 1rem;
-        overflow: hidden;
+		& .inviteTitle {
+			text-align: center;
+			margin-bottom: 2rem;
+			font-weight: 600;
+		}
 
-        & .inviteTitle {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-weight: 600;
-        }
+		& .inviteGroups {
+			display: flex;
+			flex-flow: column nowrap;
+			width: 100%;
+			align-items: center;
 
-        & .inviteGroups {
-            display: flex;
-            flex-flow: column nowrap;
-            width: 100%;
-            align-items: center;
+			& .inviteGroup {
+				display: flex;
+				flex-flow: row nowrap;
+				gap: 0.5rem;
+				font-weight: 600;
+			}
+		}
 
-            & .inviteGroup {
-                display: flex;
-                flex-flow: row nowrap;
-                gap: 0.5rem;
-                font-weight: 600;
-            }
-        }
-
-
-        & .submitInviteBtn {
-            @mixin brownButton;
-            margin-top: 2rem;
-        }
-    }
+		& .submitInviteBtn {
+			@mixin brownButton;
+			margin-top: 2rem;
+		}
+	}
 }

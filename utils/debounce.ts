@@ -1,10 +1,10 @@
 export default function debounce(cb, delay = 250) {
-    let timeout
+	let timeout
 
-    return (...args) => {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => {
-            cb(...args)
-        }, delay)
-    }
+	return (...args) => {
+		clearTimeout(timeout)
+		timeout = setTimeout(() => {
+			cb(...args)
+		}, delay)
+	}
 }

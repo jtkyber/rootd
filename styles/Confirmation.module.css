@@ -1,70 +1,70 @@
 @import 'variables.css';
 
 .container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 5rem;
-    overflow: hidden;
-    z-index: 100;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(5px);
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding-top: 5rem;
+	overflow: hidden;
+	z-index: 100;
 
-    & .confirmationBox {
-        width: max-content;
-        height: max-content;
-        background-color: rgb($light_grey);
-        border-radius: $largeBorderRadius;
-        padding: 2rem;
-        display: grid;
-        justify-content: center;
-        justify-items: center;
-        align-items: center;
-        align-content: center;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: max-content max-content max-content;
-        grid-template-areas:
-        "title title"
-        "passwordInput passwordInput"
-        "cancelBtn joinBtn";
-        gap: 1rem;
+	& .confirmationBox {
+		width: max-content;
+		height: max-content;
+		background-color: rgb($light_grey);
+		border-radius: $largeBorderRadius;
+		padding: 2rem;
+		display: grid;
+		justify-content: center;
+		justify-items: center;
+		align-items: center;
+		align-content: center;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: max-content max-content max-content;
+		grid-template-areas:
+			'title title'
+			'passwordInput passwordInput'
+			'cancelBtn joinBtn';
+		gap: 1rem;
 
-        & .title {
-            grid-area: title;
-            color: rgb($red_brown);
-        }
+		& .title {
+			grid-area: title;
+			color: rgb($red_brown);
+		}
 
-        & .passwordInput {
-            grid-area: passwordInput;
-            width: 100%;
-            height: 2.2rem;
-            padding: 0.3rem;
-            background-color:transparent;
-            border: 1px solid rgba($red_brown_dark, 1);
-            border-radius: $smallBorderRadius;
-            color: rgba($red_brown_dark, 1);
-            outline: none;
-            box-shadow: $shadow;
+		& .passwordInput {
+			grid-area: passwordInput;
+			width: 100%;
+			height: 2.2rem;
+			padding: 0.3rem;
+			background-color: transparent;
+			border: 1px solid rgba($red_brown_dark, 1);
+			border-radius: $smallBorderRadius;
+			color: rgba($red_brown_dark, 1);
+			outline: none;
+			box-shadow: $shadow;
 
-            &:focus {
-                outline: none;
-                border-width: 2px;
-            }
-        }
+			&:focus {
+				outline: none;
+				border-width: 2px;
+			}
+		}
 
-        & .cancelBtn {
-            @mixin brownButton;
-            grid-area: cancelBtn;
-            justify-self: start;
-        }
+		& .cancelBtn {
+			@mixin brownButton;
+			grid-area: cancelBtn;
+			justify-self: start;
+		}
 
-        & .joinBtn {
-            @mixin brownButton;
-            grid-area: joinBtn;
-            justify-self: end;
-        }
-    }
+		& .joinBtn {
+			@mixin brownButton;
+			grid-area: joinBtn;
+			justify-self: end;
+		}
+	}
 }

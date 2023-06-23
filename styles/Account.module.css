@@ -1,135 +1,133 @@
 @import 'variables.css';
 
 .container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    background-color: rgb($light_grey);
-    
-    & .accountContainer {
-        width: 45rem;
-        max-width: 90%;
-        height: max-content;
-        display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
-        padding: 2rem 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	background-color: rgb($light_grey);
 
-        $accountSectionPadding: 2rem 3rem;
+	& .accountContainer {
+		width: 45rem;
+		max-width: 90%;
+		height: max-content;
+		display: flex;
+		flex-flow: column nowrap;
+		align-items: center;
+		padding: 2rem 0;
 
-        & * {
-            font-family: $cleanFont;
-            font-weight: 600;
-        }
+		$accountSectionPadding: 2rem 3rem;
 
-        & button {
-            @mixin brownButton;
-        }
-        
-        & .profileImg {
-            border-radius: 50%;
-    
-            &.noImg {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: rgb($light_grey);
-                width: 90px;
-                aspect-ratio: 1/1;
-                background-color: rgb($red_brown);
-            }
-        }
-    
-        & .basicInfo {
-            width: 100%;
-            display: flex;
-            flex-flow: column nowrap;
-            gap: 1rem;
-            padding: $accountSectionPadding;
-            border-bottom: 1px solid rgba($red_brown_dark, 0.3);
+		& * {
+			font-family: $cleanFont;
+			font-weight: 600;
+		}
 
-            & .basicInfoSection {
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-        }
+		& button {
+			@mixin brownButton;
+		}
 
-        & .profileSettings {
-            width: 100%;
-            display: flex;
-            flex-flow: column nowrap;
-            gap: 1rem;
-            padding: $accountSectionPadding;
-            border-bottom: 1px solid rgba($red_brown_dark, 0.3);
-            
-            & .bibleVersion {
-                width: 100%;
-                display: grid;
-                grid-template-columns: 12rem 1fr max-content;
-                align-items: center;
+		& .profileImg {
+			border-radius: 50%;
 
-                & .bVersionEdit {
-                    background-color: transparent;
-                    color: rgb($red_brown_dark);
-                }
-            }
-        }
+			&.noImg {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				color: rgb($light_grey);
+				width: 90px;
+				aspect-ratio: 1/1;
+				background-color: rgb($red_brown);
+			}
+		}
 
-        & .appSettings {
-            width: 100%;
-            display: flex;
-            flex-flow: column nowrap;
-            gap: 1rem;
-            padding: $accountSectionPadding;
-            border-bottom: 1px solid rgba($red_brown_dark, 0.3);
+		& .basicInfo {
+			width: 100%;
+			display: flex;
+			flex-flow: column nowrap;
+			gap: 1rem;
+			padding: $accountSectionPadding;
+			border-bottom: 1px solid rgba($red_brown_dark, 0.3);
 
-            & .darkModeOption {
-                width: 100%;
-                display: flex;
-                flex-flow: row nowrap;
-                align-items: center;
-                justify-content: space-between;
-            }
-        }
+			& .basicInfoSection {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+		}
 
-        & .deleteAccount {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            padding: $accountSectionPadding;
-            padding-bottom: 0;
-            
-            & .deleteAccountBtn {
-                color: rgb($deep_red);
-                cursor: pointer;
-                @mixin fadeOnHover;
-            }
-        }
-    }
+		& .profileSettings {
+			width: 100%;
+			display: flex;
+			flex-flow: column nowrap;
+			gap: 1rem;
+			padding: $accountSectionPadding;
+			border-bottom: 1px solid rgba($red_brown_dark, 0.3);
 
+			& .bibleVersion {
+				width: 100%;
+				display: grid;
+				grid-template-columns: 12rem 1fr max-content;
+				align-items: center;
 
-    &.darkMode {
-        background-color: rgb($grey_blue_dark);
+				& .bVersionEdit {
+					background-color: transparent;
+					color: rgb($red_brown_dark);
+				}
+			}
+		}
 
-        & h5 {
-            color: rgb($light_grey);
-        }
+		& .appSettings {
+			width: 100%;
+			display: flex;
+			flex-flow: column nowrap;
+			gap: 1rem;
+			padding: $accountSectionPadding;
+			border-bottom: 1px solid rgba($red_brown_dark, 0.3);
 
-        & .accountContainer > div {
-            border-color: rgba($light_grey, 0.3);
-        }
+			& .darkModeOption {
+				width: 100%;
+				display: flex;
+				flex-flow: row nowrap;
+				align-items: center;
+				justify-content: space-between;
+			}
+		}
 
-        & .profileSettings {
-            & .bibleVersion {
-                & .bVersionEdit {
-                    background-color: transparent;
-                    color: rgb($light_grey);
-                }
-            }
-        }
+		& .deleteAccount {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			padding: $accountSectionPadding;
+			padding-bottom: 0;
 
-    }
+			& .deleteAccountBtn {
+				color: rgb($deep_red);
+				cursor: pointer;
+				@mixin fadeOnHover;
+			}
+		}
+	}
+
+	&.darkMode {
+		background-color: rgb($grey_blue_dark);
+
+		& h5 {
+			color: rgb($light_grey);
+		}
+
+		& .accountContainer > div {
+			border-color: rgba($light_grey, 0.3);
+		}
+
+		& .profileSettings {
+			& .bibleVersion {
+				& .bVersionEdit {
+					background-color: transparent;
+					color: rgb($light_grey);
+				}
+			}
+		}
+	}
 }

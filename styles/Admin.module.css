@@ -1,201 +1,196 @@
 @import 'variables.css';
 
 .container {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 20rem 1fr;
-    grid-template-rows: max-content 1fr;
-    grid-template-areas: 
-    "title title"
-    "sideBar results";
-    overflow: hidden;
+	width: 100%;
+	height: 100%;
+	display: grid;
+	grid-template-columns: 20rem 1fr;
+	grid-template-rows: max-content 1fr;
+	grid-template-areas:
+		'title title'
+		'sideBar results';
+	overflow: hidden;
 
-    & * {
-        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    }
+	& * {
+		font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+			Droid Sans, Helvetica Neue, sans-serif;
+	}
 
-    & .title {
-        text-align: center;
-        grid-area: title;
-        padding: 0.5rem;
-        box-shadow: $sectionShadow;
-        font-weight: 400;
-        z-index: 3;
-        background-color: rgb($light_grey);
-    }
+	& .title {
+		text-align: center;
+		grid-area: title;
+		padding: 0.5rem;
+		box-shadow: $sectionShadow;
+		font-weight: 400;
+		z-index: 3;
+		background-color: rgb($light_grey);
+	}
 
-    & .sideBar {
-        grid-area: sideBar;
-        box-shadow: $sectionShadow;
-        z-index: 2;
-        background-color: rgb($light_grey);
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: max-content 1fr;
-        overflow: hidden;
+	& .sideBar {
+		grid-area: sideBar;
+		box-shadow: $sectionShadow;
+		z-index: 2;
+		background-color: rgb($light_grey);
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: max-content 1fr;
+		overflow: hidden;
 
-        & .options {
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-            flex-flow: row nowrap;
-            gap: 0.5rem;
-            border-bottom: 1px solid rgb($red_brown_dark);
-            padding: 1rem;
+		& .options {
+			width: 100%;
+			display: flex;
+			justify-content: space-around;
+			align-items: flex-end;
+			flex-flow: row nowrap;
+			gap: 0.5rem;
+			border-bottom: 1px solid rgb($red_brown_dark);
+			padding: 1rem;
 
-            & .resultTypeBtn {
-                width: min-content;
-                height: max-content;
-                box-shadow: 0 0 0.23rem 0 rgb($red_brown_dark);
-                background-color: rgb($light_grey);
-                border: none;
-                border-radius: $smallBorderRadius;
-                cursor: pointer;
-                padding: 0.3rem 0.5rem;
-                text-align: center;
-                font-weight: 600;
-                line-height: 0.8rem;
+			& .resultTypeBtn {
+				width: min-content;
+				height: max-content;
+				box-shadow: 0 0 0.23rem 0 rgb($red_brown_dark);
+				background-color: rgb($light_grey);
+				border: none;
+				border-radius: $smallBorderRadius;
+				cursor: pointer;
+				padding: 0.3rem 0.5rem;
+				text-align: center;
+				font-weight: 600;
+				line-height: 0.8rem;
 
-                &.active {
-                    box-shadow: inset 0 0 0.23rem 0 rgb($red_brown_dark);
-                }
-            }
+				&.active {
+					box-shadow: inset 0 0 0.23rem 0 rgb($red_brown_dark);
+				}
+			}
 
-            & img {
-                width: 1.2rem;
-                height: auto;
-                cursor: pointer;
-                @mixin fadeOnHover;
-            }
-        }
+			& img {
+				width: 1.2rem;
+				height: auto;
+				cursor: pointer;
+				@mixin fadeOnHover;
+			}
+		}
 
-        & .resultsContainer {
-            overflow-y: auto;
-            padding: 1rem;
-            @mixin miniScrollbar;
+		& .resultsContainer {
+			overflow-y: auto;
+			padding: 1rem;
+			@mixin miniScrollbar;
 
-            & .results {
-                display: flex;
-                flex-flow: column nowrap;
-                gap: 1rem;
-    
-    
-                & .result {
-                    width: 100%;
-                    height: max-content;
-                    padding: 0.5rem 1rem;
-                    box-shadow: 0 0 0.3rem 0 rgb($red_brown_dark);
-                    background-color: rgb($light_grey);
-                    border: none;
-                    border-radius: $smallBorderRadius;
-                    cursor: pointer;
-    
-                    &.active {
-                        box-shadow: inset 0 0 0.3rem 0 rgb($red_brown_dark);
-                    }
-    
-                    & h5 {
-                        text-align: center;
-                    }
-                }
-            }
-        }
-    }
+			& .results {
+				display: flex;
+				flex-flow: column nowrap;
+				gap: 1rem;
 
-    & .content {
-        grid-area: results;
-        background-color: rgb($light_grey);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
-        padding: 1rem;
-        gap: 2rem;
+				& .result {
+					width: 100%;
+					height: max-content;
+					padding: 0.5rem 1rem;
+					box-shadow: 0 0 0.3rem 0 rgb($red_brown_dark);
+					background-color: rgb($light_grey);
+					border: none;
+					border-radius: $smallBorderRadius;
+					cursor: pointer;
 
-        & .notification {
-            
-            & .notificationTitle {
-                width: 100%;
-                text-align: center;
-                font-weight: 600;
-                padding-bottom: 1rem;
-                border-bottom: 1px solid rgb($red_brown_dark);
-            }
-    
-            & .notificationMsg {
-                padding-top: 1rem;
-                display: flex;
-                flex-flow: column nowrap;
-                gap: 1rem;
-    
-                & h5 {
-                    font-weight: 600;
-                    & span {
-                        font-weight: 800;
-                    }
-                }
-            }
-        }
+					&.active {
+						box-shadow: inset 0 0 0.3rem 0 rgb($red_brown_dark);
+					}
 
-        & .actions {
+					& h5 {
+						text-align: center;
+					}
+				}
+			}
+		}
+	}
 
-            & .actionsTitle {
-                width: 100%;
-                text-align: center;
-                font-weight: 600;
-                padding-bottom: 1rem;
-                border-bottom: 1px solid rgb($red_brown_dark);
-            }
+	& .content {
+		grid-area: results;
+		background-color: rgb($light_grey);
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: 1fr;
+		padding: 1rem;
+		gap: 2rem;
 
-            & .actionsTools {
-                display: flex;
-                flex-flow: column nowrap;
-                align-items: center;
-                gap: 2rem;
-                padding-top: 1rem;
+		& .notification {
+			& .notificationTitle {
+				width: 100%;
+				text-align: center;
+				font-weight: 600;
+				padding-bottom: 1rem;
+				border-bottom: 1px solid rgb($red_brown_dark);
+			}
 
-                & button {
-                    @mixin brownButton;
-                }
+			& .notificationMsg {
+				padding-top: 1rem;
+				display: flex;
+				flex-flow: column nowrap;
+				gap: 1rem;
 
-                & .acceptChunk {
+				& h5 {
+					font-weight: 600;
+					& span {
+						font-weight: 800;
+					}
+				}
+			}
+		}
 
-                }
+		& .actions {
+			& .actionsTitle {
+				width: 100%;
+				text-align: center;
+				font-weight: 600;
+				padding-bottom: 1rem;
+				border-bottom: 1px solid rgb($red_brown_dark);
+			}
 
-                & .rejectChunk {
-                    display: flex;
-                    flex-flow: column nowrap;
-                    align-items: flex-end;
-                    width: 100%;
-                    gap: 0.5rem;
+			& .actionsTools {
+				display: flex;
+				flex-flow: column nowrap;
+				align-items: center;
+				gap: 2rem;
+				padding-top: 1rem;
 
-                    & .rejectReason {
-                        text-align: center;
-                        width: 100%;
-                    }
+				& button {
+					@mixin brownButton;
+				}
 
-                    & textarea {
-                        resize: vertical;
-                        width: 100%;
-                        padding: 0.5rem;
-                        background-color: inherit;
-                        border: none;
-                        border-radius: $smallBorderRadius;
-                        outline: 1px solid rgb($red_brown_dark);
-                        @mixin hideScrollbar;
+				& .acceptChunk {
+				}
 
-                        &:focus {
-                            outline-width: 2px;
-                        }
-                    }
+				& .rejectChunk {
+					display: flex;
+					flex-flow: column nowrap;
+					align-items: flex-end;
+					width: 100%;
+					gap: 0.5rem;
 
-                    & .rejectBtn {
+					& .rejectReason {
+						text-align: center;
+						width: 100%;
+					}
 
-                    }
-                }
-            }
-        }
-    }
+					& textarea {
+						resize: vertical;
+						width: 100%;
+						padding: 0.5rem;
+						background-color: inherit;
+						border: none;
+						border-radius: $smallBorderRadius;
+						outline: 1px solid rgb($red_brown_dark);
+						@mixin hideScrollbar;
+
+						&:focus {
+							outline-width: 2px;
+						}
+					}
+
+					& .rejectBtn {
+					}
+				}
+			}
+		}
+	}
 }

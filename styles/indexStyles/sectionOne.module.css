@@ -1,116 +1,125 @@
 @import '../variables.css';
 
 .container {
-    width: 100%;
-    height: max-content;
-    min-height: 100%;
-    display: flex;
-    justify-content: center;
-    position: relative;
+	width: 100%;
+	height: max-content;
+	min-height: 100%;
+	display: flex;
+	justify-content: center;
+	position: relative;
 
-    & img {
-        object-fit: cover;
-    }
-    /* height: max-content;
+	& img {
+		object-fit: cover;
+	}
+	/* height: max-content;
     background-image: url('/neil-mark-thomas-dGyshquBzOc-unsplash.jpg');
     background-position: center;
     background-size: cover; */
-    
-    & .content {
-        width: 100%;
-        max-width: 80rem;
-        height: 100%;
-        /* display: flex;
+
+	& .content {
+		width: 100%;
+		max-width: 80rem;
+		height: 100%;
+		/* display: flex;
         flex-flow: row wrap;
         justify-content: center;
         align-items: center; */
-        display: grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: 1fr;
-        justify-items: center;
-        align-items: center;
-        padding: 6rem 2rem;
-        z-index: 1;
+		display: grid;
+		grid-template-columns: 50% 50%;
+		grid-template-rows: 1fr;
+		justify-items: center;
+		align-items: center;
+		padding: 6rem 2rem;
+		z-index: 1;
 
-        & .text {
-            justify-self: start;
-            width: 100%;
-            flex-grow: 1;
-            text-align: left;
-            padding: 1rem;
-            
-            & .slogan {
-                font-family: Title;
-                font-size: 2.8rem;
-                font-weight: 900;
-                white-space: pre-line;
-                color: rgb($light_grey);
-                text-shadow: 0.1rem 0.1rem 0.4rem black;
-            }
-    
-            & .shortDescription {
-                font-size: x-large;
-                font-weight: 600;
-                color: rgb($light_grey);
-                text-shadow: 0.1rem 0.1rem 0.2rem black;
-            }
+		& .text {
+			justify-self: start;
+			width: 100%;
+			flex-grow: 1;
+			text-align: left;
+			padding: 1rem;
 
-            & .register {
-                margin-top: 4rem;
+			& .slogan {
+				font-family: Title;
+				font-size: 2.8rem;
+				font-weight: 900;
+				white-space: pre-line;
+				color: rgb($light_grey);
+				text-shadow: 0.1rem 0.1rem 0.4rem black;
+			}
 
-                & a {
-                    @mixin brownButton;
-                    background-color: rgb($grey_blue_vibrant);
-                    font-weight: 600;
-                    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-                    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-                    @mixin fadeOnHover;
-                }
-            }
-        }
+			& .shortDescription {
+				font-size: x-large;
+				font-weight: 600;
+				color: rgb($light_grey);
+				text-shadow: 0.1rem 0.1rem 0.2rem black;
+			}
 
-        & .visual {
-            text-align: center;
-            width: max-content;
-            padding: 1rem;
-            z-index: 1;
-            width: max-content;
-            height: 100%;
+			& .register {
+				margin-top: 4rem;
 
-            @media screen and (max-width: 1165px) { transform: scale(0.85); }
-            @media screen and (max-width: 570px) { transform: scale(0.7); }
-            @media screen and (max-width: 415px) { transform: scale(0.6); }
-            @media screen and (max-width: 350px) { transform: scale(0.5); }
-        }
-    }
+				& a {
+					@mixin brownButton;
+					background-color: rgb($grey_blue_vibrant);
+					font-weight: 600;
+					font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+						Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+					@mixin fadeOnHover;
+				}
+			}
+		}
 
-    @media screen and (max-width: 970px) { 
-        & .content {
-            padding: 2rem 2rem;
-            grid-template-columns: 100%;
-            grid-template-rows: max-content 1fr;
-        
-            & .text {
-                & .slogan, & .shortDescription, & .register {
-                    text-align: center;
-                }
+		& .visual {
+			text-align: center;
+			width: max-content;
+			padding: 1rem;
+			z-index: 1;
+			width: max-content;
+			height: 100%;
 
-                & .slogan {
-                    font-size: 2.2rem;
-                    white-space: normal;
-                    text-shadow: 0.08rem 0.08rem 0.2rem black;
-                }
+			@media screen and (max-width: 1165px) {
+				transform: scale(0.85);
+			}
+			@media screen and (max-width: 570px) {
+				transform: scale(0.7);
+			}
+			@media screen and (max-width: 415px) {
+				transform: scale(0.6);
+			}
+			@media screen and (max-width: 350px) {
+				transform: scale(0.5);
+			}
+		}
+	}
 
-                & .shortDescription {
-                    font-size: large;
-                    text-shadow: 0.08rem 0.08rem 0.1rem black;
-                }
+	@media screen and (max-width: 970px) {
+		& .content {
+			padding: 2rem 2rem;
+			grid-template-columns: 100%;
+			grid-template-rows: max-content 1fr;
 
-                & .register {
-                    margin-top: 2rem;
-                }
-            }
-        
-        }
-    }
+			& .text {
+				& .slogan,
+				& .shortDescription,
+				& .register {
+					text-align: center;
+				}
+
+				& .slogan {
+					font-size: 2.2rem;
+					white-space: normal;
+					text-shadow: 0.08rem 0.08rem 0.2rem black;
+				}
+
+				& .shortDescription {
+					font-size: large;
+					text-shadow: 0.08rem 0.08rem 0.1rem black;
+				}
+
+				& .register {
+					margin-top: 2rem;
+				}
+			}
+		}
+	}
 }

@@ -1,349 +1,348 @@
 @import 'variables.css';
 
 .container {
-    width: 35rem;
-    aspect-ratio: 3/2;
-    background-color: rgb($light_grey);
-    border-radius: $largeBorderRadius;
-    box-shadow: 0.2rem 0.2rem 0.7rem 0rem rgba($red_brown_dark, 0.7);
-    overflow: hidden;
-    /* pointer-events: none; */
-    display: grid;
-    grid-template-columns: 5.8rem 1fr 7.3rem;
-    grid-template-rows: 2rem 1fr 2.5rem;
-    grid-template-areas: 
-    "left top right"
-    "left middle right"
-    "left bottom right";
-    
-    & * {
-        letter-spacing: 0.02rem;
-    }
+	width: 35rem;
+	aspect-ratio: 3/2;
+	background-color: rgb($light_grey);
+	border-radius: $largeBorderRadius;
+	box-shadow: 0.2rem 0.2rem 0.7rem 0rem rgba($red_brown_dark, 0.7);
+	overflow: hidden;
+	/* pointer-events: none; */
+	display: grid;
+	grid-template-columns: 5.8rem 1fr 7.3rem;
+	grid-template-rows: 2rem 1fr 2.5rem;
+	grid-template-areas:
+		'left top right'
+		'left middle right'
+		'left bottom right';
 
-    & .top {
-        background-color: rgb($light_grey);
-        grid-area: top;
-        box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 0.8);
-        z-index: 2;
-        padding-left: 6.5rem;
+	& * {
+		letter-spacing: 0.02rem;
+	}
 
-        & .groupTitle {
-            font-family: HeadingFont;
-            font-weight: 400;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    }
+	& .top {
+		background-color: rgb($light_grey);
+		grid-area: top;
+		box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 0.8);
+		z-index: 2;
+		padding-left: 6.5rem;
 
-    & .bottom {
-        background-color: rgb($light_grey);
-        grid-area: bottom;
-        box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 0.8);
-        z-index: 2;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: center;
-        align-items: center;
-        gap: 0.3rem;
-        padding-left: 6.5rem;
+		& .groupTitle {
+			font-family: HeadingFont;
+			font-weight: 400;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
 
-        & svg {
-            width: 0.8rem;
-            height: auto;
+	& .bottom {
+		background-color: rgb($light_grey);
+		grid-area: bottom;
+		box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 0.8);
+		z-index: 2;
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: center;
+		align-items: center;
+		gap: 0.3rem;
+		padding-left: 6.5rem;
 
-            & path {
-                fill: rgb($grey_blue_vibrant);
-            }
-        }
+		& svg {
+			width: 0.8rem;
+			height: auto;
 
-        & .inputBox {
-            border: 1px solid rgba($red_brown_dark, 0.5);
-            border-radius: 0.5rem;
-            width: 10rem;
-            height: 2rem;
-        }
+			& path {
+				fill: rgb($grey_blue_vibrant);
+			}
+		}
 
-        & .sendBtn {
-            @mixin brownButton;
-            font-size: 0.5rem;
-            font-weight: 400;
-            padding: 0.2rem 0.3rem;
-            border-radius: 0.3rem;
-        }
-    }
+		& .inputBox {
+			border: 1px solid rgba($red_brown_dark, 0.5);
+			border-radius: 0.5rem;
+			width: 10rem;
+			height: 2rem;
+		}
 
-    & .left {
-        background-color: rgb($light_grey);
-        grid-area: left;
-        box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 0.8);
-        z-index: 3;
-        padding: 0.5rem;
+		& .sendBtn {
+			@mixin brownButton;
+			font-size: 0.5rem;
+			font-weight: 400;
+			padding: 0.2rem 0.3rem;
+			border-radius: 0.3rem;
+		}
+	}
 
-        & .myGroupsTitle {
-            color: rgb($moss_green_vibrant);
-            box-shadow: inset 0 0 0.2rem 0 rgba(0, 0, 0, 0.7);
-            width: 100%;
-            border-radius: 0.3rem;
-            font-size: 0.60rem;
-            font-family: HeadingFont;
-            padding: 0.2rem;
-            margin: auto;
-        }
+	& .left {
+		background-color: rgb($light_grey);
+		grid-area: left;
+		box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 0.8);
+		z-index: 3;
+		padding: 0.5rem;
 
-        & .groupNameContainer {
-            width: 100%;
-            display: flex;
-            flex-flow: column nowrap;
+		& .myGroupsTitle {
+			color: rgb($moss_green_vibrant);
+			box-shadow: inset 0 0 0.2rem 0 rgba(0, 0, 0, 0.7);
+			width: 100%;
+			border-radius: 0.3rem;
+			font-size: 0.6rem;
+			font-family: HeadingFont;
+			padding: 0.2rem;
+			margin: auto;
+		}
 
-            & .groupName {
-                font-family: MainFont;
-                width: 100%;
-                height: 2rem;
-                box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.8);
-                border-radius: $largeBorderRadius;
-                background-color: rgb($light_grey);
-                margin-top: 0.5rem;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: xx-small;
+		& .groupNameContainer {
+			width: 100%;
+			display: flex;
+			flex-flow: column nowrap;
 
-                &:first-child {
-                    box-shadow: inset 0 0 0.25rem 0 rgba(0, 0, 0, 0.8);
-                }
-            }
-        }
-    }
+			& .groupName {
+				font-family: MainFont;
+				width: 100%;
+				height: 2rem;
+				box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.8);
+				border-radius: $largeBorderRadius;
+				background-color: rgb($light_grey);
+				margin-top: 0.5rem;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: xx-small;
 
-    & .right {
-        background-color: rgb($light_grey);
-        grid-area: right;
-        box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 0.8);
-        z-index: 3;
-        padding: 0.5rem;
-        display: flex;
-        flex-flow: column nowrap;
-        gap: 1rem;
+				&:first-child {
+					box-shadow: inset 0 0 0.25rem 0 rgba(0, 0, 0, 0.8);
+				}
+			}
+		}
+	}
 
-        & .chunkOne {
-            display: grid;
-            grid-template-columns: max-content 1fr max-content max-content;
-            grid-template-areas: 
-            "arrow . mute options";
-            gap: 0.4rem;
-            padding-right: 0.3rem;
-            align-items: center;
+	& .right {
+		background-color: rgb($light_grey);
+		grid-area: right;
+		box-shadow: 0 0 0.3rem 0 rgba(0, 0, 0, 0.8);
+		z-index: 3;
+		padding: 0.5rem;
+		display: flex;
+		flex-flow: column nowrap;
+		gap: 1rem;
 
-            & .arrow {
-                display: flex;
-                flex-flow: row nowrap;
-                grid-area: arrow;
+		& .chunkOne {
+			display: grid;
+			grid-template-columns: max-content 1fr max-content max-content;
+			grid-template-areas: 'arrow . mute options';
+			gap: 0.4rem;
+			padding-right: 0.3rem;
+			align-items: center;
 
-                & .rect {
-                    width: 0.7rem;
-                    height: 0.3rem;
-                    background-color: rgb($red_brown);
-                }
+			& .arrow {
+				display: flex;
+				flex-flow: row nowrap;
+				grid-area: arrow;
 
-                & .triangle {
-                    width: 0.5rem;
-                    height: 0.5rem;
-                    background-color: rgb($red_brown);
-                    transform: rotate(45deg) translate(calc(-50% - 1px), calc(50% - 1px));
-                    z-index: -1;
+				& .rect {
+					width: 0.7rem;
+					height: 0.3rem;
+					background-color: rgb($red_brown);
+				}
 
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        width: 0.5rem;
-                        height: 0.8rem;
-                        top: -2px;
-                        left: 0px;
-                        background-color: rgb($light_grey);
-                        transform: rotate(-45deg) translate(-40%);
-                    }
-                }
-            }
+				& .triangle {
+					width: 0.5rem;
+					height: 0.5rem;
+					background-color: rgb($red_brown);
+					transform: rotate(45deg) translate(calc(-50% - 1px), calc(50% - 1px));
+					z-index: -1;
 
-            & img {
-                height: 10px;
-                width: auto;
-                grid-area: mute;
-            }
+					&::after {
+						content: '';
+						position: absolute;
+						width: 0.5rem;
+						height: 0.8rem;
+						top: -2px;
+						left: 0px;
+						background-color: rgb($light_grey);
+						transform: rotate(-45deg) translate(-40%);
+					}
+				}
+			}
 
-            & svg {
-                height: 8px;
-                width: auto;
-                grid-area: options;
-            }
-        }
+			& img {
+				height: 10px;
+				width: auto;
+				grid-area: mute;
+			}
 
-        & .chunkTwo {
-            display: flex;
-            flex-flow: column nowrap;
-            justify-content: center;
-            align-items: center;
+			& svg {
+				height: 8px;
+				width: auto;
+				grid-area: options;
+			}
+		}
 
-            & .groupTitle {
-                font-family: HeadingFont;
-                font-weight: 400;
-            }
+		& .chunkTwo {
+			display: flex;
+			flex-flow: column nowrap;
+			justify-content: center;
+			align-items: center;
 
-            & .groupDescription {
-                font-size: 0.4rem;
-                font-weight: 600;
-                text-align: left;
-                word-break: break-word;
-            }
-        }
+			& .groupTitle {
+				font-family: HeadingFont;
+				font-weight: 400;
+			}
 
-        & .chunkThree {
-            display: flex;
-            flex-flow: column nowrap;
-            gap: 0.1rem;
+			& .groupDescription {
+				font-size: 0.4rem;
+				font-weight: 600;
+				text-align: left;
+				word-break: break-word;
+			}
+		}
 
-            & .membersTitle {
-                font-size: 0.7rem;
-                font-weight: 700;
-            }
+		& .chunkThree {
+			display: flex;
+			flex-flow: column nowrap;
+			gap: 0.1rem;
 
-            & .members {
-                display: flex;
-                flex-flow: row wrap;
-                gap: 0.2rem;
+			& .membersTitle {
+				font-size: 0.7rem;
+				font-weight: 700;
+			}
 
-                & .member {
-                    font-size: 0.45rem;
-                    font-weight: 600; 
-                    border: 1px solid rgba($red_brown_dark, 0.5);
-                    border-radius: 0.3rem;
-                    padding: 0.05rem 0.25rem;
+			& .members {
+				display: flex;
+				flex-flow: row wrap;
+				gap: 0.2rem;
 
-                    &:nth-child(1), &:nth-child(2) {
-                        color: rgb($moss_green_vibrant);
-                    }
-                }
-            }
-        }
-    }
+				& .member {
+					font-size: 0.45rem;
+					font-weight: 600;
+					border: 1px solid rgba($red_brown_dark, 0.5);
+					border-radius: 0.3rem;
+					padding: 0.05rem 0.25rem;
 
-    & .middle {
-        background-color: rgb($light_grey);
-        grid-area: middle;
-        z-index: 1;
-        padding: 0 1rem;
-        padding-left: 2rem;
-        display: flex;
-        flex-flow: column nowrap;
+					&:nth-child(1),
+					&:nth-child(2) {
+						color: rgb($moss_green_vibrant);
+					}
+				}
+			}
+		}
+	}
 
-        & .message {
-            display: flex;
-            flex-flow: column nowrap;
-            gap: 0.2rem;
-            font-family: MainFont;
-            border-bottom: 1px solid rgba($red_brown_dark, 0.2);
-            padding: 0.5rem 0;
+	& .middle {
+		background-color: rgb($light_grey);
+		grid-area: middle;
+		z-index: 1;
+		padding: 0 1rem;
+		padding-left: 2rem;
+		display: flex;
+		flex-flow: column nowrap;
 
-            &:last-child {
-                border: none;
-                padding-bottom: 0;
-                margin-bottom: 0;
-            }
+		& .message {
+			display: flex;
+			flex-flow: column nowrap;
+			gap: 0.2rem;
+			font-family: MainFont;
+			border-bottom: 1px solid rgba($red_brown_dark, 0.2);
+			padding: 0.5rem 0;
 
-            & .author {
-                display: flex;
-                flex-flow: row nowrap;
-                gap: 0.2rem;
-                margin-left: -1rem;
+			&:last-child {
+				border: none;
+				padding-bottom: 0;
+				margin-bottom: 0;
+			}
 
-                & .imgContainer {
-                    position: relative;
-                    width: 1rem;
-                    aspect-ratio: 1/1;
-                    border-radius: 50%;
-                    overflow: hidden;
-                    font-size: 0.5rem;
+			& .author {
+				display: flex;
+				flex-flow: row nowrap;
+				gap: 0.2rem;
+				margin-left: -1rem;
 
-                    & img {
-                        object-fit: cover;
-                    }
-                }
+				& .imgContainer {
+					position: relative;
+					width: 1rem;
+					aspect-ratio: 1/1;
+					border-radius: 50%;
+					overflow: hidden;
+					font-size: 0.5rem;
 
-                & .name {
-                    font-size: 0.5rem;
-                    color: rgb($grey_blue);
-                }
-            }
+					& img {
+						object-fit: cover;
+					}
+				}
 
-            & .content {
-                position: relative;
-                font-size: 0.5rem;
-                text-align: left;
-                font-weight: 400;
-                border: 1px solid rgb($msg_color_user);
-                border-radius: 0.5rem;
-                padding: 0.3rem;
-                
-                &.user {
-                    color: rgb($light_grey);
-                    background-color: rgb($msg_color_user);
+				& .name {
+					font-size: 0.5rem;
+					color: rgb($grey_blue);
+				}
+			}
 
-                    & span {
-                        color: hsl(213, 70%, 75%);
-                    }
+			& .content {
+				position: relative;
+				font-size: 0.5rem;
+				text-align: left;
+				font-weight: 400;
+				border: 1px solid rgb($msg_color_user);
+				border-radius: 0.5rem;
+				padding: 0.3rem;
 
-                    &.thirdMsg::after {
-                        content: "1";
-                        position: absolute;
-                        top: 2px;
-                        right: -8px;
-                        font-size: 0.45rem;
-                        font-weight: 600;
-                        transform: translate(50%, -50%);
-                        color: rgb($red_brown_dark);
-                    }
-                }
+				&.user {
+					color: rgb($light_grey);
+					background-color: rgb($msg_color_user);
 
-                &.other {
-                    color: rgb($red_brown_dark);
-                    background-color: rgb($msg_color_not_user);
+					& span {
+						color: hsl(213, 70%, 75%);
+					}
 
-                    & span {
-                        color: rgb($grey_blue_vibrant);
-                    }
+					&.thirdMsg::after {
+						content: '1';
+						position: absolute;
+						top: 2px;
+						right: -8px;
+						font-size: 0.45rem;
+						font-weight: 600;
+						transform: translate(50%, -50%);
+						color: rgb($red_brown_dark);
+					}
+				}
 
-                    &.secondMsg::after {
-                        content: "3";
-                        position: absolute;
-                        top: 2px;
-                        right: -8px;
-                        font-size: 0.45rem;
-                        font-weight: 600;
-                        transform: translate(50%, -50%);
-                        color: rgb($red_brown_dark);
-                    }
-                }
+				&.other {
+					color: rgb($red_brown_dark);
+					background-color: rgb($msg_color_not_user);
 
-                & .likeImg {
-                    position: absolute;
-                    width: 0.5rem;
-                    height: auto;
-                    top: 2px;
-                    right: 0px;
-                    transform: translate(50%, -50%);
-                }
-            }
+					& span {
+						color: rgb($grey_blue_vibrant);
+					}
 
-            & .date {
-                font-size: 0.45rem;
-                text-align: left;
-                font-weight: 200;
-                font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-                Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;;
-            }
-        }
-    }
+					&.secondMsg::after {
+						content: '3';
+						position: absolute;
+						top: 2px;
+						right: -8px;
+						font-size: 0.45rem;
+						font-weight: 600;
+						transform: translate(50%, -50%);
+						color: rgb($red_brown_dark);
+					}
+				}
+
+				& .likeImg {
+					position: absolute;
+					width: 0.5rem;
+					height: auto;
+					top: 2px;
+					right: 0px;
+					transform: translate(50%, -50%);
+				}
+			}
+
+			& .date {
+				font-size: 0.45rem;
+				text-align: left;
+				font-weight: 200;
+				font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+					Droid Sans, Helvetica Neue, sans-serif;
+			}
+		}
+	}
 }
-

@@ -1,56 +1,55 @@
 @import 'variables.css';
 
 .container {
-    width: 100vw;
-    height: $nav_height;
-    background-color: rgb($red_brown);
-    box-shadow: $sectionShadow;
-    display: flex;
-    flex-flow: row nowrap;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+	width: 100vw;
+	height: $nav_height;
+	background-color: rgb($red_brown);
+	box-shadow: $sectionShadow;
+	display: flex;
+	flex-flow: row nowrap;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
 
-    &::after {
-        position: absolute;
-        content: "";
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('/texture.png');
-        background-size: 15rem auto;
-        background-repeat: repeat;
-        opacity: 0.7;
-        z-index: -1;
-        pointer-events: none;
-    }
-    
-    & .left {
-        width: 50%;
-        height: 100%;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-start;
-        align-items: center;
-        padding-left: 3rem;
+	&::after {
+		position: absolute;
+		content: '';
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		background-image: url('/texture.png');
+		background-size: 15rem auto;
+		background-repeat: repeat;
+		opacity: 0.7;
+		z-index: -1;
+		pointer-events: none;
+	}
 
-        & .appTitle {
-            color: rgb($light_grey);
-            font-size: x-large;
-            cursor: pointer;
-            font-family: HeadingFont;
+	& .left {
+		width: 50%;
+		height: 100%;
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: flex-start;
+		align-items: center;
+		padding-left: 3rem;
 
-            & span {
-                font-size: xx-large;
-            }
+		& .appTitle {
+			color: rgb($light_grey);
+			font-size: x-large;
+			cursor: pointer;
+			font-family: HeadingFont;
 
-            @mixin fadeOnHover;
+			& span {
+				font-size: xx-large;
+			}
 
-        }
-/* 
+			@mixin fadeOnHover;
+		}
+		/* 
         & .logo {
             height: 80%;
             width: auto;
@@ -61,246 +60,249 @@
             & * {
                 fill: rgb($light_grey);
             } */
-        /* } */
-    }
+		/* } */
+	}
 
-    & .right {
-        width: 50%;
-        height: 100%;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-end;
-        align-items: center;
-        padding-right: 1rem;
+	& .right {
+		width: 50%;
+		height: 100%;
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: flex-end;
+		align-items: center;
+		padding-right: 1rem;
 
-        & a, & .notificationContainer, & .settingsContainer {
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
+		& a,
+		& .notificationContainer,
+		& .settingsContainer {
+			height: 100%;
+			display: flex;
+			align-items: center;
+		}
 
-        & a, & .bellIcon, & .settingsIcon {
-            padding: 0 0.5rem;
+		& a,
+		& .bellIcon,
+		& .settingsIcon {
+			padding: 0 0.5rem;
 
-            & * {
-                pointer-events: none;
-            }
+			& * {
+				pointer-events: none;
+			}
 
-            & svg {
-                transition: opacity linear 0.15s;
-            }
+			& svg {
+				transition: opacity linear 0.15s;
+			}
 
-            &:hover svg {
-                opacity: 0.6;
-            }
-        }
-        
-        & a {
-            height: 100%;
-            cursor: pointer;
-            color: rgb($light_grey);
-            
-            &:has(.findGroupBtn), &:has(.adminToolsBtn), &.loginBtn, &.backBtn {
-                @mixin fadeOnHover;
-            }
+			&:hover svg {
+				opacity: 0.6;
+			}
+		}
 
-            & .findGroupBtn, & .adminToolsBtn {
-                border: none;
-                background-color: rgba($light_grey, 0.8);
-                padding: 0.3rem 0.5rem;
-                border-radius: $largeBorderRadius;
-                font-weight: 600;
-            }
+		& a {
+			height: 100%;
+			cursor: pointer;
+			color: rgb($light_grey);
 
-            & .dmIcon {
-                width: 20px;
-                height: 20px;
-                position: relative;
-                margin-top: 0.1rem;
-                
+			&:has(.findGroupBtn),
+			&:has(.adminToolsBtn),
+			&.loginBtn,
+			&.backBtn {
+				@mixin fadeOnHover;
+			}
 
-                & svg {
-                    width: 20px;
-                    height: 20px;
-                    fill: rgba($light_grey, 0.7);
-                }
-                
-                &.hasNewDms:after {
-                    position: absolute;
-                    content: "";
-                    top: 0;
-                    right: 0;
-                    width: 0.5rem;
-                    aspect-ratio: 1/1;
-                    background-color: rgb($deep_red);
-                    border-radius: 50%;
-                    transform: translate(50%, -2px);
-                }
-            }
+			& .findGroupBtn,
+			& .adminToolsBtn {
+				border: none;
+				background-color: rgba($light_grey, 0.8);
+				padding: 0.3rem 0.5rem;
+				border-radius: $largeBorderRadius;
+				font-weight: 600;
+			}
 
-            & .homeIcon {
-                width: 20px;
-                height: auto;
-                fill: rgba($light_grey, 0.8);
-            }
-        }
+			& .dmIcon {
+				width: 20px;
+				height: 20px;
+				position: relative;
+				margin-top: 0.1rem;
 
-        & .notificationContainer {
-            position: relative;
-            
-            & .bellIcon {
-                height: 100%;
-                width: 100%;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
+				& svg {
+					width: 20px;
+					height: 20px;
+					fill: rgba($light_grey, 0.7);
+				}
 
-                & svg {
-                    fill: rgb($light_grey);
-                    width: 20px;
-                    height: auto;
-                }
+				&.hasNewDms:after {
+					position: absolute;
+					content: '';
+					top: 0;
+					right: 0;
+					width: 0.5rem;
+					aspect-ratio: 1/1;
+					background-color: rgb($deep_red);
+					border-radius: 50%;
+					transform: translate(50%, -2px);
+				}
+			}
 
-            }
+			& .homeIcon {
+				width: 20px;
+				height: auto;
+				fill: rgba($light_grey, 0.8);
+			}
+		}
 
-            & .unreadCount {
-                position: absolute;
-                top: 0.1rem;
-                right: 0.3rem;
-                color: rgb($light_grey);
-                font-size: 0.9rem;
-            }
+		& .notificationContainer {
+			position: relative;
 
-            & .notificationDropdown {
-                position: fixed;
-                top: calc($nav_height);
-                right: 0;
-                width: 15rem;
-                height: max-content;
-                max-height: 25rem;
-                box-shadow: $sectionShadow;
-                border-bottom-left-radius: 0.5rem;
-                background-color: rgb($light_grey);
-                display: none;
-                overflow: auto;
+			& .bellIcon {
+				height: 100%;
+				width: 100%;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
 
-                @mixin miniScrollbar;
+				& svg {
+					fill: rgb($light_grey);
+					width: 20px;
+					height: auto;
+				}
+			}
 
-                &.active {
-                    display: block;
-                }
+			& .unreadCount {
+				position: absolute;
+				top: 0.1rem;
+				right: 0.3rem;
+				color: rgb($light_grey);
+				font-size: 0.9rem;
+			}
 
-                & .notification {
-                    width: 100%;
-                    height: max-content;
-                    text-align: center;
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-                    padding: 0.7rem;
-                    cursor: pointer;
+			& .notificationDropdown {
+				position: fixed;
+				top: calc($nav_height);
+				right: 0;
+				width: 15rem;
+				height: max-content;
+				max-height: 25rem;
+				box-shadow: $sectionShadow;
+				border-bottom-left-radius: 0.5rem;
+				background-color: rgb($light_grey);
+				display: none;
+				overflow: auto;
 
-                    & h5 {
-                        font-weight: 600;
-                        font-size: 0.9rem;
-                    }
+				@mixin miniScrollbar;
 
-                    &.read {
-                        opacity: 0.6;
-                        cursor: default;
-                    }
+				&.active {
+					display: block;
+				}
 
-                    &:not(&:has(.groupInviteNotif)) {
-                        & * {
-                            pointer-events: none;
-                        }
-                        @mixin fadeOnHover;
-                    }
+				& .notification {
+					width: 100%;
+					height: max-content;
+					text-align: center;
+					border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+					padding: 0.7rem;
+					cursor: pointer;
 
-                    &:has(.groupInviteNotif) {
-                        cursor: default;
-                    }
+					& h5 {
+						font-weight: 600;
+						font-size: 0.9rem;
+					}
 
+					&.read {
+						opacity: 0.6;
+						cursor: default;
+					}
 
-                    & .groupInviteNotif {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        grid-template-columns: 1fr 1fr;
-                        grid-template-areas: 
-                        "message message"
-                        "reject join";
-                        gap: 1rem;
+					&:not(&:has(.groupInviteNotif)) {
+						& * {
+							pointer-events: none;
+						}
+						@mixin fadeOnHover;
+					}
 
-                        & .text {
-                            grid-area: message;
-                        }
+					&:has(.groupInviteNotif) {
+						cursor: default;
+					}
 
-                        & button {
-                            @mixin brownButton;
-                            width: 100%;
-                            padding: 0.3rem 0.5rem;
-                            
-                            &.rejectBtn {
-                                grid-area: reject;
-                            }
-    
-                            &.joinBtn {
-                                
-                                grid-area: join;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+					& .groupInviteNotif {
+						display: grid;
+						grid-template-columns: 1fr 1fr;
+						grid-template-columns: 1fr 1fr;
+						grid-template-areas:
+							'message message'
+							'reject join';
+						gap: 1rem;
 
-        & .settingsContainer {
-            position: relative;
+						& .text {
+							grid-area: message;
+						}
 
-            & .settingsIcon {
-                display: flex;
-                height: 100%;
-                width: 100%;
-                align-items: center;
-                cursor: pointer;
+						& button {
+							@mixin brownButton;
+							width: 100%;
+							padding: 0.3rem 0.5rem;
 
-                & svg {
-                    width: 20px;
-                    height: auto;
-                    
-                    & path {
-                        fill: rgba($light_grey, 0.8);
-                    }
-                }
-            }
+							&.rejectBtn {
+								grid-area: reject;
+							}
 
-            & .settingsDropdown {
-                position: fixed;
-                top: calc($nav_height);
-                right: 0;
-                width: 15rem;
-                height: max-content;
-                box-shadow: $sectionShadow;
-                border-bottom-left-radius: 0.5rem;
-                background-color: rgb($light_grey);
-                display: none;
+							&.joinBtn {
+								grid-area: join;
+							}
+						}
+					}
+				}
+			}
+		}
 
-                &.active {
-                    display: block;
-                }
+		& .settingsContainer {
+			position: relative;
 
-                & .setting {
-                    width: 100%;
-                    height: max-content;
-                    text-align: center;
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-                    padding: 0.5rem;
-                    cursor: pointer;
-                    font-size: 0.9rem;
-                    font-weight: 600;
+			& .settingsIcon {
+				display: flex;
+				height: 100%;
+				width: 100%;
+				align-items: center;
+				cursor: pointer;
 
-                    @mixin fadeOnHover;
-                }
-            }
-        }
+				& svg {
+					width: 20px;
+					height: auto;
 
-    }
+					& path {
+						fill: rgba($light_grey, 0.8);
+					}
+				}
+			}
+
+			& .settingsDropdown {
+				position: fixed;
+				top: calc($nav_height);
+				right: 0;
+				width: 15rem;
+				height: max-content;
+				box-shadow: $sectionShadow;
+				border-bottom-left-radius: 0.5rem;
+				background-color: rgb($light_grey);
+				display: none;
+
+				&.active {
+					display: block;
+				}
+
+				& .setting {
+					width: 100%;
+					height: max-content;
+					text-align: center;
+					border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+					padding: 0.5rem;
+					cursor: pointer;
+					font-size: 0.9rem;
+					font-weight: 600;
+
+					@mixin fadeOnHover;
+				}
+			}
+		}
+	}
 }

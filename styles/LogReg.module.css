@@ -1,115 +1,114 @@
 @import 'variables.css';
 
 .container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb($light_grey);
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb($light_grey);
 
-    & form {
-        width: 20rem;
-        height: max-content;
-        display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem 1rem;
-        gap: 1rem;
-        border-radius: $largeBorderRadius;
-        box-shadow: inset 0 0 0.7rem 0rem rgba($red_brown_dark, 1);
+	& form {
+		width: 20rem;
+		height: max-content;
+		display: flex;
+		flex-flow: column nowrap;
+		align-items: center;
+		justify-content: center;
+		padding: 2rem 1rem;
+		gap: 1rem;
+		border-radius: $largeBorderRadius;
+		box-shadow: inset 0 0 0.7rem 0rem rgba($red_brown_dark, 1);
 
-        & * {
-            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-            Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-        }
-        
-        & .loading {
-            width: max-content;
-            height: max-content;
-            transform: scale(0.60);
-            margin: -1.6rem 0;
-        }
+		& * {
+			font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+				Droid Sans, Helvetica Neue, sans-serif;
+		}
 
-        & .title {
-            font-weight: 400;
-        }
+		& .loading {
+			width: max-content;
+			height: max-content;
+			transform: scale(0.6);
+			margin: -1.6rem 0;
+		}
 
-        & .errorMessage {
-            color: rgb($deep_red);
-            font-weight: 600;
-        }
+		& .title {
+			font-weight: 400;
+		}
 
-        & input {
-            width: 100%;
-            height: 2.5rem;
-            padding: 0.3rem;
-            background-color: transparent;
-            border: 0.1rem solid rgba($red_brown_dark, 1);
-            border-radius: 0.2rem;
-            outline: none;
+		& .errorMessage {
+			color: rgb($deep_red);
+			font-weight: 600;
+		}
 
-            &:-webkit-autofill { 
-                background-clip: text;
-                -webkit-text-fill-color: rgba($red_brown_dark, 1) !important;
-            }
+		& input {
+			width: 100%;
+			height: 2.5rem;
+			padding: 0.3rem;
+			background-color: transparent;
+			border: 0.1rem solid rgba($red_brown_dark, 1);
+			border-radius: 0.2rem;
+			outline: none;
 
+			&:-webkit-autofill {
+				background-clip: text;
+				-webkit-text-fill-color: rgba($red_brown_dark, 1) !important;
+			}
 
-            &:focus {
-                border-color: green;
-            }
-            
-            &:invalid:focus {
-                border-color: rgb($deep_red);
-            }
-        }
-        
-        & button {
-            @mixin brownButton;
-            width: 100%;
-            height: 2.5rem;
-            text-align: center;
-            font-weight: 600;
+			&:focus {
+				border-color: green;
+			}
 
-            &.googleSignInBtn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.3rem;
-                background-color: white;
-                border: 1px solid black;
-                color: black;
+			&:invalid:focus {
+				border-color: rgb($deep_red);
+			}
+		}
 
-                & img {
-                    height: 16px;
-                    width: auto;
-                }
-            }
-        }
+		& button {
+			@mixin brownButton;
+			width: 100%;
+			height: 2.5rem;
+			text-align: center;
+			font-weight: 600;
 
-        & .orText {
-            font-weight: 400;
-            margin: -0.5rem 0;
-        }
+			&.googleSignInBtn {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.3rem;
+				background-color: white;
+				border: 1px solid black;
+				color: black;
 
-        & .logRegSwitch {
-            color: rgb($grey_blue_vibrant);
-        }
+				& img {
+					height: 16px;
+					width: auto;
+				}
+			}
+		}
 
-        & select {
-            background-color: transparent;
-            border-radius: 0.2rem;
-            border: 0.1rem solid rgb($red_brown);
-            width: 100%;
-        }
+		& .orText {
+			font-weight: 400;
+			margin: -0.5rem 0;
+		}
 
-        & .genderAndVersion {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            width: 100%;
-            height: 2.5rem;
-        }
-    }
+		& .logRegSwitch {
+			color: rgb($grey_blue_vibrant);
+		}
+
+		& select {
+			background-color: transparent;
+			border-radius: 0.2rem;
+			border: 0.1rem solid rgb($red_brown);
+			width: 100%;
+		}
+
+		& .genderAndVersion {
+			display: flex;
+			justify-content: space-between;
+			gap: 1rem;
+			width: 100%;
+			height: 2.5rem;
+		}
+	}
 }
