@@ -45,7 +45,7 @@ const GroupDetailsArrow = ({ clickFunction }) => {
 					in2='SourceGraphic'
 				/>
 			</filter>
-			<g clip-path='url(#clip0_14_2)'>
+			<g clipPath='url(#clip0_14_2)'>
 				<path
 					d='M160.917 0.196777H467.532V235.831H160.917V0.196777Z'
 					fill='#D9D9D9'

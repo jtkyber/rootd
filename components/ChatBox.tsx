@@ -485,7 +485,7 @@ const ChatBox = ({ channels }: { channels: PresenceChannel[] | [] }) => {
 					<div
 						ref={messagesRef}
 						className={stylesChat.messages}>
-						{data?.pages.map((page, i, row1) => (
+						{data?.pages?.map((page, i, row1) => (
 							<Fragment key={i}>
 								{page?.data.map((msg: IMessage, j, row2) => {
 									return (
@@ -551,7 +551,7 @@ const ChatBox = ({ channels }: { channels: PresenceChannel[] | [] }) => {
 											<div
 												id={msg._id + '-likes'}
 												className={stylesChat.msgLikeNames}>
-												{msg.likes.map((name, i) => {
+												{msg?.likes.map((name, i) => {
 													return (
 														<h6
 															key={i}

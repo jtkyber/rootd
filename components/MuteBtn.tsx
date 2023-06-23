@@ -34,7 +34,7 @@ const MuteBtn = () => {
 					transform='rotate(-39.4707 -2.60311 23.0779)'
 					fill='black'
 					stroke='white'
-					stroke-width='10'
+					strokeWidth='10'
 				/>
 			</svg>
 		</div>

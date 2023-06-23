@@ -127,7 +127,7 @@ const GroupCreation = ({ setCreatingGroup, userId }: IParams) => {
 				groupId: group._id,
 			})
 
-			if (res.data.groups.includes(group._id)) router.replace('/home')
+			if (res?.data._id === group._id) router.replace('/home')
 		} catch (err) {
 			console.log(err)
 		}
