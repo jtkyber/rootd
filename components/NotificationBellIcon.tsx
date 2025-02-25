@@ -1,11 +1,11 @@
-import React from 'react'
-import styles from '../styles/Nav.module.css'
+import React from 'react';
+import styles from '../styles/Nav.module.css';
 
 const NotificationBellIcon = () => {
 	return (
 		<div
 			className={`${styles.bellIcon} hasTooltip`}
-			data-tooltip-msg='Navigation'
+			data-tooltip-msg='Notifications'
 			data-tooltip-position='below'>
 			<svg
 				fill='#000000'
@@ -39,7 +39,7 @@ const NotificationBellIcon = () => {
 				</g>
 			</svg>
 		</div>
-	)
-}
+	);
+};
 
-export default NotificationBellIcon
+export default NotificationBellIcon;
